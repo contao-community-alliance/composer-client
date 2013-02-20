@@ -5,23 +5,25 @@ Mini module which loads the composer autoloader, creates initial composer.json
 
 ### Installation
 
+##### Checkout repository
+
+Checkout this repository to system/modules/_composer
+
+```
+cd /path/to/my/project/documentroot
+git clone git@github.com:ContaoCommunityAlliance/Composer.git system/modules/_composer
+```
+
 ##### Contao page request
 
 Do a normal page request, this will prepare the folder structure and the default composer.json
-
-##### Open terminal
-
-Go into the composer folder within a terminal (there is no windows support atm)
-
-```
-cd path/to/my/project/documentroot/composer
-```
 
 ##### Download composer
 
 Download composer as explained here: http://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
 
 ```
+cd ./composer
 curl -sS https://getcomposer.org/installer | php
 ```
 
