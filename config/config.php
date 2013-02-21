@@ -58,9 +58,8 @@ EOF;
         $strComposerJsonContent = <<<EOF
 {
     "require": {
-        "contao-community-alliance/composer-installer": "dev-master"
-    },
-    "minimum-stability": "dev"
+        "contao-community-alliance/composer-installer": "dev-master@dev"
+    }
 }
 EOF;
 
