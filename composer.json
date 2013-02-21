@@ -15,12 +15,12 @@
         "contao": "2.11.*"
     },
     "autoload": {
-        "classmap": [""]
+        "classmap": ["src/"]
     },
     "extra": {
         "contao": {
             "targets": {
-                "": "system/modules/_composer"
+                "src/system/modules/_composer": "system/modules/_composer"
             }
         }
     }
