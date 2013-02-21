@@ -1,0 +1,27 @@
+{
+    "name": "contao-community-alliance/composer",
+    "type": "contao-module",
+    "description": "composer integration into the contao cms",
+    "keywords": ["contao", "composer"],
+    "license": "LGPLv3",
+    "authors": [
+        {
+            "name": "Dominik Zogg",
+            "email": "dominik.zogg@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.4"
+    },
+    "autoload": {
+        "classmap": ["/"]
+    },
+    "extras": {
+        "contao": {
+            "target": "_composer",
+            "require": {
+                "contao": "2.11.*"
+            }
+        }
+    }
+}
