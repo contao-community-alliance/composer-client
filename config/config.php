@@ -55,11 +55,20 @@ EOF;
     // check composer.json exists
     if(!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.json'))
     {
+        $strContaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
+
         $strComposerJsonContent = <<<EOF
 {
+    "name": "contao",
+    "version": "$strContaoVersion",
+    "type": "metapackage",
     "require": {
         "contao-community-alliance/composer-installer": "dev-master@dev",
         "contao-community-alliance/composer": "dev-master@dev"
+    },
+    "scripts": {
+        "pre-install-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::updateContaoPackage",
+        "pre-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::updateContaoPackage"
     }
 }
 EOF;
