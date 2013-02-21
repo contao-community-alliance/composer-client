@@ -15,7 +15,7 @@
         "contao": "2.11.*"
     },
     "autoload": {
-        "classmap": ["/"]
+        "classmap": [""]
     },
     "extra": {
         "contao": {
