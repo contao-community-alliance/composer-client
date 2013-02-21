@@ -16,7 +16,7 @@
     "autoload": {
         "classmap": ["/"]
     },
-    "extras": {
+    "extra": {
         "contao": {
             "target": "_composer",
             "require": {
