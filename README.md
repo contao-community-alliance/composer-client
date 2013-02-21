@@ -35,7 +35,7 @@ Add some vendors to the composer.json as explained here: http://getcomposer.org/
 {
     "require": {
         "contao-community-alliance/composer-installer": "dev-master@dev",
-        "payment/saferpay": "dev-master@dev"
+        "contao-community-alliance/composer": "dev-master@dev"
     }
 }
 ```
