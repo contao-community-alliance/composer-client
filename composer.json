@@ -19,7 +19,7 @@
     },
     "extra": {
         "contao": {
-            "targets": {
+            "symlinks": {
                 "src/system/modules/_composer": "system/modules/_composer"
             }
         }
