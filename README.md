@@ -7,11 +7,14 @@ Mini module which loads the composer autoloader, creates initial composer.json
 
 ##### Checkout repository
 
-Checkout this repository to system/modules/_composer
+Checkout this repository and link it to system/modules (initial)
 
 ```
 cd /path/to/my/project/documentroot
-git clone git@github.com:ContaoCommunityAlliance/Composer.git system/modules/_composer
+git clone git@github.com:ContaoCommunityAlliance/Composer.git composer/vendor/contao-community-alliance/composer
+cd system/modules
+ln -s ../../composer/vendor/contao-community-alliance/composer/src/system/modules/_composer .
+cd ../..
 ```
 
 ##### Contao page request
