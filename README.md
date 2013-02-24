@@ -26,7 +26,7 @@ Do a normal page request, this will prepare the folder structure and the default
 Download composer as explained here: http://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
 
 ```
-cd ./composer
+cd composer
 curl -sS https://getcomposer.org/installer | php
 ```
 
@@ -35,11 +35,9 @@ curl -sS https://getcomposer.org/installer | php
 Add some vendors to the composer.json as explained here: http://getcomposer.org/doc/04-schema.md
 
 ```json
-{
-    "require": {
-        "contao-community-alliance/composer-installer": "dev-master@dev",
-        "contao-community-alliance/composer": "dev-master@dev"
-    }
+"require": {
+    ...
+    "contao-community-alliance/composer-demo": "dev-master@dev"
 }
 ```
 
