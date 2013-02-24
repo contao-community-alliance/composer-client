@@ -37,7 +37,7 @@ Add some vendors to the composer.json as explained here: http://getcomposer.org/
 ```json
 "require": {
     ...
-    "contao-community-alliance/composer-demo": "dev-master@dev"
+   "bit3/contao-nested-menu": "dev-master" 
 }
 ```
 
