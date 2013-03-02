@@ -59,7 +59,9 @@ EOF;
 
         $strComposerJsonContent = <<<EOF
 {
-    "name": "contao",
+    "name": "contao/core",
+    "description": "Contao Open Source CMS",
+    "license": "LGPL-3.0+",
     "version": "$strContaoVersion",
     "type": "metapackage",
     "require": {
