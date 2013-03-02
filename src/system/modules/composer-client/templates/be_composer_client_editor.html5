@@ -1,0 +1,66 @@
+<div id="tl_buttons">
+	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+	</a>
+</div>
+
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['editor_headline']; ?></h2>
+
+<?php echo $this->getMessages(); ?>
+
+<form action="contao/main.php?do=composer&amp;settings=experts"
+	  class="tl_form" method="post" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+	<input type="hidden" name="config" id="ctrl_config" value="">
+
+	<div id="composer_client_editor_wrapper">
+		<div id="composer_client_editor"><?php echo $this->config; ?></div>
+	</div>
+
+	<div class="tl_formbody_submit">
+		<div class="tl_submit_container">
+			<input type="submit" name="save" accesskey="s" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['save']; ?>">
+		</div>
+	</div>
+</form>
+
+<script src="system/modules/composer-client/vendor/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var config = $('ctrl_config');
+
+	var editor = ace.edit("composer_client_editor");
+    editor.getSession().setMode("ace/mode/json");
+	editor.getSession().setTabSize(4);
+	editor.getSession().setUseSoftTabs(true);
+
+	var updateConfig = function() {
+		config.setAttribute('value', editor.getValue());
+	};
+	updateConfig();
+
+	editor.getSession().on('change', updateConfig);
+
+	/**
+	 * @see http://stackoverflow.com/a/13579233
+	 */
+	var heightUpdateFunction = function() {
+		// http://stackoverflow.com/questions/11584061/
+		var newHeight =
+			editor.getSession().getScreenLength()
+			* editor.renderer.lineHeight
+			+ editor.renderer.scrollBar.getWidth();
+
+		$('composer_client_editor_wrapper').setStyle('height', newHeight.toString() + "px");
+
+		// This call is required for the editor to fix all of
+		// its inner structure for adapting to a change in size
+		editor.resize();
+	};
+
+	// Set initial size to match initial content
+	heightUpdateFunction();
+
+	// Whenever a change happens inside the ACE editor, update
+	// the size again
+	editor.getSession().on('change', heightUpdateFunction);
+</script>

@@ -1,0 +1,29 @@
+{
+    "name": "contao-community-alliance/composer-client",
+    "type": "contao-module",
+    "description": "composer client for the Contao Open Source CMS",
+    "keywords": ["contao", "composer", "client"],
+    "license": "LGPLv3",
+    "authors": [
+		{
+			"name":"Tristan Lins",
+			"email":"tristan.lins@bit3.de",
+			"homepage":"http://bit3.de",
+			"role":"Developer"
+		}
+    ],
+    "require": {
+        "php": ">=5.3.4",
+        "contao/core": ">=2.11"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "extra": {
+        "contao": {
+            "symlinks": {
+                "src/system/modules/composer-client": "system/modules/composer-client"
+            }
+        }
+    }
+}

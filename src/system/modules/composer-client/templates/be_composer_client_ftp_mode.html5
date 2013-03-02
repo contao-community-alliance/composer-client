@@ -1,0 +1,8 @@
+<br>
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['ftp_mode_headline']; ?></h2>
+
+<div class="tl_formbody_edit">
+	<p>
+		<div class="tl_error"><?php echo $GLOBALS['TL_LANG']['composer_client']['ftp_mode']; ?></div>
+	</p>
+</div>

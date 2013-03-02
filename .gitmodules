@@ -1,0 +1,3 @@
+[submodule "src/system/modules/composer-client/vendor/ace"]
+	path = src/system/modules/composer-client/vendor/ace
+	url = https://github.com/ajaxorg/ace-builds.git
