@@ -71,6 +71,9 @@ EOF;
     "scripts": {
         "pre-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::updateContaoPackage",
         "post-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::createRunonce"
+    },
+    "config": {
+    	"cache-dir": "cache"
     }
 }
 EOF;
