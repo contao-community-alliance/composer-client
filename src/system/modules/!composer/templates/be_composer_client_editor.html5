@@ -24,7 +24,7 @@
 	</div>
 </form>
 
-<script src="system/modules/composer-client/vendor/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var config = $('ctrl_config');
 
