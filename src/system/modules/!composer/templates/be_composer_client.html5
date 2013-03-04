@@ -193,7 +193,7 @@ usort(
 					</a>
 				</td>
 				<td class="tl_file_list"><?php
-						if (preg_match('#@(dev|alpha|beta|rc|stable)#', strtolower($link->getPrettyConstraint()), $matches)) {
+						if (preg_match('#@(dev|alpha|beta|rc|stable)#', strtolower($requireLink->getPrettyConstraint()), $matches)) {
 							$stability = $matches[1];
 						}
 						else {
@@ -203,7 +203,7 @@ usort(
 						printf(
 							'<span class="stability-%s">%s</span>',
 							strtolower($stability),
-							$link->getPrettyConstraint()
+							$requireLink->getPrettyConstraint()
 						);
 					?></td>
 				<td class="tl_file_list">
