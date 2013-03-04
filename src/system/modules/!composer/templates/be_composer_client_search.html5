@@ -1,0 +1,80 @@
+<div id="tl_buttons">
+	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+	</a>
+</div>
+
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['search_headline']; ?></h2>
+
+<?php
+/** @var \Composer\Composer $composer */
+$composer = $this->composer;
+/** @var \Composer\Repository\RepositoryManager $repositoryManager */
+$repositoryManager = $composer->getRepositoryManager();
+/** @var \Composer\Repository\RepositoryInterface $localRepository */
+$localRepository = $repositoryManager->getLocalRepository();
+/** @var \Composer\Installer\InstallationManager $installationManager */
+$installationManager = $composer->getInstallationManager();
+/** @var \Composer\Package\CompletePackage $package */
+?>
+
+<?php echo $this->getMessages(); ?>
+
+<?php if ($this->output): ?>
+	<div class="output"><?php echo $this->output; ?></div>
+<?php endif; ?>
+
+<div class="tl_listing_container list_view" id="tl_composer_search">
+	<table class="tl_listing showColumns">
+		<thead>
+		<tr>
+			<th class="tl_folder_tlist col_name"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
+			<th class="tl_folder_tlist col_action"></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php $n = 1; foreach ($this->packages as $package): ?>
+			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+				<td class="tl_file_list col_name">
+					<div class="name">
+						<?php echo $package['name']; ?>
+					</div>
+					<div class="description">
+						<p><?php echo nl2br($package['description']); ?></p>
+					</div>
+				</td>
+				<td class="tl_file_list col_action"><?php
+						$versions = $localRepository->findPackages($package['name']);
+						if (count($versions)):
+							$title = sprintf(
+								$GLOBALS['TL_LANG']['composer_client']['installed_in'],
+								$versions[0]->getPrettyVersion()
+							);
+							echo $this->generateImage(
+								'system/modules/!composer/assets/images/installed_package.png',
+								$title,
+								'title="' . specialchars($title) . '"'
+							);
+						else:
+							?>
+							<a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>">
+								<?php echo $this->generateImage(
+									'system/modules/!composer/assets/images/mark_install.png',
+									$GLOBALS['TL_LANG']['composer_client']['mark_to_install'],
+									'title="' . specialchars($GLOBALS['TL_LANG']['composer_client']['mark_to_install']) . '"'
+								); ?>
+							</a>
+							<?php
+						endif;
+					?></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>
+
+<?php
+$template = new BackendTemplate('be_composer_client_form');
+$template->setData($this->getData());
+echo $template->parse();
+?>

@@ -2,13 +2,19 @@
     "name": "contao-community-alliance/composer",
     "type": "contao-module",
     "description": "composer integration into the contao cms",
-    "keywords": ["contao", "composer"],
+    "keywords": ["contao", "composer", "client"],
     "license": "LGPLv3",
     "authors": [
         {
             "name": "Dominik Zogg",
             "email": "dominik.zogg@gmail.com"
-        }
+        },
+		{
+			"name":"Tristan Lins",
+			"email":"tristan.lins@bit3.de",
+			"homepage":"http://bit3.de",
+			"role":"Developer"
+		}
     ],
     "require": {
         "php": ">=5.3.4",
@@ -20,7 +26,7 @@
     "extra": {
         "contao": {
             "symlinks": {
-                "src/system/modules/_composer": "system/modules/_composer"
+                "src/system/modules/!composer": "system/modules/!composer"
             }
         }
     }

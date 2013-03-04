@@ -1,28 +1,12 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2013 Leo Feyer
- *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this program. If not, please visit the Free
- * Software Foundation website at <http://www.gnu.org/licenses/>.
+ * Composer integration for Contao.
  *
  * PHP version 5
  * @copyright  ContaoCommunityAlliance 2013
  * @author     Dominik Zogg <dominik.zogg at gmail.com>
+ * @author     Tristan Lins <tristan.lins@bit3.de>
  * @package    Composer
  * @license    LGPLv3
  * @filesource
@@ -32,6 +16,9 @@ define('COMPOSER_MIN_PHPVERSION', '5.3.4');
 define('COMPOSER_DIR_RELATIVE', 'composer');
 define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 
+/**
+ * Create initial composer.json
+ */
 if(version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '>='))
 {
     // check composer folder exists
@@ -85,10 +72,26 @@ EOF;
     // check for autoload.php
     if(file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php'))
     {
+		// unregister the default autoloader
+		if (version_compare(VERSION, '3', '<')) {
+        	spl_autoload_unregister('__autoload');
+		}
+
         // register the autoloader
         require COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php';
 
         // register the default autoloader as spl autoload
-        spl_autoload_register('__autoload');
+		if (version_compare(VERSION, '3', '<')) {
+        	spl_autoload_register('__autoload');
+		}
     }
 }
+
+/**
+ * Add backend module
+ */
+$GLOBALS['BE_MOD']['system']['composer'] = array(
+	'callback'   => 'ComposerClientBackend',
+	'icon'       => 'system/modules/!composer/assets/images/icon.png',
+	'stylesheet' => 'system/modules/!composer/assets/css/backend.css',
+);

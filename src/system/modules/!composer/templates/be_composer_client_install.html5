@@ -1,0 +1,324 @@
+<div id="tl_buttons">
+	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+	</a>
+</div>
+
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['install_headline']; ?></h2>
+
+<?php
+/** @var \Composer\Composer $composer */
+$composer = $this->composer;
+/** @var \Composer\Package\RootPackage $package */
+$package = $composer->getPackage();
+/** @var \Composer\Repository\RepositoryManager $repositoryManager */
+$repositoryManager = $composer->getRepositoryManager();
+/** @var \Composer\Repository\RepositoryInterface $localRepository */
+$localRepository = $repositoryManager->getLocalRepository();
+/** @var \Composer\Installer\InstallationManager $installationManager */
+$installationManager = $composer->getInstallationManager();
+/** @var \Composer\Package\CompletePackage[] $candidates */
+$candidates = $this->candidates;
+/** @var array $keywords */
+$keywords = array();
+foreach ($candidates as $candidate) {
+	if ($candidate->getKeywords()) {
+		$keywords = array_merge($keywords, $candidate->getKeywords());
+	}
+}
+$keywords = array_unique($keywords);
+sort($keywords);
+/** @var \Composer\Package\CompletePackage $preferedCandidate */
+$preferedCandidate = $candidates[0];
+/** @var int $selectedCandidate */
+$selectedCandidate = -1;
+?>
+
+<?php echo $this->getMessages(); ?>
+
+<?php if ($this->output): ?>
+	<div class="output"><?php echo $this->output; ?></div>
+<?php endif; ?>
+
+<div class="tl_formbody_edit" id="tl_composer_install">
+	<h3 id="ctrl_composer_name" class="stability-<?php echo strtolower($preferedCandidate->getStability()); ?>">
+		<span class="name"><?php echo $preferedCandidate->getName(); ?></span>
+		<?php if (!empty($keywords)): ?>
+		<span class="keywords">
+			<span class="keyword"><?php echo implode('</span> <span class="keyword">', $keywords) ?></span>
+		</span>
+		<?php endif; ?>
+	</h3>
+	<div id="ctrl_composer_details">
+		<p class="description"><?php echo nl2br($preferedCandidate->getDescription()); ?></p>
+		<?php
+		$type = $preferedCandidate->getType();
+		$support = $preferedCandidate->getSupport();
+		$authors = $preferedCandidate->getAuthors();
+		$homepage = $preferedCandidate->getHomepage();
+		$source = $preferedCandidate->getSourceUrl();
+		?>
+		<table>
+			<tr>
+				<th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_type']; ?>:</th>
+				<td><?php echo $type; ?></td>
+			</tr>
+			<?php if (!empty($support)): ?>
+			<tr>
+				<td colspan="2"><?php var_dump($support); ?></td>
+			</tr>
+			<?php endif; ?>
+			<?php if (!empty($authors)): ?>
+			<tr>
+				<th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_authors']; ?>:</th>
+				<td>
+					<?php
+					echo implode(
+						', ',
+						array_map(
+							function ($author) {
+								return sprintf(
+									'<a href="mailto:%s">%s</a>',
+									$author['email'],
+									$author['name']
+								);
+							},
+							$authors
+						)
+					);
+					?>
+				</td>
+			</tr>
+			<?php endif; ?>
+			<?php if (!empty($homepage)): ?>
+			<tr>
+				<th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_homepage']; ?>:</th>
+				<td>
+					<?php
+					$url = parse_url($homepage);
+					$link = $url['host'];
+					if (!empty($url['path'])) {
+						$link .= $url['path'];
+					}
+					if (!empty($url['query'])) {
+						$link .= $url['query'];
+					}
+					printf(
+						'<a href="%s" target="_blank">%s</a>',
+						$homepage,
+						$link
+					);
+					?>
+				</td>
+			</tr>
+			<?php endif; ?>
+			<?php if (!empty($source)): ?>
+			<tr>
+				<th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_source']; ?>:</th>
+				<td>
+					<?php
+					$url = parse_url($source);
+					$link = $url['host'];
+					if (!empty($url['path'])) {
+						$link .= $url['path'];
+					}
+					if (!empty($url['query'])) {
+						$link .= $url['query'];
+					}
+					printf(
+						'<a href="%s" target="_blank">%s</a>',
+						$source,
+						$link
+					);
+					?>
+				</td>
+			</tr>
+			<?php endif; ?>
+		</table>
+	</div>
+	<div id="ctrl_composer_versions">
+		<?php foreach (array_values($candidates) as $index => $candidate): ?>
+			<?php
+			if ($selectedCandidate == -1 && $candidate->getStability() == 'stable') {
+				$selectedCandidate = $index;
+			}
+			?>
+			<div class="release stability-<?php echo strtolower($candidate->getStability()); ?>">
+				<div class="toggler">
+					<span class="version"><?php echo $candidate->getPrettyVersion(); ?></span>
+					<span class="reference"><?php
+							echo $GLOBALS['TL_LANG']['composer_client']['package_reference'] . ': ';
+							$reference = $candidate->getDistReference();
+							if (preg_match('#^[\da-f]{40}$#', $reference)) {
+								echo substr($reference, 0, 8);
+							}
+							else {
+								echo $reference;
+							}
+						?></span>
+					<span class="release-date"><?php echo $candidate->getReleaseDate()->format($GLOBALS['TL_CONFIG']['datimFormat']); ?></span>
+					<span class="license"><?php
+							$license = $candidate->getLicense();
+							if (empty($license)):
+								printf(
+									'<span class="unknown-license">%s</span>',
+									$GLOBALS['TL_LANG']['composer_client']['unknown_license']
+								);
+							else:
+								echo implode(', ', $candidate->getLicense());
+							endif;
+						?></span>
+				</div>
+				<div class="details">
+					<?php
+					/** @var \Composer\Package\Link[] $requires */
+					$requires = $candidate->getRequires();
+					$suggests = $candidate->getSuggests();
+					$provides = $candidate->getProvides();
+					$conflicts = $candidate->getConflicts();
+					$replaces = $candidate->getReplaces();
+					?>
+					<table>
+						<colgroup>
+							<col width="33%">
+							<col width="33%">
+							<col width="33%">
+						</colgroup>
+						<tr>
+							<td>
+								<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['package_requires']; ?></strong>
+								<?php if (empty($requires)): ?>
+									<div><?php echo $GLOBALS['TL_LANG']['composer_client']['no_requires']; ?></div>
+								<?php else: ?>
+									<ul>
+										<?php foreach ($requires as $requireName => $require): ?>
+										<li><?php echo $requireName; ?> <?php echo htmlentities($require->getPrettyConstraint(), ENT_QUOTES, 'UTF-8'); ?></li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</td>
+							<td>
+								<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['package_conflicts']; ?></strong>
+								<?php if (empty($conflicts)): ?>
+									<div><?php echo $GLOBALS['TL_LANG']['composer_client']['no_conflicts']; ?></div>
+								<?php else: ?>
+									<ul>
+										<?php foreach ($conflicts as $key => $conflict): ?>
+										<li><?php var_dump($key, $conflict); ?></li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</td>
+							<td>
+								<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['package_provides']; ?></strong>
+								<?php if (empty($provides)): ?>
+									<div><?php echo $GLOBALS['TL_LANG']['composer_client']['no_provides']; ?></div>
+								<?php else: ?>
+									<ul>
+										<?php foreach ($provides as $key => $provide): ?>
+										<li><?php var_dump($key, $provide); ?></li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['package_suggests']; ?></strong>
+								<?php if (empty($suggests)): ?>
+									<div><?php echo $GLOBALS['TL_LANG']['composer_client']['no_suggests']; ?></div>
+								<?php else: ?>
+									<ul>
+										<?php foreach ($suggests as $suggestName => $suggestDescription): ?>
+										<li><?php echo $suggestName; ?>: <?php echo $suggestDescription; ?></li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</td>
+							<td>
+								<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['package_replaces']; ?></strong>
+								<?php if (empty($replaces)): ?>
+									<div><?php echo $GLOBALS['TL_LANG']['composer_client']['no_replaces']; ?></div>
+								<?php else: ?>
+									<ul>
+										<?php foreach ($replaces as $key => $replace): ?>
+										<li><?php var_dump($key, $replace); ?></li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<form action="contao/main.php?do=composer&amp;install=<?php echo specialchars($this->packageName); ?>"
+									  class="tl_form" method="post" enctype="application/x-www-form-urlencoded">
+									<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+									<?php
+									$versions = array();
+									list($version, $stability) = explode('-', $candidate->getVersion(), 2);
+									$candidateStability = $candidate->getStability();
+									$prettyStability = '';
+									if ($stability || $candidateStability != 'stable') {
+										$prettyStability = '-' . $stability;
+										$stability = '@' . $candidateStability;
+									}
+									list($major, $minor, $build, $release) = explode('.', $version);
+
+									$preferedVersion = $candidate->getVersion();
+
+									if (substr($candidate->getPrettyVersion(), 0, 4) == 'dev-' || $stability == '-dev') {
+										$versions[$candidate->getPrettyVersion() . '@' . $candidate->getStability()] = $candidate->getPrettyVersion();
+									}
+									else {
+										if (strlen($build)) {
+											$version = sprintf('%s.%s.%s', $major, $minor, $build) . $prettyStability;
+											$versions[$version . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_exakt'], $version);
+										}
+
+										if (strlen($minor)) {
+											$bugfix = sprintf('%s.%s.*', $major, $minor) . $prettyStability;
+											$versions[$bugfix . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_bugfix'], $bugfix);
+											$preferedVersion = $bugfix;
+										}
+
+										$feature = sprintf('%s.*', $major) . $prettyStability;
+										$versions[$feature . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_feature'], $feature);
+
+										if (strlen($build)) {
+											$upstream = '>=' . sprintf('%s.%s.%s', $major, $minor, $build) . $prettyStability;
+											$versions[$upstream . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $upstream);
+										}
+
+										if (strlen($minor)) {
+											$bugfix = sprintf('>=%s.%s', $major, $minor);
+											$versions[$bugfix . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $bugfix);
+										}
+
+										$feature = sprintf('>=%s', $major);
+										$versions[$feature . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $feature);
+									}
+									?>
+									<select name="version">
+										<?php foreach ($versions as $version => $label): ?>
+										<option value="<?php echo specialchars($version); ?>"<?php if ($preferedVersion == $version): ?> selected="selected"<?php endif; ?>><?php echo $label; ?></option>
+										<?php endforeach; ?>
+									</select>
+									<input type="submit" name="install" id="install" class="tl_submit" accesskey="i"
+										   value="<?php echo $GLOBALS['TL_LANG']['composer_client']['mark_to_install']; ?>">
+								</form>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		<?php endforeach; ?>
+	</div>
+</div>
+
+<script type="text/javascript">
+	new Fx.Accordion(
+		$$('#tl_composer_install .release .toggler'),
+		$$('#tl_composer_install .release .details'),
+		{ "display": <?php echo json_encode($selectedCandidate); ?>, "alwaysHide": true }
+	);
+</script>
