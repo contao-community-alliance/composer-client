@@ -9,12 +9,14 @@ Module which loads the composer autoloader, creates initial composer.json and pr
 
 ##### Checkout repository
 
-Checkout this repository to system/modules/!composer
+Checkout this repository and link it to system/modules (initial)
 
 ```
 cd /path/to/my/project/documentroot
-git clone git@github.com:ContaoCommunityAlliance/Composer.git /tmp/
-mv /tmp/Composer/src/system/modules/!composer system/modules/!composer
+git clone git@github.com:ContaoCommunityAlliance/Composer.git composer/vendor/contao-community-alliance/composer
+cd system/modules
+ln -s ../../composer/vendor/contao-community-alliance/composer/src/system/modules/_composer .
+cd ../..
 ```
 
 ##### Contao page request
@@ -26,7 +28,7 @@ Do a normal page request, this will prepare the folder structure and the default
 Download composer as explained here: http://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
 
 ```
-cd ./composer
+cd composer
 curl -sS https://getcomposer.org/installer | php
 ```
 
@@ -41,8 +43,7 @@ Open the composer/composer.json in your prefered editor and add some dependencie
 ```json
 {
     "require": {
-        "contao-community-alliance/composer-installer": "dev-master@dev",
-        "contao-community-alliance/composer": "dev-master@dev"
+        "bit3/contao-nested-menu": "dev-master"
     }
 }
 ```
@@ -67,11 +68,9 @@ Select prefered version and version contraint to install.
 Click on "advanced mode" in the backend client and add some dependencies as explained here: http://getcomposer.org/doc/04-schema.md
 
 ```json
-{
-    "require": {
-        "contao-community-alliance/composer-installer": "dev-master@dev",
-        "contao-community-alliance/composer": "dev-master@dev"
-    }
+"require": {
+    ...
+   "bit3/contao-nested-menu": "dev-master" 
 }
 ```
 
