@@ -255,6 +255,7 @@ class ComposerClientBackend extends BackendModule
 				->getDownloadManager()
 				->setOutputProgress(false);
 			$installer = Installer::create($io, $composer);
+			$installer->setPreferDist(true);
 			
 			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
 				$installer->setUpdate(true);
