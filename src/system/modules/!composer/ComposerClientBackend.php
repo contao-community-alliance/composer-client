@@ -66,7 +66,9 @@ class ComposerClientBackend extends BackendModule
 		chdir(TL_ROOT . '/composer');
 
 		// unregister contao class loader
-		spl_autoload_unregister('__autoload');
+		if (version_compare(VERSION, '3', '<')) {
+			spl_autoload_unregister('__autoload');
+		}
 
 		// try to increase memory limit
 		$this->increaseMemoryLimit();
@@ -77,7 +79,9 @@ class ComposerClientBackend extends BackendModule
 		require_once($autoloadPathname->getPathname());
 
 		// reregister contao class loader
-		spl_autoload_register('__autoload');
+		if (version_compare(VERSION, '3', '<')) {
+			spl_autoload_register('__autoload');
+		}
 
 		// define pathname to config file
 		$configPathname = 'composer/' . Factory::getComposerFile();

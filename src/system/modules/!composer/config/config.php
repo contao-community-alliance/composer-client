@@ -72,11 +72,18 @@ EOF;
     // check for autoload.php
     if(file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php'))
     {
+		// unregister the default autoloader
+		if (version_compare(VERSION, '3', '<')) {
+        	spl_autoload_unregister('__autoload');
+		}
+
         // register the autoloader
         require COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php';
 
         // register the default autoloader as spl autoload
-        spl_autoload_register('__autoload');
+		if (version_compare(VERSION, '3', '<')) {
+        	spl_autoload_register('__autoload');
+		}
     }
 }
 
