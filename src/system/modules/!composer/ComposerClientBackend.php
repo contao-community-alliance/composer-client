@@ -244,13 +244,18 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		if ($input->post('update') == 'packages') {
+			
+			if (version_compare(VERSION, '3', '<')) {
+				spl_autoload_unregister('__autoload');
+			}
+			
 			$lockPathname = preg_replace('#\.json$#', '.lock', $configPathname);
 
 			$composer
 				->getDownloadManager()
 				->setOutputProgress(false);
 			$installer = Installer::create($io, $composer);
-
+			
 			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
 				$installer->setUpdate(true);
 			}
