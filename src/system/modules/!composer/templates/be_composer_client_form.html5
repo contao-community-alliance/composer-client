@@ -7,7 +7,7 @@
 			<input type="text" name="keyword" id="ctrl_keyword" class="tl_text"
 				   value="<?php echo specialchars($this->keyword); ?>"
 				   placeholder="<?php echo $GLOBALS['TL_LANG']['composer_client']['search_placeholder']; ?>">
-			<input type="submit" name="search" id="search" class="tl_submit" accesskey="s"
+			<input type="submit" name="search" id="ctrl_search" class="tl_submit" accesskey="s"
 				   value="<?php echo $GLOBALS['TL_LANG']['composer_client']['search']; ?>">
 		</form>
 		<form action="contao/main.php?do=composer" id="tl_composer_update" class="tl_form" style="text-align: right" method="post"
