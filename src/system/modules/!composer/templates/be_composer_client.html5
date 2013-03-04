@@ -1,21 +1,21 @@
 <div id="tl_buttons">
 	<a href="contao/main.php?do=composer&amp;update=database" title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['update_database']); ?>">
 		<?php echo $this->generateImage(
-			'system/modules/composer-client/assets/images/database_update.png',
+			'system/modules/!composer/assets/images/database_update.png',
 			$GLOBALS['TL_LANG']['composer_client']['update_database']
 		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['update_database']; ?>
 	</a>
 	&nbsp; :: &nbsp;
 	<a href="contao/main.php?do=composer&amp;settings=experts" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>">
 		<?php echo $this->generateImage(
-			'system/modules/composer-client/assets/images/experts_mode.png',
+			'system/modules/!composer/assets/images/experts_mode.png',
 			$GLOBALS['TL_LANG']['composer_client']['experts_mode']
 		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>
 	</a>
 	&nbsp; :: &nbsp;
 	<a href="contao/main.php?do=composer&amp;update=composer" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['update_composer']; ?>">
 		<?php echo $this->generateImage(
-			'system/modules/composer-client/assets/images/composer_update.png',
+			'system/modules/!composer/assets/images/composer_update.png',
 			$GLOBALS['TL_LANG']['composer_client']['update_composer']
 		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['update_composer']; ?>
 	</a>
@@ -100,7 +100,7 @@ usort(
 								implode(', ', array_keys($dependencyGraph[$localPackage->getName()]))
 							);
 							echo $this->generateImage(
-								'system/modules/composer-client/assets/images/dependency.png',
+								'system/modules/!composer/assets/images/dependency.png',
 								$title,
 								'title="' . specialchars($title) . '"'
 							);
@@ -169,7 +169,7 @@ usort(
 						  onsubmit="return confirm(<?php echo str_replace('"', "'", json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemove'], $localPackage->getName()))); ?>);">
 						<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
 						<input type="hidden" name="remove" value="<?php echo specialchars($localPackage->getName()); ?>">
-						<input type="image" src="system/modules/composer-client/assets/images/remove.png"
+						<input type="image" src="system/modules/!composer/assets/images/remove.png"
 							   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['removePackage']); ?>">
 					</form>
 					<?php endif; if ($removeRequested): ?>
@@ -182,7 +182,7 @@ usort(
 			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 				<td class="tl_file_list col_icon"><?php
 						echo $this->generateImage(
-							'system/modules/composer-client/assets/images/not_installed.png',
+							'system/modules/!composer/assets/images/not_installed.png',
 							$GLOBALS['TL_LANG']['composer_client']['not_installed'],
 							'title="' . specialchars($GLOBALS['TL_LANG']['composer_client']['not_installed']) . '"'
 						);

@@ -51,7 +51,7 @@ $installationManager = $composer->getInstallationManager();
 								$versions[0]->getPrettyVersion()
 							);
 							echo $this->generateImage(
-								'system/modules/composer-client/assets/images/installed_package.png',
+								'system/modules/!composer/assets/images/installed_package.png',
 								$title,
 								'title="' . specialchars($title) . '"'
 							);
@@ -59,7 +59,7 @@ $installationManager = $composer->getInstallationManager();
 							?>
 							<a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>">
 								<?php echo $this->generateImage(
-									'system/modules/composer-client/assets/images/mark_install.png',
+									'system/modules/!composer/assets/images/mark_install.png',
 									$GLOBALS['TL_LANG']['composer_client']['mark_to_install'],
 									'title="' . specialchars($GLOBALS['TL_LANG']['composer_client']['mark_to_install']) . '"'
 								); ?>
