@@ -247,11 +247,11 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		if ($input->post('update') == 'packages') {
-			
+
 			if (version_compare(VERSION, '3', '<')) {
 				spl_autoload_unregister('__autoload');
 			}
-			
+
 			$lockPathname = preg_replace('#\.json$#', '.lock', $configPathname);
 
 			$composer
@@ -259,7 +259,7 @@ class ComposerClientBackend extends BackendModule
 				->setOutputProgress(false);
 			$installer = Installer::create($io, $composer);
 			$installer->setPreferDist(true);
-			
+
 			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
 				$installer->setUpdate(true);
 			}
@@ -407,7 +407,7 @@ class ComposerClientBackend extends BackendModule
 				$platformRepository
 			)
 		);
-		$repositories = array_merge(
+		$repositories          = array_merge(
 			array($installedRepositories),
 			$composer
 				->getRepositoryManager()
@@ -416,18 +416,18 @@ class ComposerClientBackend extends BackendModule
 
 		// remove packagist.org repository from composition
 		$packagistRepository = null;
-		$packagistBaseUrl = null;
+		$packagistBaseUrl    = null;
 		/** @var \Composer\Repository\ComposerRepository $repository */
 		foreach ($repositories as $index => $repository) {
 			if ($repository instanceof ComposerRepository) {
-				$class = new ReflectionClass($repository);
+				$class       = new ReflectionClass($repository);
 				$urlProperty = $class->getProperty('baseUrl');
 				$urlProperty->setAccessible(true);
 				$url = $urlProperty->getValue($repository);
 
 				if (preg_match('#^https?://packagist\.org#', $url)) {
 					$packagistRepository = $repository;
-					$packagistBaseUrl = $url;
+					$packagistBaseUrl    = $url;
 					unset($repositories[$index]);
 					break;
 				}
@@ -471,7 +471,7 @@ class ComposerClientBackend extends BackendModule
 			$url = $packagistBaseUrl . '/search.json?q=' . rawurlencode(implode(' ', $tokens));
 			do {
 				$jsonString = $this->download($url);
-				$json = json_decode($jsonString, true);
+				$json       = json_decode($jsonString, true);
 
 				if (isset($json['results'])) {
 					foreach ($json['results'] as $packageArray) {
@@ -549,7 +549,7 @@ class ComposerClientBackend extends BackendModule
 				$platformRepository
 			)
 		);
-		$repositories = array_merge(
+		$repositories          = array_merge(
 			array($installedRepositories),
 			$composer
 				->getRepositoryManager()
@@ -558,18 +558,18 @@ class ComposerClientBackend extends BackendModule
 
 		// remove packagist.org repository from composition
 		$packagistRepository = null;
-		$packagistBaseUrl = null;
+		$packagistBaseUrl    = null;
 		/** @var \Composer\Repository\ComposerRepository $repository */
 		foreach ($repositories as $index => $repository) {
 			if ($repository instanceof ComposerRepository) {
-				$class = new ReflectionClass($repository);
+				$class       = new ReflectionClass($repository);
 				$urlProperty = $class->getProperty('baseUrl');
 				$urlProperty->setAccessible(true);
 				$url = $urlProperty->getValue($repository);
 
 				if (preg_match('#^https?://packagist\.org#', $url)) {
 					$packagistRepository = $repository;
-					$packagistBaseUrl = $url;
+					$packagistBaseUrl    = $url;
 					unset($repositories[$index]);
 					break;
 				}
@@ -595,7 +595,7 @@ class ComposerClientBackend extends BackendModule
 		// quick search on packagist.org
 		if ($packagistRepository && $packagistBaseUrl) {
 			$jsonString = $this->download($packagistBaseUrl . '/packages/' . $packageName . '.json');
-			$json = json_decode($jsonString, true);
+			$json       = json_decode($jsonString, true);
 
 			if (isset($json['package']) && isset($json['package']['versions'])) {
 				foreach ($json['package']['versions'] as $packageArray) {
@@ -706,7 +706,7 @@ class ComposerClientBackend extends BackendModule
 
 		if ($file === false) {
 			$return = true;
-			$file = 'php://temp';
+			$file   = 'php://temp';
 		}
 
 		$curl = curl_init($url);
