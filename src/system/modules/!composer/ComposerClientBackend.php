@@ -115,7 +115,6 @@ class ComposerClientBackend extends BackendModule
 					$_SESSION['COMPOSER_EDIT_CONFIG'] = $config;
 
 					if ($errors) {
-						var_dump($_SESSION['TL_ERROR']);
 						foreach ($errors as $message) {
 							$_SESSION['TL_ERROR'][] = 'Error: ' . $message;
 						}
