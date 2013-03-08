@@ -78,6 +78,20 @@ span.stability-dev {
 /**
  * Details view
  */
+.composer_package_type_contao_module {
+	background: -moz-linear-gradient(top,  #FFB269 0%, #ffffff 128px);
+	background: -webkit-linear-gradient(top,  #FFB269 0%,#ffffff 128px);
+	background: -o-linear-gradient(top,  #FFB269 0%,#ffffff 128px);
+	background: -ms-linear-gradient(top,  #FFB269 0%,#ffffff 128px);
+	background: linear-gradient(to bottom,  #FFB269 0%,#ffffff 128px);
+}
+.composer_package_type_library {
+	background: -moz-linear-gradient(top,  #9BD1FF 0%, #ffffff 128px);
+	background: -webkit-linear-gradient(top,  #9BD1FF 0%,#ffffff 128px);
+	background: -o-linear-gradient(top,  #9BD1FF 0%,#ffffff 128px);
+	background: -ms-linear-gradient(top,  #9BD1FF 0%,#ffffff 128px);
+	background: linear-gradient(to bottom,  #9BD1FF 0%,#ffffff 128px);
+}
 #ctrl_composer_name {
 	font-size: 22px;
 	height: 30px;
@@ -87,13 +101,21 @@ span.stability-dev {
 #ctrl_composer_name .name {
 	margin-right: 12px;
 }
-#ctrl_composer_name .keywords {
+#tl_composer_install .type {
+	float: right;
+	font-size: 22px;
+	font-weight: bold;
+	color: #ffffff;
+	margin-top: -70px;
+}
+#tl_composer_install .keywords {
 	font-size: 10px;
 	line-height: 10px;
+	margin-top: 6px;
 }
-#ctrl_composer_name .keywords .keyword {
+#tl_composer_install .keywords .keyword {
 	display: inline-block;
-	background-color: maroon;
+	background-color: #666;
 	color: white;
 	padding: 6px;
 	-moz-border-radius: 6px;
