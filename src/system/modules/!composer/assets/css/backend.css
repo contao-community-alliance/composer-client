@@ -34,8 +34,9 @@ span.stability-dev {
 	vertical-align: middle;
 }
 .output {
-	margin: 24px 18px;
+	padding: 24px 18px;
 	white-space: pre-line;
+	background-color: #f3f3f3;
 }
 
 /**
