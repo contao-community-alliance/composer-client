@@ -135,6 +135,7 @@ usort(
 							unset($requires[$localPackage->getName()]);
 						}
 						if (isset($dependencyGraph[$localPackage->getName()])) {
+							$constraints = array();
 							foreach ($dependencyGraph[$localPackage->getName()] as $parentName => $versionConstraint) {
 								if (preg_match('#@(dev|alpha|beta|rc|stable)#', strtolower($versionConstraint), $matches)) {
 									$stability = $matches[1];
@@ -143,14 +144,35 @@ usort(
 									$stability = $package->getStability();
 								}
 
-								printf(
-									$GLOBALS['TL_LANG']['composer_client']['install_via'] . '<br>',
-									$parentName,
-									sprintf(
-										'<span class="stability-%s">%s</span>',
-										strtolower($stability),
+								$key = $versionConstraint . '@' . $stability;
+
+								if (isset($constraints[$key])) {
+									$constraints[$key]['via'][] = sprintf(
+										$GLOBALS['TL_LANG']['composer_client']['install_via'],
+										$parentName,
 										$versionConstraint
-									)
+									);
+								}
+								else {
+									$constraints[$key] = array(
+										'constraint' => $versionConstraint,
+										'stability'  => $stability,
+										'via'        => array(
+											sprintf(
+												$GLOBALS['TL_LANG']['composer_client']['install_via'],
+												$parentName,
+												$versionConstraint
+											)
+										)
+									);
+								}
+							}
+							foreach ($constraints as $constraint) {
+								printf(
+									'<span title="%s" class="stability-%s">%s</span><br>',
+									implode("&#13;", $constraint['via']),
+									$constraint['stability'],
+									$constraint['constraint']
 								);
 							}
 						}
