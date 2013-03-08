@@ -510,8 +510,12 @@ class ComposerClientBackend extends BackendModule
 	protected function calculatePriority(array $tokens, $name, array $keywords, $description)
 	{
 		$priority = 0;
+		$fullName = $name;
 		list($vendor, $name) = explode('/', $name, 2);
 		foreach ($tokens as $token) {
+			if (false !== strpos($token, '/') && false !== stripos($fullName, $token)) {
+				$priority += 20;
+			}
 			if (false !== stripos($vendor, $token)) {
 				$priority += 10;
 			}
