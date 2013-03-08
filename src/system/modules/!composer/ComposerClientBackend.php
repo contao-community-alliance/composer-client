@@ -55,12 +55,16 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		if ($input->get('update') == 'database') {
-			if (in_array('rep_client', $this->Config->getActiveModules())) {
-				$this->redirect('contao/main.php?do=repository_manager');
+			if (
+				version_compare(VERSION, '3', '<') &&
+				in_array('rep_client', $this->Config->getActiveModules()) ||
+				version_compare(VERSION, '3', '>=') &&
+				in_array('repository', $this->Config->getActiveModules())
+			) {
+				$this->redirect('contao/main.php?do=repository_manager&update=database');
 			}
-			else {
-				$this->redirect('contao/install.php');
-			}
+
+			$this->redirect('contao/install.php');
 		}
 
 		chdir(TL_ROOT . '/composer');
