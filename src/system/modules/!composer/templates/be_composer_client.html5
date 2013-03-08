@@ -164,7 +164,7 @@ usort(
 					?></td>
 				<td class="tl_file_list col_remove">
 					<?php if ($removePossible): ?>
-					<form action="contao/main.php?do=composer" id="tl_composer_update" class="tl_form" method="post"
+					<form action="contao/main.php?do=composer" class="tl_form" method="post"
 						  enctype="application/x-www-form-urlencoded"
 						  onsubmit="return confirm(<?php echo str_replace('"', "'", json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemove'], $localPackage->getName()))); ?>);">
 						<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
@@ -211,7 +211,16 @@ usort(
 						echo $GLOBALS['TL_LANG']['composer_client']['not_installed'];
 					?></span>
 				</td>
-				<td class="tl_file_list col_remove"> </td>
+				<td class="tl_file_list col_remove">
+					<form action="contao/main.php?do=composer" class="tl_form" method="post"
+						  enctype="application/x-www-form-urlencoded"
+						  onsubmit="return confirm(<?php echo str_replace('"', "'", json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemove'], $requireName))); ?>);">
+						<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+						<input type="hidden" name="remove" value="<?php echo specialchars($requireName); ?>">
+						<input type="image" src="system/modules/!composer/assets/images/remove.png"
+							   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['removePackage']); ?>">
+					</form>
+				</td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
