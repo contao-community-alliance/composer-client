@@ -1,3 +1,6 @@
+/**
+ * Stability colors
+ */
 span.stability-stable {
 	color: #006400;
 }
@@ -13,12 +16,20 @@ span.stability-alpha {
 span.stability-dev {
 	color: #dc143c;
 }
+
+/**
+ * Installation actions
+ */
 .installation-candidate {
 	color: gray;
 }
 .to-be-removed {
 	color: #900;
 }
+
+/**
+ * Some generic styles
+ */
 #tl_buttons * {
 	vertical-align: middle;
 }
@@ -26,6 +37,10 @@ span.stability-dev {
 	margin: 24px 18px;
 	white-space: pre-line;
 }
+
+/**
+ * Listing view
+ */
 .col_action {
 	text-align: right;
 }
@@ -46,6 +61,10 @@ span.stability-dev {
 	color: #666;
 	margin-top: 12px;
 }
+
+/**
+ * Search result view
+ */
 #tl_composer_search .col_name .name {
 	margin-top: 6px;
 	margin-bottom: 4px;
@@ -55,6 +74,10 @@ span.stability-dev {
 	margin-top: 0;
 	margin-bottom: 6px;
 }
+
+/**
+ * Details view
+ */
 #ctrl_composer_name {
 	font-size: 22px;
 	height: 30px;
@@ -183,6 +206,10 @@ span.stability-dev {
 .unknown-license {
 	color: red;
 }
+
+/**
+ * Experts mode
+ */
 #composer_client_editor_wrapper {
 	position: relative;
 	margin: 12px 18px;
