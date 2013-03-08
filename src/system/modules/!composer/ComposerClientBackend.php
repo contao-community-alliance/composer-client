@@ -15,6 +15,7 @@ use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
 use Composer\Util\ConfigValidator;
+use Symfony\Component\Process\Process;
 
 class ComposerClientBackend extends BackendModule
 {
@@ -247,9 +248,39 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		if ($input->post('update') == 'packages') {
-
 			if (version_compare(VERSION, '3', '<')) {
 				spl_autoload_unregister('__autoload');
+			}
+
+			$gitAvailable = false;
+			$mercurialAvailable = false;
+			$subversionAvailable = false;
+
+			// detect git
+			try {
+				$process = new Process('git --version');
+				$process->run();
+				$gitAvailable = true;
+			}
+			catch (RuntimeException $e) {
+			}
+
+			// detect mercurial
+			try {
+				$process = new Process('hg --version');
+				$process->run();
+				$mercurialAvailable = true;
+			}
+			catch (RuntimeException $e) {
+			}
+
+			// detect mercurial
+			try {
+				$process = new Process('svn --version');
+				$process->run();
+				$subversionAvailable = true;
+			}
+			catch (RuntimeException $e) {
 			}
 
 			$lockPathname = preg_replace('#\.json$#', '.lock', $configPathname);
@@ -258,7 +289,7 @@ class ComposerClientBackend extends BackendModule
 				->getDownloadManager()
 				->setOutputProgress(false);
 			$installer = Installer::create($io, $composer);
-			$installer->setPreferDist(true);
+			$installer->setPreferDist(!($gitAvailable || $mercurialAvailable || $subversionAvailable));
 
 			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
 				$installer->setUpdate(true);
