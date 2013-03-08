@@ -177,7 +177,7 @@ class ComposerClientBackend extends BackendModule
 				$this->redirect('contao/main.php?do=composer');
 			}
 
-			$packages = $this->searchPackages($composer, $tokens, $input->get('cache') == 'no');
+			$packages = $this->searchPackages($composer, $tokens);
 
 			if (empty($packages)) {
 				$_SESSION['TL_ERROR'][] = sprintf(
@@ -224,7 +224,7 @@ class ComposerClientBackend extends BackendModule
 				$this->redirect('contao/main.php?do=composer');
 			}
 
-			$installationCandidates = $this->searchPackage($composer, $packageName, $input->get('cache') == 'no');
+			$installationCandidates = $this->searchPackage($composer, $packageName);
 
 			if (empty($installationCandidates)) {
 				$_SESSION['TL_ERROR'][] = sprintf(
@@ -391,133 +391,120 @@ class ComposerClientBackend extends BackendModule
 		}
 	}
 
-	protected function searchPackages(Composer $composer, array $tokens, $noCache = false)
+	protected function searchPackages(Composer $composer, array $tokens)
 	{
-		$cache = FileCache::getInstance('composer');
-
-		sort($tokens);
-		$cacheKey = 'search:' . implode(',', $tokens);
-
-		if (!$cache->$cacheKey || time() >= $cache->$cacheKey->ttl || $noCache) {
-			$localRepository       = $composer
+		$localRepository       = $composer
+			->getRepositoryManager()
+			->getLocalRepository();
+		$platformRepository    = new PlatformRepository();
+		$installedRepositories = new CompositeRepository(
+			array(
+				$localRepository,
+				$platformRepository
+			)
+		);
+		$repositories = array_merge(
+			array($installedRepositories),
+			$composer
 				->getRepositoryManager()
-				->getLocalRepository();
-			$platformRepository    = new PlatformRepository();
-			$installedRepositories = new CompositeRepository(
-				array(
-					$localRepository,
-					$platformRepository
-				)
-			);
-			$repositories = array_merge(
-				array($installedRepositories),
-				$composer
-					->getRepositoryManager()
-					->getRepositories()
-			);
+				->getRepositories()
+		);
 
-			// remove packagist.org repository from composition
-			$packagistRepository = null;
-			$packagistBaseUrl = null;
-			/** @var \Composer\Repository\ComposerRepository $repository */
-			foreach ($repositories as $index => $repository) {
-				if ($repository instanceof ComposerRepository) {
-					$class = new ReflectionClass($repository);
-					$urlProperty = $class->getProperty('baseUrl');
-					$urlProperty->setAccessible(true);
-					$url = $urlProperty->getValue($repository);
+		// remove packagist.org repository from composition
+		$packagistRepository = null;
+		$packagistBaseUrl = null;
+		/** @var \Composer\Repository\ComposerRepository $repository */
+		foreach ($repositories as $index => $repository) {
+			if ($repository instanceof ComposerRepository) {
+				$class = new ReflectionClass($repository);
+				$urlProperty = $class->getProperty('baseUrl');
+				$urlProperty->setAccessible(true);
+				$url = $urlProperty->getValue($repository);
 
-					if (preg_match('#^https?://packagist\.org#', $url)) {
-						$packagistRepository = $repository;
-						$packagistBaseUrl = $url;
-						unset($repositories[$index]);
-						break;
-					}
+				if (preg_match('#^https?://packagist\.org#', $url)) {
+					$packagistRepository = $repository;
+					$packagistBaseUrl = $url;
+					unset($repositories[$index]);
+					break;
 				}
 			}
-
-			$repositories = new CompositeRepository($repositories);
-
-			$priorities = array();
-			$packages   = array();
-
-			$repositories->filterPackages(
-				function (PackageInterface $package) use ($tokens, &$priorities, &$packages) {
-					if ($package instanceof AliasPackage ||
-						isset($packages[$package->getName()])
-					) {
-						return;
-					}
-
-					/** @var \Composer\Package\CompletePackage $package */
-
-					$priority = $this->calculatePriority(
-						$tokens,
-						$package->getName(),
-						array(),
-						$package->getDescription()
-					);
-					if ($priority) {
-						$priorities[$package->getName()] = $priority;
-						$packages[$package->getName()]   = array(
-							'name'        => $package->getPrettyName(),
-							'description' => $package->getDescription()
-						);
-					}
-				},
-				'Composer\Package\CompletePackage'
-			);
-
-			// quick search on packagist.org
-			if ($packagistRepository && $packagistBaseUrl) {
-				$url = $packagistBaseUrl . '/search.json?q=' . rawurlencode(implode(' ', $tokens));
-				do {
-					$jsonString = $this->download($url);
-					$json = json_decode($jsonString, true);
-
-					if (isset($json['results'])) {
-						foreach ($json['results'] as $packageArray) {
-							$packages[$packageArray['name']]   = $packageArray;
-							$priorities[$packageArray['name']] = $this->calculatePriority(
-								$tokens,
-								$packageArray['name'],
-								array(),
-								$packageArray['description']
-							);
-						}
-					}
-					if (isset($json['next'])) {
-						$url = $json['next'];
-					}
-					else {
-						$url = false;
-					}
-				} while ($url);
-			}
-
-			usort(
-				$packages,
-				function (array $packageA, array $packageB) use ($priorities) {
-					$priorityA = $priorities[$packageA['name']];
-					$priorityB = $priorities[$packageB['name']];
-
-					if ($priorityA == $priorityB) {
-						return strcasecmp($packageA['name'], $packageB['name']);
-					}
-					else {
-						return $priorityB - $priorityA;
-					}
-				}
-			);
-
-			$cache->$cacheKey = (object) array(
-				'value' => $packages,
-				'ttl'   => time() + 1800
-			);
-			return $packages;
 		}
 
-		return $cache->$cacheKey->value;
+		$repositories = new CompositeRepository($repositories);
+
+		$priorities = array();
+		$packages   = array();
+
+		$repositories->filterPackages(
+			function (PackageInterface $package) use ($tokens, &$priorities, &$packages) {
+				if ($package instanceof AliasPackage ||
+					isset($packages[$package->getName()])
+				) {
+					return;
+				}
+
+				/** @var \Composer\Package\CompletePackage $package */
+
+				$priority = $this->calculatePriority(
+					$tokens,
+					$package->getName(),
+					array(),
+					$package->getDescription()
+				);
+				if ($priority) {
+					$priorities[$package->getName()] = $priority;
+					$packages[$package->getName()]   = array(
+						'name'        => $package->getPrettyName(),
+						'description' => $package->getDescription()
+					);
+				}
+			},
+			'Composer\Package\CompletePackage'
+		);
+
+		// quick search on packagist.org
+		if ($packagistRepository && $packagistBaseUrl) {
+			$url = $packagistBaseUrl . '/search.json?q=' . rawurlencode(implode(' ', $tokens));
+			do {
+				$jsonString = $this->download($url);
+				$json = json_decode($jsonString, true);
+
+				if (isset($json['results'])) {
+					foreach ($json['results'] as $packageArray) {
+						$packages[$packageArray['name']]   = $packageArray;
+						$priorities[$packageArray['name']] = $this->calculatePriority(
+							$tokens,
+							$packageArray['name'],
+							array(),
+							$packageArray['description']
+						);
+					}
+				}
+				if (isset($json['next'])) {
+					$url = $json['next'];
+				}
+				else {
+					$url = false;
+				}
+			} while ($url);
+		}
+
+		usort(
+			$packages,
+			function (array $packageA, array $packageB) use ($priorities) {
+				$priorityA = $priorities[$packageA['name']];
+				$priorityB = $priorities[$packageB['name']];
+
+				if ($priorityA == $priorityB) {
+					return strcasecmp($packageA['name'], $packageB['name']);
+				}
+				else {
+					return $priorityB - $priorityA;
+				}
+			}
+		);
+
+		return $packages;
 	}
 
 	protected function calculatePriority(array $tokens, $name, array $keywords, $description)
@@ -541,131 +528,119 @@ class ComposerClientBackend extends BackendModule
 		return $priority;
 	}
 
-	protected function searchPackage(Composer $composer, $packageName, $noCache = false)
+	protected function searchPackage(Composer $composer, $packageName)
 	{
-		$cache = FileCache::getInstance('composer');
-
-		$cacheKey = 'package:' . $packageName;
-
-		if (!$cache->$cacheKey || time() >= $cache->$cacheKey->ttl || $noCache) {
-			// collect repositories
-			$localRepository       = $composer
+		// collect repositories
+		$localRepository       = $composer
+			->getRepositoryManager()
+			->getLocalRepository();
+		$platformRepository    = new PlatformRepository();
+		$installedRepositories = new CompositeRepository(
+			array(
+				$localRepository,
+				$platformRepository
+			)
+		);
+		$repositories = array_merge(
+			array($installedRepositories),
+			$composer
 				->getRepositoryManager()
-				->getLocalRepository();
-			$platformRepository    = new PlatformRepository();
-			$installedRepositories = new CompositeRepository(
-				array(
-					$localRepository,
-					$platformRepository
-				)
-			);
-			$repositories = array_merge(
-				array($installedRepositories),
-				$composer
-					->getRepositoryManager()
-					->getRepositories()
-			);
+				->getRepositories()
+		);
 
-			// remove packagist.org repository from composition
-			$packagistRepository = null;
-			$packagistBaseUrl = null;
-			/** @var \Composer\Repository\ComposerRepository $repository */
-			foreach ($repositories as $index => $repository) {
-				if ($repository instanceof ComposerRepository) {
-					$class = new ReflectionClass($repository);
-					$urlProperty = $class->getProperty('baseUrl');
-					$urlProperty->setAccessible(true);
-					$url = $urlProperty->getValue($repository);
+		// remove packagist.org repository from composition
+		$packagistRepository = null;
+		$packagistBaseUrl = null;
+		/** @var \Composer\Repository\ComposerRepository $repository */
+		foreach ($repositories as $index => $repository) {
+			if ($repository instanceof ComposerRepository) {
+				$class = new ReflectionClass($repository);
+				$urlProperty = $class->getProperty('baseUrl');
+				$urlProperty->setAccessible(true);
+				$url = $urlProperty->getValue($repository);
 
-					if (preg_match('#^https?://packagist\.org#', $url)) {
-						$packagistRepository = $repository;
-						$packagistBaseUrl = $url;
-						unset($repositories[$index]);
-						break;
-					}
+				if (preg_match('#^https?://packagist\.org#', $url)) {
+					$packagistRepository = $repository;
+					$packagistBaseUrl = $url;
+					unset($repositories[$index]);
+					break;
 				}
 			}
+		}
 
-			$repositories = new CompositeRepository($repositories);
+		$repositories = new CompositeRepository($repositories);
 
-			$versions = array();
+		$versions = array();
 
-			$repositories->filterPackages(
-				function (PackageInterface $package) use ($packageName, &$versions) {
-					if ($package instanceof AliasPackage) {
-						return;
-					}
+		$repositories->filterPackages(
+			function (PackageInterface $package) use ($packageName, &$versions) {
+				if ($package instanceof AliasPackage) {
+					return;
+				}
+				if ($package->getName() == $packageName) {
+					$versions[$package->getVersion() . '@' . $package->getStability()] = $package;
+				}
+			},
+			'Composer\Package\CompletePackage'
+		);
+
+		// quick search on packagist.org
+		if ($packagistRepository && $packagistBaseUrl) {
+			$jsonString = $this->download($packagistBaseUrl . '/packages/' . $packageName . '.json');
+			$json = json_decode($jsonString, true);
+
+			if (isset($json['package']) && isset($json['package']['versions'])) {
+				foreach ($json['package']['versions'] as $packageArray) {
+					$package = $packagistRepository->loadPackage(array('raw' => $packageArray));
 					if ($package->getName() == $packageName) {
 						$versions[$package->getVersion() . '@' . $package->getStability()] = $package;
 					}
-				},
-				'Composer\Package\CompletePackage'
-			);
-
-			// quick search on packagist.org
-			if ($packagistRepository && $packagistBaseUrl) {
-				$jsonString = $this->download($packagistBaseUrl . '/packages/' . $packageName . '.json');
-				$json = json_decode($jsonString, true);
-
-				if (isset($json['package']) && isset($json['package']['versions'])) {
-					foreach ($json['package']['versions'] as $packageArray) {
-						$package = $packagistRepository->loadPackage(array('raw' => $packageArray));
-						if ($package->getName() == $packageName) {
-							$versions[$package->getVersion() . '@' . $package->getStability()] = $package;
-						}
-					}
 				}
 			}
-
-			usort(
-				$versions,
-				function (PackageInterface $packageA, PackageInterface $packageB) {
-					return $packageB
-						->getReleaseDate()
-						->getTimestamp() - $packageA
-						->getReleaseDate()
-						->getTimestamp();
-					/*
-					$versionA = $this->reformatVersion($packageA);
-					$versionB = $this->reformatVersion($packageB);
-
-					$classicA = preg_match('#^\d(\.\d+)*$#', $versionA);
-					$classicB = preg_match('#^\d(\.\d+)*$#', $versionB);
-
-					$branchA = 'dev-' == substr($packageA->getPrettyVersion(), 0, 4);
-					$branchB = 'dev-' == substr($packageB->getPrettyVersion(), 0, 4);
-
-					if ($branchA && $branchB) {
-						return strcasecmp($branchA, $branchB);
-					}
-					if ($classicA && $classicB) {
-						if ($packageA->getPrettyVersion() == 'dev-master') {
-							return -1;
-						}
-						if ($packageB->getPrettyVersion() == 'dev-master') {
-							return 1;
-						}
-						return version_compare($versionB, $versionA);
-					}
-					if ($classicA) {
-						return -1;
-					}
-					if ($classicB) {
-						return 1;
-					}
-					return 0;
-					*/
-				}
-			);
-
-			$cache->$cacheKey = (object) array(
-				'value' => $versions,
-				'ttl'   => time() + 1800
-			);
-			return $versions;
 		}
 
-		return $cache->$cacheKey->value;
+		usort(
+			$versions,
+			function (PackageInterface $packageA, PackageInterface $packageB) {
+				return $packageB
+					->getReleaseDate()
+					->getTimestamp() - $packageA
+					->getReleaseDate()
+					->getTimestamp();
+				/*
+				$versionA = $this->reformatVersion($packageA);
+				$versionB = $this->reformatVersion($packageB);
+
+				$classicA = preg_match('#^\d(\.\d+)*$#', $versionA);
+				$classicB = preg_match('#^\d(\.\d+)*$#', $versionB);
+
+				$branchA = 'dev-' == substr($packageA->getPrettyVersion(), 0, 4);
+				$branchB = 'dev-' == substr($packageB->getPrettyVersion(), 0, 4);
+
+				if ($branchA && $branchB) {
+					return strcasecmp($branchA, $branchB);
+				}
+				if ($classicA && $classicB) {
+					if ($packageA->getPrettyVersion() == 'dev-master') {
+						return -1;
+					}
+					if ($packageB->getPrettyVersion() == 'dev-master') {
+						return 1;
+					}
+					return version_compare($versionB, $versionA);
+				}
+				if ($classicA) {
+					return -1;
+				}
+				if ($classicB) {
+					return 1;
+				}
+				return 0;
+				*/
+			}
+		);
+
+		return $versions;
 	}
 
 	protected function reformatVersion(PackageInterface $package)
