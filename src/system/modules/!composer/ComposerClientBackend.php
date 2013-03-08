@@ -298,7 +298,9 @@ class ComposerClientBackend extends BackendModule
 			$installer->run();
 
 			$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-			$this->reload();
+
+			// redirect to database update
+			$this->redirect('contao/main.php?do=composer&update=database');
 		}
 
 		/**
