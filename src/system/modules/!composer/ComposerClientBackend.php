@@ -248,59 +248,65 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		if ($input->post('update') == 'packages') {
-			if (version_compare(VERSION, '3', '<')) {
-				spl_autoload_unregister('__autoload');
-			}
-
-			$gitAvailable = false;
-			$mercurialAvailable = false;
-			$subversionAvailable = false;
-
-			// detect git
 			try {
-				$process = new Process('git --version');
-				$process->run();
-				$gitAvailable = true;
+				if (version_compare(VERSION, '3', '<')) {
+					spl_autoload_unregister('__autoload');
+				}
+
+				$gitAvailable = false;
+				$mercurialAvailable = false;
+				$subversionAvailable = false;
+
+				// detect git
+				try {
+					$process = new Process('git --version');
+					$process->run();
+					$gitAvailable = true;
+				}
+				catch (RuntimeException $e) {
+				}
+
+				// detect mercurial
+				try {
+					$process = new Process('hg --version');
+					$process->run();
+					$mercurialAvailable = true;
+				}
+				catch (RuntimeException $e) {
+				}
+
+				// detect mercurial
+				try {
+					$process = new Process('svn --version');
+					$process->run();
+					$subversionAvailable = true;
+				}
+				catch (RuntimeException $e) {
+				}
+
+				$lockPathname = preg_replace('#\.json$#', '.lock', $configPathname);
+
+				$composer
+					->getDownloadManager()
+					->setOutputProgress(false);
+				$installer = Installer::create($io, $composer);
+				$installer->setPreferDist(!($gitAvailable || $mercurialAvailable || $subversionAvailable));
+
+				if (file_exists(TL_ROOT . '/' . $lockPathname)) {
+					$installer->setUpdate(true);
+				}
+
+				$installer->run();
+
+				$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
+
+				// redirect to database update
+				$this->redirect('contao/main.php?do=composer&update=database');
 			}
 			catch (RuntimeException $e) {
+				$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
+				$this->reload();
 			}
-
-			// detect mercurial
-			try {
-				$process = new Process('hg --version');
-				$process->run();
-				$mercurialAvailable = true;
-			}
-			catch (RuntimeException $e) {
-			}
-
-			// detect mercurial
-			try {
-				$process = new Process('svn --version');
-				$process->run();
-				$subversionAvailable = true;
-			}
-			catch (RuntimeException $e) {
-			}
-
-			$lockPathname = preg_replace('#\.json$#', '.lock', $configPathname);
-
-			$composer
-				->getDownloadManager()
-				->setOutputProgress(false);
-			$installer = Installer::create($io, $composer);
-			$installer->setPreferDist(!($gitAvailable || $mercurialAvailable || $subversionAvailable));
-
-			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
-				$installer->setUpdate(true);
-			}
-
-			$installer->run();
-
-			$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-
-			// redirect to database update
-			$this->redirect('contao/main.php?do=composer&update=database');
 		}
 
 		/**
