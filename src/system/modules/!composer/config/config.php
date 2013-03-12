@@ -60,6 +60,7 @@ EOF;
         "post-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::createRunonce"
     },
     "config": {
+        "preferred-install": "dist", 
     	"cache-dir": "cache"
     }
 }
