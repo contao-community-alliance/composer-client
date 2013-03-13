@@ -9,6 +9,7 @@ use Composer\Json\JsonFile;
 use Composer\Package\AliasPackage;
 use Composer\Package\BasePackage;
 use Composer\Package\PackageInterface;
+use Composer\Package\CompletePackageInterface;
 use Composer\Package\Version\VersionParser;
 use Composer\Repository\ComposerRepository;
 use Composer\Repository\CompositeRepository;
@@ -204,7 +205,7 @@ class ComposerClientBackend extends BackendModule
 				$this->redirect('contao/main.php?do=composer');
 			}
 
-			$packages = $this->searchPackages($composer, $tokens);
+			$packages = $this->searchPackages($composer, $tokens, RepositoryInterface::SEARCH_FULLTEXT);
 
 			if (empty($packages)) {
 				$_SESSION['TL_ERROR'][] = sprintf(
@@ -456,8 +457,28 @@ class ComposerClientBackend extends BackendModule
 		}
 	}
 
-	protected function searchPackages(Composer $composer, array $tokens)
+	/**
+	 * @param Composer $composer
+	 * @param array    $tokens
+	 * @param int      $searchIn
+	 *
+	 * @return CompletePackageInterface[]
+	 */
+	protected function searchPackages(Composer $composer, array $tokens, $searchIn)
 	{
+		$platformRepo = new PlatformRepository;
+		$localRepository = $composer->getRepositoryManager()->getLocalRepository();
+		$installedRepository = new CompositeRepository(
+			array($localRepository, $platformRepo)
+		);
+		$repositories = new CompositeRepository(
+			array_merge(
+				array($installedRepository),
+				$composer->getRepositoryManager()->getRepositories()
+			)
+		);
+
+		/*
 		$localRepository       = $composer
 			->getRepositoryManager()
 			->getLocalRepository();
@@ -475,126 +496,19 @@ class ComposerClientBackend extends BackendModule
 				->getRepositories()
 		);
 
-		// remove packagist.org repository from composition
-		$packagistRepository = null;
-		$packagistBaseUrl    = null;
-		/** @var \Composer\Repository\ComposerRepository $repository */
-		foreach ($repositories as $index => $repository) {
-			if ($repository instanceof ComposerRepository) {
-				$class       = new ReflectionClass($repository);
-				$urlProperty = $class->getProperty('baseUrl');
-				$urlProperty->setAccessible(true);
-				$url = $urlProperty->getValue($repository);
-
-				if (preg_match('#^https?://packagist\.org#', $url)) {
-					$packagistRepository = $repository;
-					$packagistBaseUrl    = $url;
-					unset($repositories[$index]);
-					break;
-				}
-			}
-		}
-
 		$repositories = new CompositeRepository($repositories);
+		*/
 
-		$priorities = array();
-		$packages   = array();
+		$results = $repositories->search(implode(' ', $tokens), $searchIn);
 
-		$repositories->filterPackages(
-			function (PackageInterface $package) use ($tokens, &$priorities, &$packages) {
-				if ($package instanceof AliasPackage ||
-					isset($packages[$package->getName()])
-				) {
-					return;
-				}
-
-				/** @var \Composer\Package\CompletePackage $package */
-
-				$priority = $this->calculatePriority(
-					$tokens,
-					$package->getName(),
-					array(),
-					$package->getDescription()
-				);
-				if ($priority) {
-					$priorities[$package->getName()] = $priority;
-					$packages[$package->getName()]   = array(
-						'name'        => $package->getPrettyName(),
-						'description' => $package->getDescription()
-					);
-				}
-			},
-			'Composer\Package\CompletePackage'
-		);
-
-		// quick search on packagist.org
-		if ($packagistRepository && $packagistBaseUrl) {
-			$url = $packagistBaseUrl . '/search.json?q=' . rawurlencode(implode(' ', $tokens));
-			do {
-				$jsonString = $this->download($url);
-				$json       = json_decode($jsonString, true);
-
-				if (isset($json['results'])) {
-					foreach ($json['results'] as $packageArray) {
-						$packages[$packageArray['name']]   = $packageArray;
-						$priorities[$packageArray['name']] = $this->calculatePriority(
-							$tokens,
-							$packageArray['name'],
-							array(),
-							$packageArray['description']
-						);
-					}
-				}
-				if (isset($json['next'])) {
-					$url = $json['next'];
-				}
-				else {
-					$url = false;
-				}
-			} while ($url);
-		}
-
-		usort(
-			$packages,
-			function (array $packageA, array $packageB) use ($priorities) {
-				$priorityA = $priorities[$packageA['name']];
-				$priorityB = $priorities[$packageB['name']];
-
-				if ($priorityA == $priorityB) {
-					return strcasecmp($packageA['name'], $packageB['name']);
-				}
-				else {
-					return $priorityB - $priorityA;
-				}
+		$packages = array();
+		foreach ($results as $result) {
+			if (!isset($packages[$result['name']])) {
+				$packages[$result['name']] = $result;
 			}
-		);
+		}
 
 		return $packages;
-	}
-
-	protected function calculatePriority(array $tokens, $name, array $keywords, $description)
-	{
-		$priority = 0;
-		$fullName = $name;
-		list($vendor, $name) = explode('/', $name, 2);
-		foreach ($tokens as $token) {
-			if (false !== strpos($token, '/') && false !== stripos($fullName, $token)) {
-				$priority += 20;
-			}
-			if (false !== stripos($vendor, $token)) {
-				$priority += 10;
-			}
-			if (false !== stripos($name, $token)) {
-				$priority += 5;
-			}
-			if (false !== stripos(implode(',', $keywords ? : array()), $token)) {
-				$priority += 3;
-			}
-			if (false !== stripos($description, $token)) {
-				$priority += 1;
-			}
-		}
-		return $priority;
 	}
 
 	protected function searchPackage(Composer $composer, $packageName)
