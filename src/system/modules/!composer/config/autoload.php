@@ -27,10 +27,9 @@ TemplateLoader::addFiles(array
 (
 	'be_composer_client'                  => 'system/modules/!composer/templates',
 	'be_composer_client_editor'           => 'system/modules/!composer/templates',
+	'be_composer_client_errors'           => 'system/modules/!composer/templates',
 	'be_composer_client_form'             => 'system/modules/!composer/templates',
-	'be_composer_client_ftp_mode'         => 'system/modules/!composer/templates',
 	'be_composer_client_install'          => 'system/modules/!composer/templates',
 	'be_composer_client_install_composer' => 'system/modules/!composer/templates',
-	'be_composer_client_php_version'      => 'system/modules/!composer/templates',
 	'be_composer_client_search'           => 'system/modules/!composer/templates',
 ));

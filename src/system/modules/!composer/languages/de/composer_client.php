@@ -3,8 +3,7 @@
 /**
  * Headlines
  */
-$GLOBALS['TL_LANG']['composer_client']['ftp_mode_headline']         = 'Safe-Mode-Hack';
-$GLOBALS['TL_LANG']['composer_client']['php_version_headline']      = 'Systemvoraussetzungen';
+$GLOBALS['TL_LANG']['composer_client']['errors_headline']           = 'Systemvoraussetzungen';
 $GLOBALS['TL_LANG']['composer_client']['composer_install_headline'] = 'Composer Installation';
 $GLOBALS['TL_LANG']['composer_client']['installed_headline']        = 'Installierte Pakete';
 $GLOBALS['TL_LANG']['composer_client']['search_headline']           = 'Suchergebnisse';
@@ -14,8 +13,9 @@ $GLOBALS['TL_LANG']['composer_client']['editor_headline']           = 'Expertenm
 /**
  * References
  */
-$GLOBALS['TL_LANG']['composer_client']['ftp_mode']           = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Richten Sie Contao so ein, dass es ohne SMH lauffähig ist.<br>Wenn nötig setzen Sie sich mit Ihrem Hoster in Verbindung.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel zum SMH im Contao Wiki</a>';
+$GLOBALS['TL_LANG']['composer_client']['ftp_mode']           = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Richten Sie Contao so ein, dass es ohne SMH lauffähig ist.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel zum SMH im Contao Wiki</a>';
 $GLOBALS['TL_LANG']['composer_client']['php_version']        = 'Für den Einsatz des Composer Client wird <strong>PHP 5.3.4</strong> vorausgesetzt, sie verwenden <strong>PHP %s</strong>.<br>Bitte aktualisieren Sie auf eine aktuellere PHP Version.';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']       = 'Zum herunterladen von Dateien wird curl benötigt.<br>Bitte installieren Sie das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
 $GLOBALS['TL_LANG']['composer_client']['composer_missing']   = 'Die Composer Library ist nicht (vollständig) installiert.<br>Drücken Sie auf <strong>Composer installieren</strong> um Composer und alle Abhängigkeiten zu installieren.';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']   = 'Composer installieren';
 $GLOBALS['TL_LANG']['composer_client']['search_placeholder'] = 'Paketname oder Suchbegriff';

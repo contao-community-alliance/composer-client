@@ -132,18 +132,25 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function checkEnvironment(Input $input)
 	{
-		if ($GLOBALS['TL_CONFIG']['useFTP']) {
-			// switch template
-			$this->Template->setName('be_composer_client_ftp_mode');
+		$errors = array();
 
-			return false;
+		if ($GLOBALS['TL_CONFIG']['useFTP']) {
+			$errors[] = $GLOBALS['TL_LANG']['composer_client']['ftp_mode'];
 		}
 
 		// check for php version
 		if (version_compare(PHP_VERSION, '5.3.4', '<')) {
-			// switch template
-			$this->Template->setName('be_composer_client_php_version');
+			$errors[] = sprintf($GLOBALS['TL_LANG']['composer_client']['php_version'], PHP_VERSION);
+		}
 
+		// check for curl
+		if (!function_exists('curl_init')) {
+			$errors[] = $GLOBALS['TL_LANG']['composer_client']['curl_missing'];
+		}
+
+		if (count($errors)) {
+			$this->Template->setName('be_composer_client_errors');
+			$this->Template->errors = $errors;
 			return false;
 		}
 

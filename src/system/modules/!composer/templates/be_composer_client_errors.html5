@@ -1,0 +1,10 @@
+<br>
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['errors_headline']; ?></h2>
+
+<div class="tl_formbody_edit">
+	<?php foreach ($this->errors as $error): ?>
+	<p>
+		<div class="tl_error"><?php echo $error; ?></div>
+	</p>
+	<?php endforeach; ?>
+</div>
