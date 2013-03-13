@@ -6,7 +6,6 @@ use Composer\Installer;
 use Composer\Console\HtmlOutputFormatter;
 use Composer\IO\BufferIO;
 use Composer\Json\JsonFile;
-use Composer\Package\AliasPackage;
 use Composer\Package\BasePackage;
 use Composer\Package\PackageInterface;
 use Composer\Package\CompletePackageInterface;
@@ -19,9 +18,40 @@ use Composer\Util\ConfigValidator;
 use Composer\DependencyResolver\Pool;
 use Symfony\Component\Process\Process;
 
+/**
+ * Class ComposerClientBackend
+ *
+ * Composer client interface.
+ */
 class ComposerClientBackend extends BackendModule
 {
+	/**
+	 * The template name
+	 *
+	 * @var string
+	 */
 	protected $strTemplate = 'be_composer_client';
+
+	/**
+	 * The pathname to the composer config file.
+	 *
+	 * @var string
+	 */
+	protected $configPathname = null;
+
+	/**
+	 * The io system.
+	 *
+	 * @var BufferIO
+	 */
+	protected $io = null;
+
+	/**
+	 * The composer instance.
+	 *
+	 * @var Composer
+	 */
+	protected $composer = null;
 
 	/**
 	 * Compile the current element
@@ -32,11 +62,81 @@ class ComposerClientBackend extends BackendModule
 
 		$input = Input::getInstance();
 
+		// check the local environment
+		if (!$this->checkEnvironment($input)) {
+			return;
+		}
+
+		// load composer and the composer class loader
+		$this->loadComposer();
+
+		if ($input->get('update') == 'database') {
+			$this->updateDatabase();
+			return;
+		}
+
+		if ($input->get('settings') == 'experts') {
+			$this->showExpertsEditor($input);
+			return;
+		}
+
+		// do search
+		if ($input->get('keyword')) {
+			$this->doSearch($input);
+			return;
+		}
+
+		// do install
+		if ($input->get('install')) {
+			$this->showDetails($input);
+			return;
+		}
+
+		if ($input->post('update') == 'packages') {
+			$this->updatePackages();
+			return;
+		}
+
+		/**
+		 * Remove package
+		 */
+		if ($input->post('remove')) {
+			$this->removePackage($input);
+			$this->redirect('contao/main.php?do=composer');
+		}
+
+		// update contao version if needed
+		$this->checkContaoVersion();
+
+		// calculate dependency graph
+		$dependencyGraph = $this->calculateDependencyGraph(
+			$this->composer
+				->getRepositoryManager()
+				->getLocalRepository()
+		);
+
+		$this->Template->dependencyGraph = $dependencyGraph;
+		$this->Template->output          = $_SESSION['COMPOSER_OUTPUT'];
+
+		unset($_SESSION['COMPOSER_OUTPUT']);
+
+		chdir(TL_ROOT);
+	}
+
+	/**
+	 * Check the local environment, return false if there are problems.
+	 *
+	 * @param \Input $input
+	 *
+	 * @return bool
+	 */
+	protected function checkEnvironment(Input $input)
+	{
 		if ($GLOBALS['TL_CONFIG']['useFTP']) {
 			// switch template
 			$this->Template->setName('be_composer_client_ftp_mode');
 
-			return;
+			return false;
 		}
 
 		// check for php version
@@ -44,7 +144,7 @@ class ComposerClientBackend extends BackendModule
 			// switch template
 			$this->Template->setName('be_composer_client_php_version');
 
-			return;
+			return false;
 		}
 
 		/*
@@ -63,7 +163,7 @@ class ComposerClientBackend extends BackendModule
 					$this->reload();
 				}
 
-				return;
+				return false;
 			}
 
 			if ($input->get('update') == 'composer') {
@@ -72,19 +172,35 @@ class ComposerClientBackend extends BackendModule
 			}
 		}
 
-		if ($input->get('update') == 'database') {
-			if (
-				version_compare(VERSION, '3', '<') &&
-				in_array('rep_client', $this->Config->getActiveModules()) ||
-				version_compare(VERSION, '3', '>=') &&
-				in_array('repository', $this->Config->getActiveModules())
-			) {
-				$this->redirect('contao/main.php?do=repository_manager&update=database');
-			}
+		return true;
+	}
 
-			$this->redirect('contao/install.php');
+	/**
+	 * Load and install the composer.phar.
+	 *
+	 * @return bool
+	 */
+	protected function updateComposer()
+	{
+		$url = 'https://getcomposer.org/composer.phar';
+
+		try {
+			$this->download($url, TL_ROOT . '/composer/composer.phar');
+			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
+			return true;
 		}
+		catch (Exception $e) {
+			$this->log($e->getMessage() . "\n" . $e->getTraceAsString(), 'ComposerClient updateComposer', 'TL_ERROR');
+			$_SESSION['TL_ERROR'][] = $e->getMessage();
+			return false;
+		}
+	}
 
+	/**
+	 * Load composer and the composer class loader.
+	 */
+	protected function loadComposer()
+	{
 		chdir(TL_ROOT . '/composer');
 
 		// unregister contao class loader
@@ -105,6 +221,13 @@ class ComposerClientBackend extends BackendModule
 			$phar             = new Phar(TL_ROOT . '/composer/composer.phar');
 			$autoloadPathname = $phar['vendor/autoload.php'];
 			require_once($autoloadPathname->getPathname());
+
+			// search for composer build version
+			$composerDevWarningTime = $this->readComposerDevWarningTime();
+			if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
+				$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
+				$this->Template->composerUpdate = true;
+			}
 		}
 
 		// reregister contao class loader
@@ -113,315 +236,25 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		// define pathname to config file
-		$configPathname = 'composer/' . Factory::getComposerFile();
+		$this->configPathname = 'composer/' . Factory::getComposerFile();
 
 		// create io interace
-		$io = new BufferIO('', null, new HtmlOutputFormatter());
-
-		if ($input->get('settings') == 'experts') {
-			$configFile = new File($configPathname);
-
-			if ($input->post('save')) {
-				$tempPathname = $configPathname . '~';
-				$tempFile     = new File($tempPathname);
-
-				$config = $input->post('config');
-				$config = html_entity_decode($config, ENT_QUOTES, 'UTF-8');
-
-				$tempFile->write($config);
-				$tempFile->close();
-
-				$validator = new ConfigValidator($io);
-				list($errors, $publishErrors, $warnings) = $validator->validate(TL_ROOT . '/' . $tempPathname);
-
-				if (!$errors && !$publishErrors) {
-					$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['configValid'];
-					$this->import('Files');
-					$this->Files->rename($tempPathname, $configPathname);
-				}
-				else {
-					$tempFile->delete();
-					$_SESSION['COMPOSER_EDIT_CONFIG'] = $config;
-
-					if ($errors) {
-						foreach ($errors as $message) {
-							$_SESSION['TL_ERROR'][] = 'Error: ' . $message;
-						}
-					}
-
-					if ($publishErrors) {
-						foreach ($publishErrors as $message) {
-							$_SESSION['TL_ERROR'][] = 'Publish error: ' . $message;
-						}
-					}
-				}
-
-				if ($warnings) {
-					foreach ($warnings as $message) {
-						$_SESSION['TL_ERROR'][] = 'Warning: ' . $message;
-					}
-				}
-
-				$this->reload();
-			}
-
-			if (isset($_SESSION['COMPOSER_EDIT_CONFIG'])) {
-				$config = $_SESSION['COMPOSER_EDIT_CONFIG'];
-				unset($_SESSION['COMPOSER_EDIT_CONFIG']);
-			}
-			else {
-				$config = $configFile->getContent();
-			}
-			$this->Template->setName('be_composer_client_editor');
-			$this->Template->config = $config;
-			return;
-		}
-
-		// search for composer build version
-		$composerDevWarningTime = $this->readComposerDevWarningTime();
-		if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
-			$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
-			$this->Template->composerUpdate = true;
-		}
+		$this->io = new BufferIO('', null, new HtmlOutputFormatter());
 
 		// create composer factory
 		/** @var \Composer\Factory $factory */
 		$factory = new Factory();
 
 		// create composer
-		/** @var \Composer\Composer $composer */
-		$composer                 = $factory->createComposer($io);
-		$this->Template->composer = $composer;
+		$this->composer = $factory->createComposer($this->io);
 
-		// do search
-		if ($input->get('keyword')) {
-			$keyword = $input->get('keyword');
-
-			$tokens = explode(' ', $keyword);
-			$tokens = array_map('trim', $tokens);
-			$tokens = array_filter($tokens);
-
-			if (empty($tokens)) {
-				$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-				$this->redirect('contao/main.php?do=composer');
-			}
-
-			$packages = $this->searchPackages($composer, $tokens, RepositoryInterface::SEARCH_FULLTEXT);
-
-			if (empty($packages)) {
-				$_SESSION['TL_ERROR'][] = sprintf(
-					$GLOBALS['TL_LANG']['composer_client']['noSearchResult'],
-					$keyword
-				);
-
-				$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-				$this->redirect('contao/main.php?do=composer');
-			}
-
-			$this->Template->setName('be_composer_client_search');
-			$this->Template->keyword  = $keyword;
-			$this->Template->packages = $packages;
-			return;
-		}
-
-		// do install
-		if ($input->get('install')) {
-			$packageName = $input->get('install');
-
-			if ($input->post('version')) {
-				$version = $input->post('version');
-
-				// make a backup
-				copy(TL_ROOT . '/' . $configPathname, TL_ROOT . '/' . $configPathname . '~');
-
-				// update requires
-				$json   = new JsonFile(TL_ROOT . '/' . $configPathname);
-				$config = $json->read();
-				if (!array_key_exists('require', $config)) {
-					$config['require'] = array();
-				}
-				$config['require'][$packageName] = $version;
-				$json->write($config);
-
-				$_SESSION['TL_INFO'][] = sprintf(
-					$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
-					$packageName,
-					$version
-				);
-
-				$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-				$this->redirect('contao/main.php?do=composer');
-			}
-
-			$installationCandidates = $this->searchPackage($composer, $packageName);
-
-			if (empty($installationCandidates)) {
-				$_SESSION['TL_ERROR'][] = sprintf(
-					$GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'],
-					$packageName
-				);
-
-				$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-				$this->redirect('contao/main.php?do=composer');
-			}
-
-			$this->Template->setName('be_composer_client_install');
-			$this->Template->packageName = $packageName;
-			$this->Template->candidates  = $installationCandidates;
-			return;
-		}
-
-		if ($input->post('update') == 'packages') {
-			try {
-				if (version_compare(VERSION, '3', '<')) {
-					spl_autoload_unregister('__autoload');
-				}
-
-				$gitAvailable        = false;
-				$mercurialAvailable  = false;
-				$subversionAvailable = false;
-
-				// detect git
-				try {
-					$process = new Process('git --version');
-					$process->run();
-					$gitAvailable = true;
-				}
-				catch (RuntimeException $e) {
-				}
-
-				// detect mercurial
-				try {
-					$process = new Process('hg --version');
-					$process->run();
-					$mercurialAvailable = true;
-				}
-				catch (RuntimeException $e) {
-				}
-
-				// detect mercurial
-				try {
-					$process = new Process('svn --version');
-					$process->run();
-					$subversionAvailable = true;
-				}
-				catch (RuntimeException $e) {
-				}
-
-				$lockPathname = preg_replace('#\.json$#', '.lock', $configPathname);
-
-				$composer
-					->getDownloadManager()
-					->setOutputProgress(false);
-				$installer = Installer::create($io, $composer);
-				$installer->setPreferDist(!($gitAvailable || $mercurialAvailable || $subversionAvailable));
-
-				if (file_exists(TL_ROOT . '/' . $lockPathname)) {
-					$installer->setUpdate(true);
-				}
-
-				$installer->run();
-
-				$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-
-				// redirect to database update
-				$this->redirect('contao/main.php?do=composer&update=database');
-			}
-			catch (RuntimeException $e) {
-				$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
-				$this->reload();
-			}
-		}
-
-		/**
-		 * Remove package
-		 */
-		if ($input->post('remove')) {
-			$removeName = $input->post('remove');
-
-			// make a backup
-			copy(TL_ROOT . '/' . $configPathname, TL_ROOT . '/' . $configPathname . '~');
-
-			// update requires
-			$json   = new JsonFile(TL_ROOT . '/' . $configPathname);
-			$config = $json->read();
-			if (!array_key_exists('require', $config)) {
-				$config['require'] = array();
-			}
-			unset($config['require'][$removeName]);
-			$json->write($config);
-
-			$_SESSION['TL_INFO'][] = sprintf(
-				$GLOBALS['TL_LANG']['composer_client']['removeCandidate'],
-				$removeName
-			);
-
-			$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-			$this->redirect('contao/main.php?do=composer');
-		}
-
-		// update contao version if needed
-		/** @var \Composer\Package\RootPackage $package */
-		$package       = $composer->getPackage();
-		$versionParser = new VersionParser();
-		$version       = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
-		$prettyVersion = $versionParser->normalize($version);
-		if ($package->getVersion() !== $prettyVersion) {
-			$configFile            = new JsonFile(TL_ROOT . '/' . $configPathname);
-			$configJson            = $configFile->read();
-			$configJson['version'] = $version;
-			$configFile->write($configJson);
-
-			$_SESSION['COMPOSER_OUTPUT'] = $io->getOutput();
-			$this->reload();
-		}
-
-		// calculate dependency graph
-		$dependencyGraph = $this->calculateDependencyGraph(
-			$composer
-				->getRepositoryManager()
-				->getLocalRepository()
-		);
-
-		$this->Template->dependencyGraph = $dependencyGraph;
-		$this->Template->output          = $_SESSION['COMPOSER_OUTPUT'];
-
-		unset($_SESSION['COMPOSER_OUTPUT']);
-
-		chdir(TL_ROOT);
+		// assign composer to template
+		$this->Template->composer = $this->composer;
 	}
 
-	protected function updateComposer()
-	{
-		$url = 'https://getcomposer.org/composer.phar';
-
-		try {
-			$this->download($url, TL_ROOT . '/composer/composer.phar');
-			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
-			return true;
-		}
-		catch (Exception $e) {
-			$this->log($e->getMessage() . "\n" . $e->getTraceAsString(), 'ComposerClient updateComposer', 'TL_ERROR');
-			$_SESSION['TL_ERROR'][] = $e->getMessage();
-			return false;
-		}
-	}
-
-	protected function readComposerDevWarningTime()
-	{
-		$configPathname = new File('composer/composer.phar');
-		$buffer         = '';
-		do {
-			$buffer .= fread($configPathname->handle, 1024);
-		} while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches) && !feof(
-			$configPathname->handle
-		));
-		if ($matches[1]) {
-			return (int) $matches[1];
-		}
-		return false;
-	}
-
+	/**
+	 * Try to increase memory.
+	 */
 	protected function increaseMemoryLimit()
 	{
 		/**
@@ -459,16 +292,153 @@ class ComposerClientBackend extends BackendModule
 	}
 
 	/**
-	 * @param Composer $composer
-	 * @param array    $tokens
-	 * @param int      $searchIn
+	 * Read the stub from the composer.phar and return the warning timestamp.
+	 *
+	 * @return bool|int
+	 */
+	protected function readComposerDevWarningTime()
+	{
+		$configPathname = new File('composer/composer.phar');
+		$buffer         = '';
+		do {
+			$buffer .= fread($configPathname->handle, 1024);
+		} while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches) && !feof(
+			$configPathname->handle
+		));
+		if ($matches[1]) {
+			return (int) $matches[1];
+		}
+		return false;
+	}
+
+	/**
+	 * Update the database scheme
+	 */
+	protected function updateDatabase()
+	{
+		if (
+			version_compare(VERSION, '3', '<') &&
+			in_array('rep_client', $this->Config->getActiveModules()) ||
+			version_compare(VERSION, '3', '>=') &&
+			in_array('repository', $this->Config->getActiveModules())
+		) {
+			$this->redirect('contao/main.php?do=repository_manager&update=database');
+		}
+
+		$this->redirect('contao/install.php');
+	}
+
+	/**
+	 * Show the experts editor and handle updates.
+	 *
+	 * @param \Input $input
+	 */
+	protected function showExpertsEditor(Input $input)
+	{
+		$configFile = new File($this->configPathname);
+
+		if ($input->post('save')) {
+			$tempPathname = $this->configPathname . '~';
+			$tempFile     = new File($tempPathname);
+
+			$config = $input->post('config');
+			$config = html_entity_decode($config, ENT_QUOTES, 'UTF-8');
+
+			$tempFile->write($config);
+			$tempFile->close();
+
+			$validator = new ConfigValidator($this->io);
+			list($errors, $publishErrors, $warnings) = $validator->validate(TL_ROOT . '/' . $tempPathname);
+
+			if (!$errors && !$publishErrors) {
+				$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['configValid'];
+				$this->import('Files');
+				$this->Files->rename($tempPathname, $this->configPathname);
+			}
+			else {
+				$tempFile->delete();
+				$_SESSION['COMPOSER_EDIT_CONFIG'] = $config;
+
+				if ($errors) {
+					foreach ($errors as $message) {
+						$_SESSION['TL_ERROR'][] = 'Error: ' . $message;
+					}
+				}
+
+				if ($publishErrors) {
+					foreach ($publishErrors as $message) {
+						$_SESSION['TL_ERROR'][] = 'Publish error: ' . $message;
+					}
+				}
+			}
+
+			if ($warnings) {
+				foreach ($warnings as $message) {
+					$_SESSION['TL_ERROR'][] = 'Warning: ' . $message;
+				}
+			}
+
+			$this->reload();
+		}
+
+		if (isset($_SESSION['COMPOSER_EDIT_CONFIG'])) {
+			$config = $_SESSION['COMPOSER_EDIT_CONFIG'];
+			unset($_SESSION['COMPOSER_EDIT_CONFIG']);
+		}
+		else {
+			$config = $configFile->getContent();
+		}
+		$this->Template->setName('be_composer_client_editor');
+		$this->Template->config = $config;
+	}
+
+	/**
+	 * Do a package search.
+	 *
+	 * @param Input $input
+	 */
+	protected  function doSearch(Input $input)
+	{
+		$keyword = $input->get('keyword');
+
+		$tokens = explode(' ', $keyword);
+		$tokens = array_map('trim', $tokens);
+		$tokens = array_filter($tokens);
+
+		if (empty($tokens)) {
+			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$this->redirect('contao/main.php?do=composer');
+		}
+
+		$packages = $this->searchPackages($tokens, RepositoryInterface::SEARCH_FULLTEXT);
+
+		if (empty($packages)) {
+			$_SESSION['TL_ERROR'][] = sprintf(
+				$GLOBALS['TL_LANG']['composer_client']['noSearchResult'],
+				$keyword
+			);
+
+			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$this->redirect('contao/main.php?do=composer');
+		}
+
+		$this->Template->setName('be_composer_client_search');
+		$this->Template->keyword  = $keyword;
+		$this->Template->packages = $packages;
+	}
+
+	/**
+	 * Search for packages.
+	 *
+	 * @param array $tokens
+	 * @param int   $searchIn
 	 *
 	 * @return CompletePackageInterface[]
 	 */
-	protected function searchPackages(Composer $composer, array $tokens, $searchIn)
+	protected function searchPackages(array $tokens, $searchIn)
 	{
 		$platformRepo        = new PlatformRepository;
-		$localRepository     = $composer
+		$localRepository     = $this->composer
 			->getRepositoryManager()
 			->getLocalRepository();
 		$installedRepository = new CompositeRepository(
@@ -477,14 +447,14 @@ class ComposerClientBackend extends BackendModule
 		$repositories        = new CompositeRepository(
 			array_merge(
 				array($installedRepository),
-				$composer
+				$this->composer
 					->getRepositoryManager()
 					->getRepositories()
 			)
 		);
 
 		/*
-		$localRepository       = $composer
+		$localRepository       = $this->composer
 			->getRepositoryManager()
 			->getLocalRepository();
 		$platformRepository    = new PlatformRepository();
@@ -496,7 +466,7 @@ class ComposerClientBackend extends BackendModule
 		);
 		$repositories          = array_merge(
 			array($installedRepositories),
-			$composer
+			$this->composer
 				->getRepositoryManager()
 				->getRepositories()
 		);
@@ -517,15 +487,67 @@ class ComposerClientBackend extends BackendModule
 	}
 
 	/**
-	 * @param Composer $composer
-	 * @param          $packageName
+	 * Show package details.
+	 *
+	 * @param Input $input
+	 */
+	protected function showDetails(Input $input)
+	{
+		$packageName = $input->get('install');
+
+		if ($input->post('version')) {
+			$version = $input->post('version');
+
+			// make a backup
+			copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
+
+			// update requires
+			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+			$config = $json->read();
+			if (!array_key_exists('require', $config)) {
+				$config['require'] = array();
+			}
+			$config['require'][$packageName] = $version;
+			$json->write($config);
+
+			$_SESSION['TL_INFO'][] = sprintf(
+				$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
+				$packageName,
+				$version
+			);
+
+			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$this->redirect('contao/main.php?do=composer');
+		}
+
+		$installationCandidates = $this->searchPackage($packageName);
+
+		if (empty($installationCandidates)) {
+			$_SESSION['TL_ERROR'][] = sprintf(
+				$GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'],
+				$packageName
+			);
+
+			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$this->redirect('contao/main.php?do=composer');
+		}
+
+		$this->Template->setName('be_composer_client_install');
+		$this->Template->packageName = $packageName;
+		$this->Template->candidates  = $installationCandidates;
+	}
+
+	/**
+	 * Search for a single packages versions.
+	 *
+	 * @param string   $packageName
 	 *
 	 * @return PackageInterface[]
 	 */
-	protected function searchPackage(Composer $composer, $packageName)
+	protected function searchPackage($packageName)
 	{
 		$platformRepo        = new PlatformRepository;
-		$localRepository     = $composer
+		$localRepository     = $this->composer
 			->getRepositoryManager()
 			->getLocalRepository();
 		$installedRepository = new CompositeRepository(
@@ -534,7 +556,7 @@ class ComposerClientBackend extends BackendModule
 		$repositories        = new CompositeRepository(
 			array_merge(
 				array($installedRepository),
-				$composer
+				$this->composer
 					->getRepositoryManager()
 					->getRepositories()
 			)
@@ -598,31 +620,129 @@ class ComposerClientBackend extends BackendModule
 		return $versions;
 	}
 
-	protected function reformatVersion(PackageInterface $package)
+	/**
+	 * Run the package update process.
+	 */
+	protected function updatePackages()
 	{
-		$version = $package->getVersion();
-
-		if (
-			preg_match(
-				'#^(.*?)[._-]?(stable|RC|beta|alpha|dev)(\d+)?$#',
-				$version,
-				$matches
-			)
-		) {
-			$stability = VersionParser::normalizeStability($matches[2]);
-			$version   = $matches[1] . '.' . (100 - BasePackage::$stabilities[$stability]);
-
-			if ($matches[3]) {
-				$version .= '.' . $matches[3];
+		try {
+			if (version_compare(VERSION, '3', '<')) {
+				spl_autoload_unregister('__autoload');
 			}
-		}
-		else {
-			$version .= '.100';
-		}
 
-		return $version;
+			$gitAvailable        = false;
+			$mercurialAvailable  = false;
+			$subversionAvailable = false;
+
+			// detect git
+			try {
+				$process = new Process('git --version');
+				$process->run();
+				$gitAvailable = true;
+			}
+			catch (RuntimeException $e) {
+			}
+
+			// detect mercurial
+			try {
+				$process = new Process('hg --version');
+				$process->run();
+				$mercurialAvailable = true;
+			}
+			catch (RuntimeException $e) {
+			}
+
+			// detect mercurial
+			try {
+				$process = new Process('svn --version');
+				$process->run();
+				$subversionAvailable = true;
+			}
+			catch (RuntimeException $e) {
+			}
+
+			$lockPathname = preg_replace('#\.json$#', '.lock', $this->configPathname);
+
+			$this->composer
+				->getDownloadManager()
+				->setOutputProgress(false);
+			$installer = Installer::create($this->io, $this->composer);
+			$installer->setPreferDist(!($gitAvailable || $mercurialAvailable || $subversionAvailable));
+
+			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
+				$installer->setUpdate(true);
+			}
+
+			$installer->run();
+
+			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+
+			// redirect to database update
+			$this->redirect('contao/main.php?do=composer&update=database');
+		}
+		catch (RuntimeException $e) {
+			$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
+			$this->reload();
+		}
 	}
 
+	/**
+	 * Remove a package from the requires list.
+	 *
+	 * @param Input $input
+	 */
+	protected function removePackage(Input $input)
+	{
+		$removeName = $input->post('remove');
+
+		// make a backup
+		copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
+
+		// update requires
+		$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+		$config = $json->read();
+		if (!array_key_exists('require', $config)) {
+			$config['require'] = array();
+		}
+		unset($config['require'][$removeName]);
+		$json->write($config);
+
+		$_SESSION['TL_INFO'][] = sprintf(
+			$GLOBALS['TL_LANG']['composer_client']['removeCandidate'],
+			$removeName
+		);
+
+		$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+	}
+
+	/**
+	 * Check the contao version in the config file and update if necessary.
+	 */
+	protected function checkContaoVersion()
+	{
+		/** @var \Composer\Package\RootPackage $package */
+		$package       = $this->composer->getPackage();
+		$versionParser = new VersionParser();
+		$version       = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
+		$prettyVersion = $versionParser->normalize($version);
+		if ($package->getVersion() !== $prettyVersion) {
+			$configFile            = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+			$configJson            = $configFile->read();
+			$configJson['version'] = $version;
+			$configFile->write($configJson);
+
+			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$this->reload();
+		}
+	}
+
+	/**
+	 * Build dependency graph of installed packages.
+	 *
+	 * @param RepositoryInterface $repository
+	 *
+	 * @return array
+	 */
 	protected function calculateDependencyGraph(RepositoryInterface $repository)
 	{
 		$dependencyGraph = array();
@@ -635,6 +755,13 @@ class ComposerClientBackend extends BackendModule
 		return $dependencyGraph;
 	}
 
+	/**
+	 * Fill the dependency graph with installed packages.
+	 *
+	 * @param RepositoryInterface $repository
+	 * @param PackageInterface    $package
+	 * @param array               $dependencyGraph
+	 */
 	protected function fillDependencyGraph(
 		RepositoryInterface $repository,
 		PackageInterface $package,
@@ -647,6 +774,15 @@ class ComposerClientBackend extends BackendModule
 		}
 	}
 
+	/**
+	 * Download an url and return or store contents.
+	 *
+	 * @param string $url
+	 * @param bool   $file
+	 *
+	 * @return bool|null|string
+	 * @throws Exception
+	 */
 	protected function download($url, $file = false)
 	{
 		$return = null;
