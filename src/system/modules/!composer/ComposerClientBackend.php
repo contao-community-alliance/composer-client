@@ -225,7 +225,9 @@ class ComposerClientBackend extends BackendModule
 		) {
 			require_once(TL_ROOT . '/composer/vendor/autoload.php');
 		}
-		else {
+
+		// register composer class loader from phar
+		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
 			$phar             = new Phar(TL_ROOT . '/composer/composer.phar');
 			$autoloadPathname = $phar['vendor/autoload.php'];
 			require_once($autoloadPathname->getPathname());
