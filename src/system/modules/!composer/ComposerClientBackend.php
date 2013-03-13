@@ -630,44 +630,12 @@ class ComposerClientBackend extends BackendModule
 				spl_autoload_unregister('__autoload');
 			}
 
-			$gitAvailable        = false;
-			$mercurialAvailable  = false;
-			$subversionAvailable = false;
-
-			// detect git
-			try {
-				$process = new Process('git --version');
-				$process->run();
-				$gitAvailable = true;
-			}
-			catch (RuntimeException $e) {
-			}
-
-			// detect mercurial
-			try {
-				$process = new Process('hg --version');
-				$process->run();
-				$mercurialAvailable = true;
-			}
-			catch (RuntimeException $e) {
-			}
-
-			// detect mercurial
-			try {
-				$process = new Process('svn --version');
-				$process->run();
-				$subversionAvailable = true;
-			}
-			catch (RuntimeException $e) {
-			}
-
 			$lockPathname = preg_replace('#\.json$#', '.lock', $this->configPathname);
 
 			$this->composer
 				->getDownloadManager()
 				->setOutputProgress(false);
 			$installer = Installer::create($this->io, $this->composer);
-			$installer->setPreferDist(!($gitAvailable || $mercurialAvailable || $subversionAvailable));
 
 			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
 				$installer->setUpdate(true);
