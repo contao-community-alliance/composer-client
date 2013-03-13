@@ -66,7 +66,9 @@ span.stability-dev {
 /**
  * Search result view
  */
-#tl_composer_search .col_name .name {
+#tl_composer_search .col_name .name,
+#tl_composer_search .col_name .name a {
+	color: maroon;
 	margin-top: 6px;
 	margin-bottom: 4px;
 	font-size: 14px;

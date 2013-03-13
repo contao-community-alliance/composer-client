@@ -37,7 +37,7 @@ $installationManager = $composer->getInstallationManager();
 			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 				<td class="tl_file_list col_name">
 					<div class="name">
-						<?php echo $package['name']; ?>
+						<a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>"><?php echo $package['name']; ?></a>
 					</div>
 					<div class="description">
 						<p><?php echo nl2br($package['description']); ?></p>
