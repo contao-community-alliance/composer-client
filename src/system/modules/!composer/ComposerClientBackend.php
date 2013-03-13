@@ -219,7 +219,7 @@ class ComposerClientBackend extends BackendModule
 		$this->increaseMemoryLimit();
 
 		// register composer class loader
-		if (file_exists(TL_ROOT . '/composer/vendor/composer/composer/src/Composer/Composer.php') ||
+		if (file_exists(TL_ROOT . '/composer/vendor/composer/composer/src/Composer/Composer.php') &&
 			file_exists(TL_ROOT . '/composer/vendor/autoload.php')
 		) {
 			require_once(TL_ROOT . '/composer/vendor/autoload.php');
