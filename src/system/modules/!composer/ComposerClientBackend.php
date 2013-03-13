@@ -277,8 +277,8 @@ class ComposerClientBackend extends BackendModule
 					spl_autoload_unregister('__autoload');
 				}
 
-				$gitAvailable = false;
-				$mercurialAvailable = false;
+				$gitAvailable        = false;
+				$mercurialAvailable  = false;
 				$subversionAvailable = false;
 
 				// detect git
@@ -467,15 +467,19 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function searchPackages(Composer $composer, array $tokens, $searchIn)
 	{
-		$platformRepo = new PlatformRepository;
-		$localRepository = $composer->getRepositoryManager()->getLocalRepository();
+		$platformRepo        = new PlatformRepository;
+		$localRepository     = $composer
+			->getRepositoryManager()
+			->getLocalRepository();
 		$installedRepository = new CompositeRepository(
 			array($localRepository, $platformRepo)
 		);
-		$repositories = new CompositeRepository(
+		$repositories        = new CompositeRepository(
 			array_merge(
 				array($installedRepository),
-				$composer->getRepositoryManager()->getRepositories()
+				$composer
+					->getRepositoryManager()
+					->getRepositories()
 			)
 		);
 
