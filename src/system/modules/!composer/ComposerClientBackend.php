@@ -45,22 +45,29 @@ class ComposerClientBackend extends BackendModule
 			return;
 		}
 
-		if (!file_exists(TL_ROOT . '/composer/composer.phar')) {
-			// switch template
-			$this->Template->setName('be_composer_client_install_composer');
+		/*
+		 * Use composer.phar only, if composer is not installed locally
+		 */
+		if (!file_exists(TL_ROOT . '/composer/vendor/composer/composer/src/Composer/Composer.php') ||
+			!file_exists(TL_ROOT . '/composer/vendor/autoload.php')
+		) {
+			if (!file_exists(TL_ROOT . '/composer/composer.phar')) {
+				// switch template
+				$this->Template->setName('be_composer_client_install_composer');
 
-			// do install composer library
-			if ($input->post('install')) {
-				$this->updateComposer();
-				$this->reload();
+				// do install composer library
+				if ($input->post('install')) {
+					$this->updateComposer();
+					$this->reload();
+				}
+
+				return;
 			}
 
-			return;
-		}
-
-		if ($input->get('update') == 'composer') {
-			$this->updateComposer();
-			$this->redirect('contao/main.php?do=composer');
+			if ($input->get('update') == 'composer') {
+				$this->updateComposer();
+				$this->redirect('contao/main.php?do=composer');
+			}
 		}
 
 		if ($input->get('update') == 'database') {
@@ -86,10 +93,17 @@ class ComposerClientBackend extends BackendModule
 		// try to increase memory limit
 		$this->increaseMemoryLimit();
 
-		// register embeded class loader
-		$phar             = new Phar(TL_ROOT . '/composer/composer.phar');
-		$autoloadPathname = $phar['vendor/autoload.php'];
-		require_once($autoloadPathname->getPathname());
+		// register composer class loader
+		if (file_exists(TL_ROOT . '/composer/vendor/composer/composer/src/Composer/Composer.php') ||
+			file_exists(TL_ROOT . '/composer/vendor/autoload.php')
+		) {
+			require_once(TL_ROOT . '/composer/vendor/autoload.php');
+		}
+		else {
+			$phar             = new Phar(TL_ROOT . '/composer/composer.phar');
+			$autoloadPathname = $phar['vendor/autoload.php'];
+			require_once($autoloadPathname->getPathname());
+		}
 
 		// reregister contao class loader
 		if (version_compare(VERSION, '3', '<')) {
