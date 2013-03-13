@@ -16,6 +16,7 @@ use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
 use Composer\Util\ConfigValidator;
+use Composer\DependencyResolver\Pool;
 use Symfony\Component\Process\Process;
 
 class ComposerClientBackend extends BackendModule
@@ -511,75 +512,42 @@ class ComposerClientBackend extends BackendModule
 		return $packages;
 	}
 
+	/**
+	 * @param Composer $composer
+	 * @param          $packageName
+	 *
+	 * @return PackageInterface[]
+	 */
 	protected function searchPackage(Composer $composer, $packageName)
 	{
-		// collect repositories
-		$localRepository       = $composer
+		$platformRepo        = new PlatformRepository;
+		$localRepository     = $composer
 			->getRepositoryManager()
 			->getLocalRepository();
-		$platformRepository    = new PlatformRepository();
-		$installedRepositories = new CompositeRepository(
-			array(
-				$localRepository,
-				$platformRepository
+		$installedRepository = new CompositeRepository(
+			array($localRepository, $platformRepo)
+		);
+		$repositories        = new CompositeRepository(
+			array_merge(
+				array($installedRepository),
+				$composer
+					->getRepositoryManager()
+					->getRepositories()
 			)
 		);
-		$repositories          = array_merge(
-			array($installedRepositories),
-			$composer
-				->getRepositoryManager()
-				->getRepositories()
-		);
 
-		// remove packagist.org repository from composition
-		$packagistRepository = null;
-		$packagistBaseUrl    = null;
-		/** @var \Composer\Repository\ComposerRepository $repository */
-		foreach ($repositories as $index => $repository) {
-			if ($repository instanceof ComposerRepository) {
-				$class       = new ReflectionClass($repository);
-				$urlProperty = $class->getProperty('baseUrl');
-				$urlProperty->setAccessible(true);
-				$url = $urlProperty->getValue($repository);
-
-				if (preg_match('#^https?://packagist\.org#', $url)) {
-					$packagistRepository = $repository;
-					$packagistBaseUrl    = $url;
-					unset($repositories[$index]);
-					break;
-				}
-			}
-		}
-
-		$repositories = new CompositeRepository($repositories);
+		$pool = new Pool('dev');
+		$pool->addRepository($repositories);
 
 		$versions = array();
-
-		$repositories->filterPackages(
-			function (PackageInterface $package) use ($packageName, &$versions) {
-				if ($package instanceof AliasPackage) {
-					return;
-				}
-				if ($package->getName() == $packageName) {
-					$versions[$package->getVersion() . '@' . $package->getStability()] = $package;
-				}
-			},
-			'Composer\Package\CompletePackage'
-		);
-
-		// quick search on packagist.org
-		if ($packagistRepository && $packagistBaseUrl) {
-			$jsonString = $this->download($packagistBaseUrl . '/packages/' . $packageName . '.json');
-			$json       = json_decode($jsonString, true);
-
-			if (isset($json['package']) && isset($json['package']['versions'])) {
-				foreach ($json['package']['versions'] as $packageArray) {
-					$package = $packagistRepository->loadPackage(array('raw' => $packageArray));
-					if ($package->getName() == $packageName) {
-						$versions[$package->getVersion() . '@' . $package->getStability()] = $package;
-					}
-				}
+		$matches  = $pool->whatProvides($packageName);
+		foreach ($matches as $package) {
+			// skip providers/replacers
+			if ($package->getName() !== $packageName) {
+				continue;
 			}
+
+			$versions[] = $package;
 		}
 
 		usort(
