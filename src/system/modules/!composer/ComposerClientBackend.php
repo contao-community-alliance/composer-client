@@ -212,7 +212,6 @@ class ComposerClientBackend extends BackendModule
 
 		// unregister contao class loader
 		if (version_compare(VERSION, '3', '<')) {
-			class_exists('File'); // preload class File
 			spl_autoload_unregister('__autoload');
 		}
 
@@ -232,17 +231,20 @@ class ComposerClientBackend extends BackendModule
 			$autoloadPathname = $phar['vendor/autoload.php'];
 			require_once($autoloadPathname->getPathname());
 
-			// search for composer build version
-			$composerDevWarningTime = $this->readComposerDevWarningTime();
-			if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
-				$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
-				$this->Template->composerUpdate = true;
-			}
 		}
 
 		// reregister contao class loader
 		if (version_compare(VERSION, '3', '<')) {
 			spl_autoload_register('__autoload');
+		}
+
+		// search for composer build version
+		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
+			$composerDevWarningTime = $this->readComposerDevWarningTime();
+			if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
+				$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
+				$this->Template->composerUpdate = true;
+			}
 		}
 
 		// define pathname to config file
