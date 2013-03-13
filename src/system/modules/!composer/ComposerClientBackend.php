@@ -212,6 +212,7 @@ class ComposerClientBackend extends BackendModule
 
 		// unregister contao class loader
 		if (version_compare(VERSION, '3', '<')) {
+			class_exists('File'); // preload class File
 			spl_autoload_unregister('__autoload');
 		}
 
