@@ -1,0 +1,8 @@
+<br>
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['php_version_headline']; ?></h2>
+
+<div class="tl_formbody_edit">
+	<p>
+		<div class="tl_error"><?php printf($GLOBALS['TL_LANG']['composer_client']['php_version'], PHP_VERSION); ?></div>
+	</p>
+</div>

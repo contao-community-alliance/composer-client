@@ -37,6 +37,14 @@ class ComposerClientBackend extends BackendModule
 			return;
 		}
 
+		// check for php version
+		if (version_compare(PHP_VERSION, '5.3.4', '<')) {
+			// switch template
+			$this->Template->setName('be_composer_client_php_version');
+
+			return;
+		}
+
 		if (!file_exists(TL_ROOT . '/composer/composer.phar')) {
 			// switch template
 			$this->Template->setName('be_composer_client_install_composer');
