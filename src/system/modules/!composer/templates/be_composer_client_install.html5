@@ -251,7 +251,14 @@ $source = $preferedCandidate->getSourceUrl();
 									echo $reference;
 								}
 							?></span>
-						<span class="release-date"><?php echo $candidate->getReleaseDate()->format($GLOBALS['TL_CONFIG']['datimFormat']); ?></span>
+						<span class="release-date"><?php
+								$relDate = $candidate->getReleaseDate();
+								if ($relDate) {
+									echo $relDate->format($GLOBALS['TL_CONFIG']['datimFormat']);
+								} else {
+									echo $GLOBALS['TL_LANG']['composer_client']['no_releasedate'];
+								}
+							?></span>
 						<span class="license"><?php
 								$license = $candidate->getLicense();
 								if (empty($license)):
