@@ -541,7 +541,7 @@ class ComposerClientBackend extends BackendModule
 		$packageName = $input->get('install');
 
 		if ($input->post('version')) {
-			$version = $input->post('version');
+			$version = $input->post('version', true);
 
 			// make a backup
 			copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
