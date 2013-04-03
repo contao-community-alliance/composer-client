@@ -611,14 +611,18 @@ class ComposerClientBackend extends BackendModule
 		$pool->addRepository($repositories);
 
 		$versions = array();
+		$seen = array();
 		$matches  = $pool->whatProvides($packageName);
 		foreach ($matches as $package) {
 			// skip providers/replacers
 			if ($package->getName() !== $packageName) {
 				continue;
 			}
-
-			$versions[] = $package;
+			// add each version only once to skip installed version.
+			if (!in_array($package->getPrettyVersion(), $seen)) {
+				$seen[] = $package->getPrettyVersion();
+				$versions[] = $package;
+			}
 		}
 
 		usort(
