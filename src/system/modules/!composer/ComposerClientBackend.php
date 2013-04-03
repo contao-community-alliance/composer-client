@@ -624,11 +624,12 @@ class ComposerClientBackend extends BackendModule
 		usort(
 			$versions,
 			function (PackageInterface $packageA, PackageInterface $packageB) {
-				return $packageB
-					->getReleaseDate()
-					->getTimestamp() - $packageA
-					->getReleaseDate()
-					->getTimestamp();
+				// is this a wise idea?
+				if (($dsa = $packageA->getReleaseDate()) && ($dsb = $packageB->getReleaseDate()))
+				{
+					return $dsb->getTimestamp() - $dsa->getTimestamp();
+				}
+
 				/*
 				$versionA = $this->reformatVersion($packageA);
 				$versionB = $this->reformatVersion($packageB);
