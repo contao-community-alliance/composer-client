@@ -240,7 +240,7 @@ $source = $preferedCandidate->getSourceUrl();
 				?>
 				<div class="release stability-<?php echo strtolower($candidate->getStability()); ?>">
 					<div class="toggler">
-						<span class="version"><?php echo $candidate->getPrettyVersion(); ?></span>
+						<span class="version"><?php echo $candidate->getPrettyVersion(); ?> <?php echo $candidate->getInstallationSource(); ?></span>
 						<span class="reference"><?php
 								echo $GLOBALS['TL_LANG']['composer_client']['package_reference'] . ': ';
 								$reference = $candidate->getDistReference();
