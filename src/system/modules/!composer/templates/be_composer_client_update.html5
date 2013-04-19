@@ -1,0 +1,27 @@
+<div id="tl_buttons">
+	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+	</a>
+</div>
+
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['update_database']; ?></h2>
+
+<?php echo $this->getMessages(); ?>
+
+<form action="contao/main.php?do=composer&amp;update=database"
+	  class="tl_form" method="post" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+	<input type="hidden" name="FORM_SUBMIT" value="database-update">
+
+	<div class="tl_formbody_edit">
+		<div class="tl_tbox">
+			<?php echo $this->form; ?>
+		</div>
+	</div>
+
+	<div class="tl_formbody_submit">
+		<div class="tl_submit_container">
+			<input type="submit" name="save" accesskey="s" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['update_database']; ?>" class="tl_submit">
+		</div>
+	</div>
+</form>

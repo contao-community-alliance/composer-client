@@ -233,6 +233,22 @@ span.stability-dev {
 }
 
 /**
+ * Database update
+ */
+table#sql_table {
+	width: 100%;
+}
+table#sql_table td {
+	padding: 4px;
+}
+table#sql_table td.tl_col_1 {
+	width: 16px;
+}
+table#sql_table td.tl_col_2 label {
+	font-family: Consolas, monospace;
+}
+
+/**
  * Experts mode
  */
 #composer_client_editor_wrapper {

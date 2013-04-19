@@ -77,6 +77,8 @@ $GLOBALS['TL_LANG']['composer_client']['configValid']              = 'Die Konfig
 $GLOBALS['TL_LANG']['composer_client']['removePackage']            = 'Paket entfernen';
 $GLOBALS['TL_LANG']['composer_client']['confirmRemove']            = 'Möchten Sie das Paket %s wirklich entferen?';
 $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']              = 'wird entfernt';
+$GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Datenbank aktualisiert, %d Queries wurden ausgeführt.';
+$GLOBALS['TL_LANG']['composer_client']['databaseUptodate']         = 'Datenbank ist aktuell.';
 
 /**
  * Buttons

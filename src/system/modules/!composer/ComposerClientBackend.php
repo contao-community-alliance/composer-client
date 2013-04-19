@@ -71,7 +71,7 @@ class ComposerClientBackend extends BackendModule
 		$this->loadComposer();
 
 		if ($input->get('update') == 'database') {
-			$this->updateDatabase();
+			$this->updateDatabase($input);
 			return;
 		}
 
@@ -326,18 +326,51 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Update the database scheme
 	 */
-	protected function updateDatabase()
+	protected function updateDatabase(Input $input)
 	{
-		if (
-			version_compare(VERSION, '3', '<') &&
-			in_array('rep_client', $this->Config->getActiveModules()) ||
-			version_compare(VERSION, '3', '>=') &&
-			in_array('repository', $this->Config->getActiveModules())
-		) {
-			$this->redirect('contao/main.php?do=repository_manager&update=database');
+		$this->handleRunOnce(); // PATCH
+
+		if ($input->post('FORM_SUBMIT') == 'database-update') {
+			$count = 0;
+			$sql = deserialize($input->post('sql'));
+			if (is_array($sql)) {
+				foreach ($sql as $key) {
+					if (isset($_SESSION['sql_commands'][$key])) {
+						$this->Database->query(
+							str_replace(
+								'DEFAULT CHARSET=utf8;',
+								'DEFAULT CHARSET=utf8 COLLATE ' . $GLOBALS['TL_CONFIG']['dbCollation'] . ';',
+								$_SESSION['sql_commands'][$key]
+							)
+						);
+						$count++;
+					}
+				}
+			}
+			$_SESSION['sql_commands'] = array();
+			$_SESSION['TL_CONFIRM'][] = sprintf($GLOBALS['TL_LANG']['composer_client']['databaseUpdated'], $count);
+			$this->reload();
 		}
 
-		$this->redirect('contao/install.php');
+		if (version_compare(VERSION, '3', '>=')) {
+			/** @var \Contao\Database\Installer $installer */
+			$installer = System::importStatic('Database\Installer');
+		}
+		else {
+			$this->import('DbInstaller');
+			/** @var \DbInstaller $installer */
+			$installer = $this->DbInstaller;
+		}
+
+		$form = $installer->generateSqlForm();
+
+		if (empty($_SESSION['sql_commands'])) {
+			$_SESSION['TL_INFO'][] = $GLOBALS['TL_LANG']['composer_client']['databaseUptodate'];
+			$this->redirect('contao/main.php?do=composer');
+		}
+
+		$this->Template->setName('be_composer_client_update');
+		$this->Template->form = $form;
 	}
 
 	/**
