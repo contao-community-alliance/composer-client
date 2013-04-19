@@ -62,7 +62,13 @@ EOF;
     "config": {
         "preferred-install": "dist", 
     	"cache-dir": "cache"
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://legacy-packages-via.contao-community-alliance.org/"
+        }
+    ]
 }
 EOF;
 
