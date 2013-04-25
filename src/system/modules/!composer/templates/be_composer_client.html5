@@ -89,7 +89,13 @@ $dependencyCount = 0;
 		</thead>
 		<tbody>
 		<tr class="even" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
-			<td class="tl_file_list col_type"><span class="label contao core">CONTAO</span></td>
+			<td class="tl_file_list col_type"><?php
+				echo $this->generateImage(
+					'composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-contao-module.png',
+					'contao-core',
+					'title="contao-core"'
+				);
+				?></td>
 			<td class="tl_file_list col_icon"></td>
 			<td class="tl_file_list col_name"><?php echo $package->getPrettyName(); ?></td>
 			<td class="tl_file_list col_requested_version"></td>
@@ -105,19 +111,11 @@ $dependencyCount = 0;
 		<?php $n = 1; foreach ($localPackages as $localPackage): ?>
 			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (isset($dependencyGraph[$localPackage->getName()])): ?> dependency<?php endif; ?>" <?php if (isset($dependencyGraph[$localPackage->getName()])): ?> style="display: none"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 				<td class="tl_file_list col_type"><?php
-						switch ($localPackage->getType()) {
-							case 'contao-module':
-								printf('<span class="label contao" title="%s">CONTAO</span>', $localPackage->getType());
-								break;
-							case 'legacy-contao-module':
-								printf('<span class="label contao legacy" title="%s">CONTAO LEGACY</span>', $localPackage->getType());
-								break;
-							case 'composer-installer':
-								printf('<span class="label composer" title="%s">COMPOSER</span>', $localPackage->getType());
-								break;
-							default:
-								printf('<span class="label php" title="%s">PHP</span>', $localPackage->getType());
-						}
+					echo $this->generateImage(
+						sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $localPackage->getType()),
+						$localPackage->getType(),
+						sprintf('title="%s"', $localPackage->getType())
+					);
 					?></td>
 				<td class="tl_file_list col_icon">
 					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
