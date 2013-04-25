@@ -693,12 +693,17 @@ class ComposerClientBackend extends BackendModule
 				$installer->setUpdate(true);
 			}
 
-			$installer->run();
+			if ($installer->run()) {
+				$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
 
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+				// redirect to database update
+				$this->redirect('contao/main.php?do=composer&update=database');
+			}
+			else {
+				$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
 
-			// redirect to database update
-			$this->redirect('contao/main.php?do=composer&update=database');
+				$this->redirect('contao/main.php?do=composer');
+			}
 		}
 		catch (RuntimeException $e) {
 			$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
