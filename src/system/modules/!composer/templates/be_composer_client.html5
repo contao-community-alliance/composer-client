@@ -234,6 +234,7 @@ $dependencyCount = 0;
 		<?php endforeach; ?>
 		<?php foreach ($requires as $requireName => $requireLink): ?>
 			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+				<td class="tl_file_list col_type"></td>
 				<td class="tl_file_list col_icon"><?php
 						echo $this->generateImage(
 							'system/modules/!composer/assets/images/not_installed.png',

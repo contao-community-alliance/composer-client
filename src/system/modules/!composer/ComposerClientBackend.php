@@ -450,12 +450,14 @@ class ComposerClientBackend extends BackendModule
 		$tokens = array_map('trim', $tokens);
 		$tokens = array_filter($tokens);
 
+		$searchName = count($tokens) == 1 && strpos($tokens[0], '/') !== false;
+
 		if (empty($tokens)) {
 			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
 			$this->redirect('contao/main.php?do=composer');
 		}
 
-		$packages = $this->searchPackages($tokens, RepositoryInterface::SEARCH_FULLTEXT);
+		$packages = $this->searchPackages($tokens, $searchName ? RepositoryInterface::SEARCH_NAME : RepositoryInterface::SEARCH_FULLTEXT);
 
 		if (empty($packages)) {
 			$_SESSION['TL_ERROR'][] = sprintf(
