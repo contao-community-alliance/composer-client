@@ -92,6 +92,10 @@ EOF;
         	spl_autoload_register('__autoload');
 		}
     }
+
+	if (!getenv('HOME') && !getenv('COMPOSER_HOME')) {
+		putenv('COMPOSER_HOME=' . COMPOSER_DIR_ABSOULTE);
+	}
 }
 
 /**
