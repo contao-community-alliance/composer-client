@@ -49,6 +49,24 @@ span.stability-dev {
 .col_action select {
 	vertical-align: middle;
 }
+.col_type .label {
+	display: inline-block;
+	padding: 3px 3px 1px;
+	border-radius: 3px;
+	background-color: #333;
+	color: #fff;
+	font-family: monospace;
+	font-size: 10px;
+}
+.col_type .label.php {
+	background-color: #626283;
+}
+.col_type .label.composer {
+	background-color: #66543C;
+}
+.col_type .label.contao {
+	background-color: #AE5500;
+}
 .col_name {
 	padding: 4px 0;
 }
@@ -61,6 +79,12 @@ span.stability-dev {
 .col_name .description p {
 	color: #666;
 	margin-top: 12px;
+}
+p.dependencies {
+	padding: 2px 6px 3px;
+}
+p.dependencies input {
+	vertical-align: middle;
 }
 
 /**
@@ -240,6 +264,7 @@ table#sql_table {
 }
 table#sql_table td {
 	padding: 4px;
+	vertical-align: top;
 }
 table#sql_table td.tl_col_1 {
 	width: 16px;

@@ -51,10 +51,19 @@ foreach ($localPackages as $index => $localPackage) {
 }
 usort(
 	$localPackages,
-	function(\Composer\Package\PackageInterface $packageA, \Composer\Package\PackageInterface $packageB) {
+	function(\Composer\Package\PackageInterface $packageA, \Composer\Package\PackageInterface $packageB) use ($dependencyGraph) {
+		$packageAisDependency = isset($dependencyGraph[$packageA->getName()]);
+		$packageBisDependency = isset($dependencyGraph[$packageB->getName()]);
+		if ($packageAisDependency && !$packageBisDependency) {
+			return 1;
+		}
+		else if (!$packageAisDependency && $packageBisDependency) {
+			return -1;
+		}
 		return strcasecmp($packageA->getName(), $packageB->getName());
 	}
 );
+$dependencyCount = 0;
 /** @var \Composer\Package\PackageInterface $localPackage */
 /** @var string $requireName */
 /** @var \Composer\Package\Link $requireLink */
@@ -70,6 +79,7 @@ usort(
 	<table class="tl_listing showColumns">
 		<thead>
 		<tr>
+			<th class="tl_folder_tlist col_type">&nbsp;</th>
 			<th class="tl_folder_tlist col_icon">&nbsp;</th>
 			<th class="tl_folder_tlist col_name"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
 			<th class="tl_folder_tlist col_requested_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_requested_version']; ?></th>
@@ -79,6 +89,7 @@ usort(
 		</thead>
 		<tbody>
 		<tr class="even" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+			<td class="tl_file_list col_type"><span class="label contao core">CONTAO</span></td>
 			<td class="tl_file_list col_icon"></td>
 			<td class="tl_file_list col_name"><?php echo $package->getPrettyName(); ?></td>
 			<td class="tl_file_list col_requested_version"></td>
@@ -92,9 +103,28 @@ usort(
 			<td class="tl_file_list col_remove"> </td>
 		</tr>
 		<?php $n = 1; foreach ($localPackages as $localPackage): ?>
-			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
-				<td class="tl_file_list col_icon"><?php
+			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (isset($dependencyGraph[$localPackage->getName()])): ?> dependency<?php endif; ?>" <?php if (isset($dependencyGraph[$localPackage->getName()])): ?> style="display: none"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+				<td class="tl_file_list col_type"><?php
+						switch ($localPackage->getType()) {
+							case 'contao-module':
+								printf('<span class="label contao" title="%s">CONTAO</span>', $localPackage->getType());
+								break;
+							case 'legacy-contao-module':
+								printf('<span class="label contao legacy" title="%s">CONTAO LEGACY</span>', $localPackage->getType());
+								break;
+							case 'composer-installer':
+								printf('<span class="label composer" title="%s">COMPOSER</span>', $localPackage->getType());
+								break;
+							default:
+								printf('<span class="label php" title="%s">PHP</span>', $localPackage->getType());
+						}
+					?></td>
+				<td class="tl_file_list col_icon">
+					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
+						<?php
 						if (isset($dependencyGraph[$localPackage->getName()])) {
+							$dependencyCount ++;
+
 							$title = sprintf(
 								$GLOBALS['TL_LANG']['composer_client']['dependency_of'],
 								implode(', ', array_keys($dependencyGraph[$localPackage->getName()]))
@@ -105,10 +135,14 @@ usort(
 								'title="' . specialchars($title) . '"'
 							);
 						}
-					?></td>
+						?>
+					</a>
+				</td>
 				<td class="tl_file_list col_name">
 					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
-						<?php echo $localPackage->getPrettyName(); ?>
+						<?php
+						echo $localPackage->getPrettyName();
+						?>
 					</a>
 				</td>
 				<td class="tl_file_list col_requested_version"><?php
@@ -127,7 +161,7 @@ usort(
 							}
 
 							printf(
-								'<span class="stability-%s">%s</span>',
+								'<span class="stability-%s">%s</span><br>',
 								strtolower($stability),
 								$link->getPrettyConstraint()
 							);
@@ -247,6 +281,7 @@ usort(
 		<?php endforeach; ?>
 		</tbody>
 	</table>
+	<p class="dependencies"><label><input type="checkbox" onchange="$$('tr.dependency').setStyle('display', this.checked ? '' : 'none');"> <?php printf($GLOBALS['TL_LANG']['composer_client']['show_dependencies'], $dependencyCount) ?></label></p>
 </div>
 
 <?php

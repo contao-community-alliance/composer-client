@@ -54,6 +54,7 @@ $GLOBALS['TL_LANG']['composer_client']['install_via']               = 'via %s: %
 $GLOBALS['TL_LANG']['composer_client']['dependency_of']             = 'Abhängigkeit von %s';
 $GLOBALS['TL_LANG']['composer_client']['installed_in']              = 'installiert in Version %s';
 $GLOBALS['TL_LANG']['composer_client']['no_releasedate']            = '-';
+$GLOBALS['TL_LANG']['composer_client']['show_dependencies']         = '%d Abhängigkeiten installiert';
 
 /**
  * Versions
