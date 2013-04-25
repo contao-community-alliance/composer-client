@@ -111,11 +111,22 @@ $dependencyCount = 0;
 		<?php $n = 1; foreach ($localPackages as $localPackage): ?>
 			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (isset($dependencyGraph[$localPackage->getName()])): ?> dependency<?php endif; ?>" <?php if (isset($dependencyGraph[$localPackage->getName()])): ?> style="display: none"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 				<td class="tl_file_list col_type"><?php
-					echo $this->generateImage(
-						sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $localPackage->getType()),
-						$localPackage->getType(),
-						sprintf('title="%s"', $localPackage->getType())
-					);
+					$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $localPackage->getType());
+					if (file_exists(TL_ROOT . '/' . $icon)) {
+						echo $this->generateImage(
+							$icon,
+							$localPackage->getType(),
+							sprintf('title="%s"', $localPackage->getType())
+						);
+					}
+					else {
+						printf(
+							'<span class="label %s" title="%s">%s</span>',
+							strtolower($localPackage->getType()),
+							$localPackage->getType(),
+							strtoupper($localPackage->getType())
+						);
+					}
 					?></td>
 				<td class="tl_file_list col_icon">
 					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">

@@ -49,6 +49,15 @@ span.stability-dev {
 .col_action select {
 	vertical-align: middle;
 }
+.col_type .label {
+	display: inline-block;
+	padding: 3px 3px 1px;
+	border-radius: 3px;
+	background-color: #333;
+	color: #fff;
+	font-family: monospace;
+	font-size: 10px;
+}
 .col_name {
 	padding: 4px 0;
 }
