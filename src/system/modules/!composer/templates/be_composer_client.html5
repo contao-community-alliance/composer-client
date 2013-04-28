@@ -40,8 +40,8 @@ $requires = $package->getRequires();
 $stabilityFlags = $package->getStabilityFlags();
 /** @var array $stabilitiesReverseMap */
 $stabilitiesReverseMap = array_flip(\Composer\Package\BasePackage::$stabilities);
-/** @var array $dependencyGraph */
-$dependencyGraph = $this->dependencyGraph;
+/** @var array $dependencyMap */
+$dependencyMap = $this->dependencyMap;
 /** @var array $localPackages */
 $localPackages = $localRepository->getPackages();
 foreach ($localPackages as $index => $localPackage) {
@@ -51,9 +51,9 @@ foreach ($localPackages as $index => $localPackage) {
 }
 usort(
 	$localPackages,
-	function(\Composer\Package\PackageInterface $packageA, \Composer\Package\PackageInterface $packageB) use ($dependencyGraph) {
-		$packageAisDependency = isset($dependencyGraph[$packageA->getName()]);
-		$packageBisDependency = isset($dependencyGraph[$packageB->getName()]);
+	function(\Composer\Package\PackageInterface $packageA, \Composer\Package\PackageInterface $packageB) use ($dependencyMap) {
+		$packageAisDependency = isset($dependencyMap[$packageA->getName()]);
+		$packageBisDependency = isset($dependencyMap[$packageB->getName()]);
 		if ($packageAisDependency && !$packageBisDependency) {
 			return 1;
 		}
@@ -109,7 +109,7 @@ $dependencyCount = 0;
 			<td class="tl_file_list col_remove"> </td>
 		</tr>
 		<?php $n = 1; foreach ($localPackages as $localPackage): ?>
-			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (isset($dependencyGraph[$localPackage->getName()])): ?> dependency<?php endif; ?>" <?php if (isset($dependencyGraph[$localPackage->getName()])): ?> style="display: none"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (isset($dependencyMap[$localPackage->getName()])): ?> dependency<?php endif; ?>" <?php if (isset($dependencyMap[$localPackage->getName()])): ?> style="display: none"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 				<td class="tl_file_list col_type"><?php
 					$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $localPackage->getType());
 					if (file_exists(TL_ROOT . '/' . $icon)) {
@@ -131,12 +131,12 @@ $dependencyCount = 0;
 				<td class="tl_file_list col_icon">
 					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
 						<?php
-						if (isset($dependencyGraph[$localPackage->getName()])) {
+						if (isset($dependencyMap[$localPackage->getName()])) {
 							$dependencyCount ++;
 
 							$title = sprintf(
 								$GLOBALS['TL_LANG']['composer_client']['dependency_of'],
-								implode(', ', array_keys($dependencyGraph[$localPackage->getName()]))
+								implode(', ', array_keys($dependencyMap[$localPackage->getName()]))
 							);
 							echo $this->generateImage(
 								'system/modules/!composer/assets/images/dependency.png',
@@ -156,7 +156,7 @@ $dependencyCount = 0;
 				</td>
 				<td class="tl_file_list col_requested_version"><?php
 						$removePossible = isset($requires[$localPackage->getName()]);
-						$removeRequested = !$removePossible && !isset($dependencyGraph[$localPackage->getName()]);
+						$removeRequested = !$removePossible && !isset($dependencyMap[$localPackage->getName()]);
 
 						if (isset($requires[$localPackage->getName()])) {
 							/** @var \Composer\Package\Link $link */
@@ -177,9 +177,9 @@ $dependencyCount = 0;
 
 							unset($requires[$localPackage->getName()]);
 						}
-						if (isset($dependencyGraph[$localPackage->getName()])) {
+						if (isset($dependencyMap[$localPackage->getName()])) {
 							$constraints = array();
-							foreach ($dependencyGraph[$localPackage->getName()] as $parentName => $versionConstraint) {
+							foreach ($dependencyMap[$localPackage->getName()] as $parentName => $versionConstraint) {
 								if (preg_match('#@(dev|alpha|beta|rc|stable)#', strtolower($versionConstraint), $matches)) {
 									$stability = $matches[1];
 								}
@@ -291,7 +291,7 @@ $dependencyCount = 0;
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-	<p class="dependencies"><label><input type="checkbox" onchange="$$('tr.dependency').setStyle('display', this.checked ? '' : 'none');"> <?php printf($GLOBALS['TL_LANG']['composer_client']['show_dependencies'], $dependencyCount) ?></label></p>
+	<p class="dependencies"><label><input type="checkbox" onchange="$$('tr.dependency').setStyle('display', this.checked ? '' : 'none');"> <?php printf($GLOBALS['TL_LANG']['composer_client']['show_dependencies'], $dependencyCount) ?></label> (<a href="contao/main.php?do=composer&amp;show=dependency-graph"><?php echo $GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']; ?></a>)</p>
 </div>
 
 <?php
