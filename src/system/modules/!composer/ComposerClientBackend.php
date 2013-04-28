@@ -80,6 +80,11 @@ class ComposerClientBackend extends BackendModule
 			return;
 		}
 
+		if ($input->get('show') == 'dependency-graph') {
+			$this->showDependencyGraph($input);
+			return;
+		}
+
 		// do search
 		if ($input->get('keyword')) {
 			$this->doSearch($input);
@@ -109,13 +114,13 @@ class ComposerClientBackend extends BackendModule
 		$this->checkContaoVersion();
 
 		// calculate dependency graph
-		$dependencyGraph = $this->calculateDependencyGraph(
+		$dependencyMap = $this->calculateDependencyMap(
 			$this->composer
 				->getRepositoryManager()
 				->getLocalRepository()
 		);
 
-		$this->Template->dependencyGraph = $dependencyGraph;
+		$this->Template->dependencyMap = $dependencyMap;
 		$this->Template->output          = $_SESSION['COMPOSER_OUTPUT'];
 
 		unset($_SESSION['COMPOSER_OUTPUT']);
@@ -332,7 +337,7 @@ class ComposerClientBackend extends BackendModule
 
 		if ($input->post('FORM_SUBMIT') == 'database-update') {
 			$count = 0;
-			$sql = deserialize($input->post('sql'));
+			$sql   = deserialize($input->post('sql'));
 			if (is_array($sql)) {
 				foreach ($sql as $key) {
 					if (isset($_SESSION['sql_commands'][$key])) {
@@ -438,11 +443,127 @@ class ComposerClientBackend extends BackendModule
 	}
 
 	/**
+	 * Show graph of dependencies.
+	 *
+	 * @param \Input $input
+	 */
+	protected function showDependencyGraph(Input $input)
+	{
+		$localRepository = $this->composer
+			->getRepositoryManager()
+			->getLocalRepository();
+
+		$dependencyMap = $this->calculateDependencyMap($localRepository);
+
+		$dependencyGraph = array();
+
+		$localPackages = $localRepository->getPackages();
+
+		$localPackages = array_filter(
+			$localPackages,
+			function ($localPackage) use ($dependencyMap) {
+				return !isset($dependencyMap[$localPackage->getName()]) && !($localPackage instanceof \Composer\Package\AliasPackage);
+			}
+		);
+
+		$allLocalPackages = $localRepository->getPackages();
+		$allLocalPackages = array_combine(
+			array_map(
+				function ($localPackage) {
+					return $localPackage->getName();
+				},
+				$allLocalPackages
+			),
+			$allLocalPackages
+		);
+
+		$localPackagesCount = count($localPackages);
+		$index = 0;
+
+		/** @var \Composer\Package\PackageInterface $package */
+		foreach ($localPackages as $package) {
+			$this->buildDependencyGraph(
+				$allLocalPackages,
+				$localRepository,
+				$package,
+				null,
+				$package->getPrettyVersion(),
+				$dependencyGraph,
+				++$index == $localPackagesCount
+			);
+		}
+
+		$this->Template->setName('be_composer_client_dependency_graph');
+		$this->Template->dependencyGraph = $dependencyGraph;
+	}
+
+	/**
+	 * Build the dependency graph with installed packages.
+	 *
+	 * @param RepositoryInterface $repository
+	 * @param PackageInterface    $package
+	 * @param array               $dependencyGraph
+	 */
+	protected function buildDependencyGraph(
+		array $localPackages,
+		RepositoryInterface $repository,
+		PackageInterface $package,
+		$requiredFrom,
+		$requiredConstraint,
+		array &$dependencyGraph,
+		$isLast,
+		$parents = 0
+	) {
+		$current = (object) array(
+			'package'  => $package,
+			'required' => (object) array(
+				'from'       => $requiredFrom,
+				'constraint' => $requiredConstraint,
+				'parents'    => $parents,
+			),
+			'lastInLevel' => $isLast ? $parents - 1 : -1
+		);
+		$dependencyGraph[] = $current;
+
+		$requires = $package->getRequires();
+		$requiresCount = count($requires);
+		$index = 0;
+		/** @var string $requireName */
+		/** @var \Composer\Package\Link $requireLink */
+		foreach ($requires as $requireName => $requireLink) {
+			if (isset($localPackages[$requireName])) {
+				$this->buildDependencyGraph(
+					$localPackages,
+					$repository,
+					$localPackages[$requireName],
+					$package,
+					$requireLink->getPrettyConstraint(),
+					$dependencyGraph,
+					++$index == $requiresCount,
+					$parents + 1
+				);
+			}
+			else {
+				$dependencyGraph[] = (object) array(
+					'package'  => $requireName,
+					'required' => (object) array(
+						'from'       => $package,
+						'constraint' => $requireLink->getPrettyConstraint(),
+						'parents'    => $parents + 1,
+					),
+					'lastInLevel' => ++$index == $requiresCount ? $parents : -1
+				);
+			}
+		}
+	}
+
+
+	/**
 	 * Do a package search.
 	 *
 	 * @param Input $input
 	 */
-	protected  function doSearch(Input $input)
+	protected function doSearch(Input $input)
 	{
 		$keyword = $input->get('keyword');
 
@@ -457,7 +578,10 @@ class ComposerClientBackend extends BackendModule
 			$this->redirect('contao/main.php?do=composer');
 		}
 
-		$packages = $this->searchPackages($tokens, $searchName ? RepositoryInterface::SEARCH_NAME : RepositoryInterface::SEARCH_FULLTEXT);
+		$packages = $this->searchPackages(
+			$tokens,
+			$searchName ? RepositoryInterface::SEARCH_NAME : RepositoryInterface::SEARCH_FULLTEXT
+		);
 
 		if (empty($packages)) {
 			$_SESSION['TL_ERROR'][] = sprintf(
@@ -613,7 +737,7 @@ class ComposerClientBackend extends BackendModule
 		$pool->addRepository($repositories);
 
 		$versions = array();
-		$seen = array();
+		$seen     = array();
 		$matches  = $pool->whatProvides($packageName);
 		foreach ($matches as $package) {
 			// skip providers/replacers
@@ -622,7 +746,7 @@ class ComposerClientBackend extends BackendModule
 			}
 			// add each version only once to skip installed version.
 			if (!in_array($package->getPrettyVersion(), $seen)) {
-				$seen[] = $package->getPrettyVersion();
+				$seen[]     = $package->getPrettyVersion();
 				$versions[] = $package;
 			}
 		}
@@ -631,8 +755,7 @@ class ComposerClientBackend extends BackendModule
 			$versions,
 			function (PackageInterface $packageA, PackageInterface $packageB) {
 				// is this a wise idea?
-				if (($dsa = $packageA->getReleaseDate()) && ($dsb = $packageB->getReleaseDate()))
-				{
+				if (($dsa = $packageA->getReleaseDate()) && ($dsb = $packageB->getReleaseDate())) {
 					return $dsb->getTimestamp() - $dsa->getTimestamp();
 				}
 
@@ -768,16 +891,16 @@ class ComposerClientBackend extends BackendModule
 	 *
 	 * @return array
 	 */
-	protected function calculateDependencyGraph(RepositoryInterface $repository)
+	protected function calculateDependencyMap(RepositoryInterface $repository, $inverted = false)
 	{
-		$dependencyGraph = array();
+		$dependencyMap = array();
 
 		/** @var \Composer\Package\PackageInterface $package */
 		foreach ($repository->getPackages() as $package) {
-			$this->fillDependencyGraph($repository, $package, $dependencyGraph);
+			$this->fillDependencyMap($repository, $package, $dependencyMap, $inverted);
 		}
 
-		return $dependencyGraph;
+		return $dependencyMap;
 	}
 
 	/**
@@ -785,17 +908,23 @@ class ComposerClientBackend extends BackendModule
 	 *
 	 * @param RepositoryInterface $repository
 	 * @param PackageInterface    $package
-	 * @param array               $dependencyGraph
+	 * @param array               $dependencyMap
 	 */
-	protected function fillDependencyGraph(
+	protected function fillDependencyMap(
 		RepositoryInterface $repository,
 		PackageInterface $package,
-		array &$dependencyGraph
+		array &$dependencyMap,
+		$inverted
 	) {
 		/** @var string $requireName */
 		/** @var \Composer\Package\Link $requireLink */
 		foreach ($package->getRequires() as $requireName => $requireLink) {
-			$dependencyGraph[$requireLink->getTarget()][$package->getName()] = $requireLink->getPrettyConstraint();
+			if ($inverted) {
+				$dependencyMap[$package->getName()][$requireLink->getTarget()] = $requireLink->getPrettyConstraint();
+			}
+			else {
+				$dependencyMap[$requireLink->getTarget()][$package->getName()] = $requireLink->getPrettyConstraint();
+			}
 		}
 	}
 

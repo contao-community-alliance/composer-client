@@ -1,0 +1,152 @@
+<div id="tl_buttons">
+	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+	</a>
+</div>
+
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']; ?></h2>
+
+<?php
+/** @var \Composer\Composer $composer */
+$composer = $this->composer;
+/** @var \Composer\Package\RootPackage $package */
+$package = $composer->getPackage();
+/** @var \Composer\Repository\RepositoryManager $repositoryManager */
+$repositoryManager = $composer->getRepositoryManager();
+/** @var \Composer\Repository\RepositoryInterface $localRepository */
+$localRepository = $repositoryManager->getLocalRepository();
+/** @var \Composer\Installer\InstallationManager $installationManager */
+$installationManager = $composer->getInstallationManager();
+/** @var array $stabilityFlags */
+$stabilityFlags = $package->getStabilityFlags();
+/** @var array $stabilitiesReverseMap */
+$stabilitiesReverseMap = array_flip(\Composer\Package\BasePackage::$stabilities);
+/** @var array $dependencyGraph */
+$dependencyGraph = $this->dependencyGraph;
+/** @var array $lastLevels */
+$lastLevels = array();
+/** @var \Composer\Package\PackageInterface $localPackage */
+/** @var string $requireName */
+/** @var \Composer\Package\Link $requireLink */
+?>
+
+<?php echo $this->getMessages(); ?>
+
+<div class="tl_listing_container list_view">
+	<table class="tl_listing showColumns">
+		<thead>
+		<tr>
+			<th class="tl_folder_tlist col_type col_name"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
+			<th class="tl_folder_tlist col_requested_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_dependend_version']; ?></th>
+			<th class="tl_folder_tlist col_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_installed_version']; ?></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php /*
+		<tr class="even" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+			<td class="tl_file_list col_type"><?php
+				echo $this->generateImage(
+					'composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-contao-module.png',
+					'contao-core',
+					'title="contao-core"'
+				);
+				?></td>
+			<td class="tl_file_list col_icon"></td>
+			<td class="tl_file_list col_name"><?php echo $package->getPrettyName(); ?></td>
+			<td class="tl_file_list col_requested_version"></td>
+			<td class="tl_file_list col_version"><?php
+					printf(
+						'<span class="stability-%s">%s</span>',
+						strtolower($package->getStability()),
+						$package->getPrettyVersion()
+					);
+				?></td>
+			<td class="tl_file_list col_remove"> </td>
+		</tr>
+		*/ ?>
+		<?php
+		$n = 1;
+		foreach ($dependencyGraph as $item):
+			$localPackage = $item->package;
+			?>
+			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+				<td class="tl_file_list col_type col_name"><?php
+					if ($item->lastInLevel >= 0) {
+						$lastLevels[$item->lastInLevel] = true;
+					}
+					foreach ($lastLevels as $level => $isLast):
+						if ($level >= $item->required->parents):
+							unset($lastLevels[$level]);
+						endif;
+					endforeach;
+
+					$parents = $item->required->parents;
+					for ($i=0; $i<$parents; $i++):
+						?><span class="dependency-indent<?php if (isset($lastLevels[$i]) && $lastLevels[$i]): ?> last<?php endif; if ($i==$parents-1): ?> child<?php endif; ?>">
+							<span class="horizontal"></span>
+							<span class="vertical"></span>
+						</span><?php
+					endfor;
+
+					echo '&nbsp;';
+
+					if ($localPackage instanceof \Composer\Package\PackageInterface):
+						$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $localPackage->getType());
+						$name = $localPackage->getType();
+					elseif ($localPackage == 'contao/core'):
+						$icon = 'composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-contao-module.png';
+						$name = 'contao-core';
+					else:
+						$icon = 'composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-php.png';
+						$name = 'php';
+					endif;
+					if (file_exists(TL_ROOT . '/' . $icon)) {
+						echo $this->generateImage(
+							$icon,
+							$name,
+							sprintf('title="%s"', $name)
+						);
+					}
+					else {
+						printf(
+							'<span class="label %s" title="%s">%s</span>',
+							strtolower($name),
+							$name,
+							strtoupper($name)
+						);
+					}
+
+					if ($localPackage instanceof \Composer\Package\PackageInterface):
+						?>&nbsp; <a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
+							<?php
+							echo $localPackage->getPrettyName();
+							?>
+						</a><?php
+					else:
+						echo '&nbsp; ' . $localPackage;
+					endif;
+					?>
+				</td>
+				<td class="tl_file_list col_requested_version"><?php
+					echo $item->required->constraint;
+					?></td>
+				<td class="tl_file_list col_version"><?php
+					if ($localPackage instanceof \Composer\Package\PackageInterface):
+						printf(
+							'<span class="stability-%s">%s</span>',
+							strtolower($localPackage->getStability()),
+							$localPackage->getPrettyVersion()
+						);
+					endif;
+					?></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>
+
+<?php
+$template = new BackendTemplate('be_composer_client_form');
+$template->setData($this->getData());
+echo $template->parse();
+?>

@@ -78,6 +78,38 @@ p.dependencies {
 p.dependencies input {
 	vertical-align: middle;
 }
+span.dependency-indent {
+	position: relative;
+	display: inline-block;
+	width: 18px;
+	height: 16px;
+	vertical-align: middle;
+}
+span.dependency-indent.child span.horizontal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -1px;
+	width: 50%;
+	height: 2px;
+	background-color: #ccc;
+}
+span.dependency-indent span.vertical {
+	position: absolute;
+	top: -6px;
+	left: 50%;
+	margin-left: -1px;
+	width: 2px;
+	height: 28px;
+	background-color: #ccc;
+}
+span.dependency-indent.last span.vertical {
+	display: none;
+}
+span.dependency-indent.child.last span.vertical {
+	display: inline;
+	height: 14px;
+}
 
 /**
  * Search result view

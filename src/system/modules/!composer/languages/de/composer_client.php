@@ -9,6 +9,7 @@ $GLOBALS['TL_LANG']['composer_client']['installed_headline']        = 'Installie
 $GLOBALS['TL_LANG']['composer_client']['search_headline']           = 'Suchergebnisse';
 $GLOBALS['TL_LANG']['composer_client']['install_headline']          = 'Paket installieren';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']           = 'Expertenmodus';
+$GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline'] = 'Abhängigkeitsgraph';
 
 /**
  * References
@@ -26,6 +27,7 @@ $GLOBALS['TL_LANG']['composer_client']['search_placeholder'] = 'Paketname oder S
 $GLOBALS['TL_LANG']['composer_client']['package_name']              = 'Paket';
 $GLOBALS['TL_LANG']['composer_client']['package_version']           = 'Version';
 $GLOBALS['TL_LANG']['composer_client']['package_requested_version'] = 'Angeforderte Version';
+$GLOBALS['TL_LANG']['composer_client']['package_dependend_version'] = 'Abhängige Version';
 $GLOBALS['TL_LANG']['composer_client']['package_installed_version'] = 'Installierte Version';
 $GLOBALS['TL_LANG']['composer_client']['package_keywords']          = 'Keywords';
 $GLOBALS['TL_LANG']['composer_client']['package_reference']         = 'Referenz';
@@ -55,6 +57,7 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_of']             = 'Abhängig
 $GLOBALS['TL_LANG']['composer_client']['installed_in']              = 'installiert in Version %s';
 $GLOBALS['TL_LANG']['composer_client']['no_releasedate']            = '-';
 $GLOBALS['TL_LANG']['composer_client']['show_dependencies']         = '%d Abhängigkeiten installiert';
+$GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']     = 'Abhängigkeitsgraph';
 
 /**
  * Versions
