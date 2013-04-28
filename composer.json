@@ -1,33 +1,39 @@
 {
-    "name": "contao-community-alliance/composer",
-    "type": "contao-module",
-    "description": "composer integration into the contao cms",
-    "keywords": ["contao", "composer", "client"],
-    "license": "LGPLv3",
-    "authors": [
-        {
-            "name": "Dominik Zogg",
-            "email": "dominik.zogg@gmail.com"
-        },
+	"name": "contao-community-alliance/composer",
+	"type": "contao-module",
+	"description": "composer integration into the contao cms",
+	"keywords": ["contao", "composer", "client"],
+	"license": "LGPLv3",
+	"authors": [
+		{
+			"name": "Dominik Zogg",
+			"email": "dominik.zogg@gmail.com"
+		},
 		{
 			"name":"Tristan Lins",
 			"email":"tristan.lins@bit3.de",
 			"homepage":"http://bit3.de",
 			"role":"Developer"
+		},
+		{
+			"name":"Christian Schiffler",
+			"email":"c.schiffler@cyberspectrum.de",
+			"homepage":"http://www.cyberspectrum.de",
+			"role":"Developer"
 		}
-    ],
-    "require": {
-        "php": ">=5.3.4",
-        "contao/core": ">=2.11"
-    },
-    "autoload": {
-        "classmap": ["src/"]
-    },
-    "extra": {
-        "contao": {
-            "symlinks": {
-                "src/system/modules/!composer": "system/modules/!composer"
-            }
-        }
-    }
+	],
+	"require": {
+		"php": ">=5.3.4",
+		"contao/core": ">=2.11"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	},
+	"extra": {
+		"contao": {
+			"symlinks": {
+				"src/system/modules/!composer": "system/modules/!composer"
+			}
+		}
+	}
 }
