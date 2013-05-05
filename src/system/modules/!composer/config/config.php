@@ -52,7 +52,6 @@ EOF;
     "version": "$strContaoVersion",
     "type": "metapackage",
     "require": {
-        "contao-community-alliance/composer-installer": "dev-master@dev",
         "contao-community-alliance/composer": "dev-master@dev"
     },
     "scripts": {
