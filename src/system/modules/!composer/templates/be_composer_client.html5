@@ -129,23 +129,21 @@ $dependencyCount = 0;
 					}
 					?></td>
 				<td class="tl_file_list col_icon">
-					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
-						<?php
-						if (isset($dependencyMap[$localPackage->getName()])) {
-							$dependencyCount ++;
+					<?php
+					if (isset($dependencyMap[$localPackage->getName()])) {
+						$dependencyCount ++;
 
-							$title = sprintf(
-								$GLOBALS['TL_LANG']['composer_client']['dependency_of'],
-								implode(', ', array_keys($dependencyMap[$localPackage->getName()]))
-							);
-							echo $this->generateImage(
-								'system/modules/!composer/assets/images/dependency.png',
-								$title,
-								'title="' . specialchars($title) . '"'
-							);
-						}
-						?>
-					</a>
+						$title = sprintf(
+							$GLOBALS['TL_LANG']['composer_client']['dependency_of'],
+							implode(', ', array_keys($dependencyMap[$localPackage->getName()]))
+						);
+						echo $this->generateImage(
+							'system/modules/!composer/assets/images/dependency.png',
+							$title,
+							'title="' . specialchars($title) . '"'
+						);
+					}
+					?>
 				</td>
 				<td class="tl_file_list col_name">
 					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
