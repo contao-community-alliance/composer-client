@@ -369,35 +369,35 @@ $source = $preferedCandidate->getSourceUrl();
 										$preferedVersion = $candidate->getVersion();
 
 										if (substr($candidate->getPrettyVersion(), 0, 4) == 'dev-' || $stability == '@dev') {
-											$versions[$candidate->getPrettyVersion() . '@' . $candidate->getStability()] = $candidate->getPrettyVersion();
+											$versions[$candidate->getPrettyVersion() . ($candidate->getStability() != 'dev' ? '@' . $candidate->getStability() : '')] = $candidate->getPrettyVersion();
 										}
 										else {
 											if (strlen($build)) {
 												$version = sprintf('%s.%s.%s', $major, $minor, $build) . $prettyStability;
-												$versions[$version . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_exakt'], $version);
+												$versions[sprintf('%s.%s.%s', $major, $minor, $build) . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_exakt'], $version);
 											}
 
 											if (strlen($minor)) {
 												$bugfix = sprintf('%s.%s.*', $major, $minor) . $prettyStability;
-												$versions[$bugfix . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_bugfix'], $bugfix);
+												$versions[sprintf('%s.%s.*', $major, $minor) . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_bugfix'], $bugfix);
 												$preferedVersion = $bugfix;
 											}
 
 											$feature = sprintf('%s.*', $major) . $prettyStability;
-											$versions[$feature . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_feature'], $feature);
+											$versions[sprintf('%s.*', $major) . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_feature'], $feature);
 
 											if (strlen($build)) {
-												$upstream = '>=' . sprintf('%s.%s.%s', $major, $minor, $build) . $prettyStability;
-												$versions[$upstream . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $upstream);
+												$upstream = sprintf('>=%s.%s.%s', $major, $minor, $build) . $prettyStability;
+												$versions[sprintf('>=%s.%s.%s', $major, $minor, $build) . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $upstream);
 											}
 
 											if (strlen($minor)) {
-												$bugfix = sprintf('>=%s.%s', $major, $minor);
-												$versions[$bugfix . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $bugfix);
+												$bugfix = sprintf('>=%s.%s', $major, $minor) . $prettyStability;
+												$versions[sprintf('>=%s.%s', $major, $minor) . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $bugfix);
 											}
 
-											$feature = sprintf('>=%s', $major);
-											$versions[$feature . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $feature);
+											$feature = sprintf('>=%s', $major) . $prettyStability;
+											$versions[sprintf('>=%s', $major) . $stability] = sprintf($GLOBALS['TL_LANG']['composer_client']['version_upstream'], $feature);
 										}
 										?>
 										<select name="version">
