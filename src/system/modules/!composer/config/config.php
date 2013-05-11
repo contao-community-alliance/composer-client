@@ -21,6 +21,10 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
  */
 if(version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '>='))
 {
+	if (TL_MODE == 'BE') {
+		$GLOBALS['TL_HOOKS']['loadLanguageFile']['composer'] = array('ComposerClient', 'disableOldClientHook');
+	}
+
     // check composer folder exists
     if(!is_dir(COMPOSER_DIR_ABSOULTE))
     {
