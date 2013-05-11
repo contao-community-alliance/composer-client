@@ -153,8 +153,11 @@ $dependencyCount = 0;
 					</a>
 				</td>
 				<td class="tl_file_list col_requested_version"><?php
-						$removePossible = isset($requires[$localPackage->getName()]);
-						$removeRequested = !$removePossible && !isset($dependencyMap[$localPackage->getName()]);
+						$removePossible = isset($requires[$localPackage->getName()]) &&
+							$localPackage->getName() != 'contao-community-alliance/composer';
+						$removeRequested = !$removePossible &&
+							!isset($dependencyMap[$localPackage->getName()]) &&
+							$localPackage->getName() != 'contao-community-alliance/composer';
 
 						if (isset($requires[$localPackage->getName()])) {
 							/** @var \Composer\Package\Link $link */
