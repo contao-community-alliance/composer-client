@@ -62,10 +62,11 @@ $GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']     = 'Abhängig
 /**
  * Versions
  */
-$GLOBALS['TL_LANG']['composer_client']['version_exakt']    = 'exakte Version %s';
-$GLOBALS['TL_LANG']['composer_client']['version_bugfix']   = 'Bugfix Releases %s';
-$GLOBALS['TL_LANG']['composer_client']['version_feature']  = 'Feature Releases %s';
-$GLOBALS['TL_LANG']['composer_client']['version_upstream'] = 'Upstream Releases %s';
+$GLOBALS['TL_LANG']['composer_client']['version_exact']    = 'exakte Version %s';
+$GLOBALS['TL_LANG']['composer_client']['version_micro']    = 'Micro Releases %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['version_bugfix']   = 'Bugfix Releases %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['version_feature']  = 'Feature Releases %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['version_upstream'] = 'Upstream Releases ab %s (%s)';
 
 /**
  * Message
