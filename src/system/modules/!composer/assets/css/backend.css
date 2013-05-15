@@ -1,3 +1,8 @@
+h2.sub_headline small {
+	font-size: 80%;
+	color: #999;
+}
+
 /**
  * Stability colors
  */

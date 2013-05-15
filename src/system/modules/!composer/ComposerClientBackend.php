@@ -8,6 +8,7 @@ use Composer\IO\BufferIO;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
 use Composer\Package\PackageInterface;
+use Composer\Package\RootPackageInterface;
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Version\VersionParser;
 use Composer\Repository\ComposerRepository;
@@ -16,6 +17,13 @@ use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
 use Composer\Util\ConfigValidator;
 use Composer\DependencyResolver\Pool;
+use Composer\DependencyResolver\Solver;
+use Composer\DependencyResolver\Request;
+use Composer\DependencyResolver\SolverProblemsException;
+use Composer\DependencyResolver\DefaultPolicy;
+use Composer\DependencyResolver\Operation\UninstallOperation;
+use Composer\Package\LinkConstraint\VersionConstraint;
+use Composer\Repository\InstalledArrayRepository;
 use Symfony\Component\Process\Process;
 
 /**
@@ -94,6 +102,12 @@ class ComposerClientBackend extends BackendModule
 		// do install
 		if ($input->get('install')) {
 			$this->showDetails($input);
+			return;
+		}
+
+		// do solve
+		if ($input->get('solve')) {
+			$this->solveDependencies($input);
 			return;
 		}
 
@@ -667,28 +681,17 @@ class ComposerClientBackend extends BackendModule
 		$packageName = $input->get('install');
 
 		if ($input->post('version')) {
-			$version = $input->post('version', true);
+			$version = $input->post('version');
 
-			// make a backup
-			copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
-
-			// update requires
-			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-			$config = $json->read();
-			if (!array_key_exists('require', $config)) {
-				$config['require'] = array();
-			}
-			$config['require'][$packageName] = $version;
-			$json->write($config);
-
-			$_SESSION['TL_INFO'][] = sprintf(
-				$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
-				$packageName,
-				$version
+			$this->redirect(
+				'contao/main.php?' . http_build_query(
+					array(
+						 'do' => 'composer',
+						 'solve' => $packageName,
+						 'version' => $version
+					)
+				)
 			);
-
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
-			$this->redirect('contao/main.php?do=composer');
 		}
 
 		$installationCandidates = $this->searchPackage($packageName);
@@ -709,6 +712,123 @@ class ComposerClientBackend extends BackendModule
 	}
 
 	/**
+	 * Solve package dependencies.
+	 *
+	 * @param Input $input
+	 */
+	protected function solveDependencies(Input $input)
+	{
+		$rootPackage = $this->composer->getPackage();
+
+        $installedRootPackage = clone $rootPackage;
+        $installedRootPackage->setRequires(array());
+        $installedRootPackage->setDevRequires(array());
+
+		$localRepository     = $this->composer
+			->getRepositoryManager()
+			->getLocalRepository();
+		$platformRepo        = new PlatformRepository;
+		$installedRepository = new CompositeRepository(
+			array(
+				 $localRepository,
+				 new InstalledArrayRepository(array($installedRootPackage)),
+				 $platformRepo
+			)
+		);
+
+		$packageName = $input->get('solve');
+		$version = base64_decode(rawurldecode($input->get('version')));
+
+		$versionParser = new VersionParser();
+		$constraint = $versionParser->parseConstraints($version);
+
+        $aliases = $this->getRootAliases($rootPackage);
+        $this->aliasPlatformPackages($platformRepo, $aliases);
+
+		$pool = $this->getPool($rootPackage->getStability(), $rootPackage->getStabilityFlags());
+		$pool->addRepository($installedRepository, $aliases);
+
+		$policy = new DefaultPolicy($rootPackage->getPreferStable());
+
+		$request = new Request($pool);
+
+		// add root package
+		$rootPackageConstraint = new VersionConstraint('=', $rootPackage->getVersion());
+        $rootPackageConstraint->setPrettyString($rootPackage->getPrettyVersion());
+        $request->install($rootPackage->getName(), $rootPackageConstraint);
+
+		// add requirements
+		$links = $rootPackage->getRequires();
+		foreach ($links as $link) {
+			$request->install($link->getTarget(), $link->getConstraint());
+		}
+		foreach ($installedRepository->getPackages() as $package) {
+			$request->install($package->getName(), new VersionConstraint('=', $package->getVersion()));
+		}
+
+		$operations = array();
+		try {
+			$solver = new Solver($policy, $pool, $installedRepository);
+
+			$beforeOperations = $solver->solve($request);
+
+			$request->install($packageName, $constraint);
+
+			$operations = $solver->solve($request);
+
+			/** @var \Composer\DependencyResolver\Operation\SolverOperation $beforeOperation */
+			foreach ($beforeOperations as $beforeOperation) {
+				/** @var \Composer\DependencyResolver\Operation\InstallOperation $operation */
+				foreach ($operations as $index => $operation) {
+					if ($operation->getPackage()->getName() != $packageName &&
+						$beforeOperation->__toString() == $operation->__toString()
+					) {
+						unset($operations[$index]);
+					}
+				}
+			}
+
+			if ($input->post('mark') || $input->post('install')) {
+				// make a backup
+				copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
+
+				// update requires
+				$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+				$config = $json->read();
+				if (!array_key_exists('require', $config)) {
+					$config['require'] = array();
+				}
+				$config['require'][$packageName] = $version;
+				$json->write($config);
+
+				$_SESSION['TL_INFO'][] = sprintf(
+					$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
+					$packageName,
+					$version
+				);
+
+				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+
+				if ($input->post('install')) {
+					$this->redirect('contao/main.php?do=composer&update=packages');
+				}
+				$this->redirect('contao/main.php?do=composer');
+			}
+		}
+		catch (SolverProblemsException $e) {
+			$_SESSION['TL_ERROR'][] = sprintf(
+				'<span style="white-space: pre-line">%s</span>',
+				trim($e->getMessage())
+			);
+		}
+
+		$this->Template->setName('be_composer_client_solve');
+		$this->Template->packageName = $packageName;
+		$this->Template->packageVersion  = $version;
+		$this->Template->operations = $operations;
+	}
+
+	/**
 	 * Search for a single packages versions.
 	 *
 	 * @param string   $packageName
@@ -717,24 +837,9 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function searchPackage($packageName)
 	{
-		$platformRepo        = new PlatformRepository;
-		$localRepository     = $this->composer
-			->getRepositoryManager()
-			->getLocalRepository();
-		$installedRepository = new CompositeRepository(
-			array($localRepository, $platformRepo)
-		);
-		$repositories        = new CompositeRepository(
-			array_merge(
-				array($installedRepository),
-				$this->composer
-					->getRepositoryManager()
-					->getRepositories()
-			)
-		);
+		$rootPackage = $this->composer->getPackage();
 
-		$pool = new Pool('dev');
-		$pool->addRepository($repositories);
+		$pool = $this->getPool($rootPackage->getStability(), $rootPackage->getStabilityFlags());
 
 		$versions = array();
 		$seen     = array();
@@ -817,13 +922,13 @@ class ComposerClientBackend extends BackendModule
 			}
 
 			if ($installer->run()) {
-				$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 
 				// redirect to database update
 				$this->redirect('contao/main.php?do=composer&update=database');
 			}
 			else {
-				$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 
 				$this->redirect('contao/main.php?do=composer');
 			}
@@ -860,7 +965,7 @@ class ComposerClientBackend extends BackendModule
 			$removeName
 		);
 
-		$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 	}
 
 	/**
@@ -879,7 +984,7 @@ class ComposerClientBackend extends BackendModule
 			$configJson['version'] = $version;
 			$configFile->write($configJson);
 
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 			$this->reload();
 		}
 	}
@@ -988,4 +1093,58 @@ class ComposerClientBackend extends BackendModule
 
 		return $return;
 	}
+
+	protected function getPool($minimumStability = 'dev', $stabilityFlags = array())
+	{
+		$platformRepo        = new PlatformRepository;
+		$localRepository     = $this->composer
+			->getRepositoryManager()
+			->getLocalRepository();
+		$installedRepository = new CompositeRepository(
+			array($localRepository, $platformRepo)
+		);
+		$repositories        = new CompositeRepository(
+			array_merge(
+				array($installedRepository),
+				$this->composer
+					->getRepositoryManager()
+					->getRepositories()
+			)
+		);
+
+		$pool = new Pool($minimumStability, $stabilityFlags);
+		$pool->addRepository($repositories);
+
+		return $pool;
+	}
+
+    private function getRootAliases(RootPackageInterface $rootPackage)
+    {
+		$aliases = $rootPackage->getAliases();
+
+        $normalizedAliases = array();
+
+        foreach ($aliases as $alias) {
+            $normalizedAliases[$alias['package']][$alias['version']] = array(
+                'alias' => $alias['alias'],
+                'alias_normalized' => $alias['alias_normalized']
+            );
+        }
+
+        return $normalizedAliases;
+    }
+
+    private function aliasPlatformPackages(PlatformRepository $platformRepo, $aliases)
+    {
+        foreach ($aliases as $package => $versions) {
+            foreach ($versions as $version => $alias) {
+                $packages = $platformRepo->findPackages($package, $version);
+                foreach ($packages as $package) {
+                    $aliasPackage = new AliasPackage($package, $alias['alias_normalized'], $alias['alias']);
+                    $aliasPackage->setRootPackageAlias(true);
+                    $platformRepo->addPackage($aliasPackage);
+                }
+            }
+        }
+    }
 }

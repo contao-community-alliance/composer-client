@@ -1,0 +1,108 @@
+<?php
+/** @var \Composer\Composer $composer */
+$composer = $this->composer;
+/** @var \Composer\Package\RootPackage $package */
+$package = $composer->getPackage();
+/** @var \Composer\Repository\RepositoryManager $repositoryManager */
+$repositoryManager = $composer->getRepositoryManager();
+/** @var \Composer\Repository\RepositoryInterface $localRepository */
+$localRepository = $repositoryManager->getLocalRepository();
+/** @var \Composer\Installer\InstallationManager $installationManager */
+$installationManager = $composer->getInstallationManager();
+/** @var \Composer\DependencyResolver\Operation\InstallOperation|\Composer\DependencyResolver\Operation\MarkAliasInstalledOperation $operation */
+?>
+
+<div class="composer_package_solve">
+	<div id="tl_buttons">
+		<a href="contao/main.php?do=composer&amp;install=<?php echo $this->packageName ?>&amp;prefer=<?php echo $this->packageVersion; ?>" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+			<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+		</a>
+	</div>
+
+	<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['solve_headline']; ?> <small><?php echo $this->packageName . ' ' . $this->packageVersion; ?></small></h2>
+
+	<?php echo $this->getMessages(); ?>
+
+	<?php if (count($this->operations)): ?>
+		<div class="tl_formbody_edit" id="tl_composer_solve">
+			<table class="tl_listing showColumns">
+				<thead>
+					<tr>
+						<th class="tl_folder_tlist col_type">&nbsp;</th>
+						<th class="tl_folder_tlist col_name"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
+						<th class="tl_folder_tlist col_requested_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_requested_version']; ?></th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach ($this->operations as $operation): ?>
+					<?php $package = $operation->getPackage(); ?>
+					<tr class="even" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+						<td class="tl_file_list col_type"><?php
+							$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $package->getType());
+							if (file_exists(TL_ROOT . '/' . $icon)) {
+								echo $this->generateImage(
+									$icon,
+									$package->getType(),
+									sprintf('title="%s"', $package->getType())
+								);
+							}
+							else {
+								printf(
+									'<span class="label %s" title="%s">%s</span>',
+									strtolower($package->getType()),
+									$package->getType(),
+									strtoupper($package->getType())
+								);
+							}
+							?></td>
+						<td class="tl_file_list col_name">
+							<a href="contao/main.php?do=composer&amp;install=<?php echo $package->getPrettyName(); ?>">
+								<?php
+								echo $package->getPrettyName();
+								?>
+							</a>
+						</td>
+						<td class="tl_file_list col_requested_version"><?php
+							$reason = $operation->getReason();
+							if ($reason instanceof \Composer\DependencyResolver\Rule) {
+								/** @var \Composer\DependencyResolver\Rule $reason */
+								do {
+									if ($reason->getReason() == \Composer\DependencyResolver\Rule::RULE_PACKAGE_REQUIRES) {
+										if ($reason->getReasonData() instanceof \Composer\Package\Link) {
+											echo $reason->getReasonData()->getConstraint()->getPrettyString();
+											break;
+										}
+									}
+									if ($reason->getReason() == \Composer\DependencyResolver\Rule::RULE_JOB_INSTALL) {
+										echo $operation->getPackage()->getPrettyVersion();
+										break;
+									}
+
+									// fallback
+									echo $reason->getPrettyString();
+								} while (false);
+							}
+							else {
+								echo is_object($reason) ? get_class($reason) : gettype($reason);
+							}
+							?></td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+		<br>
+		<form action="<?php echo Environment::getInstance()->request; ?>"
+			  class="tl_form" method="post" enctype="application/x-www-form-urlencoded">
+			<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+			<div class="tl_formbody_submit">
+				<div class="tl_submit_container">
+					<input type="submit" name="mark" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['mark_to_install']; ?>">
+					<input type="submit" name="install" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['mark_and_install']; ?>">
+				</div>
+			</div>
+		</form>
+	<?php else: ?>
+		<br>
+	<?php endif; ?>
+</div>
