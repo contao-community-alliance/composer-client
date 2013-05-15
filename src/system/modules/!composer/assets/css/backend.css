@@ -38,6 +38,8 @@ span.stability-dev {
 	padding: 6px 8px;
 	white-space: pre-line;
 	background-color: #f3f3f3;
+	max-height: 20em;
+	overflow: auto;
 }
 
 /**
