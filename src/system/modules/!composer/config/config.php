@@ -59,8 +59,9 @@ EOF;
         "contao-community-alliance/composer": "dev-master@dev"
     },
     "scripts": {
-        "pre-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::updateComposerConfig",
-        "post-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::createRunonce"
+        "pre-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::preUpdate",
+        "post-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::postUpdate",
+        "post-autoload-dump": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::postAutoloadDump"
     },
     "config": {
         "preferred-install": "dist", 
