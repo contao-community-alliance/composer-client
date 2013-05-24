@@ -87,6 +87,9 @@ class ComposerClient extends System
 		}
 		if (in_array('repository', $activeModules)) {
 			$inactiveModules[] = 'repository';
+			$skipFile = new File('system/modules/repository/.skip');
+			$skipFile->write('Remove this file to enable the module');
+			$skipFile->close();
 			$reset = true;
 		}
 		if ($reset) {
