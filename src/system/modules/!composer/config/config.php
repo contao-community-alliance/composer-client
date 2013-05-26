@@ -100,6 +100,17 @@ EOF;
 	if (!getenv('HOME') && !getenv('COMPOSER_HOME')) {
 		putenv('COMPOSER_HOME=' . COMPOSER_DIR_ABSOULTE);
 	}
+
+	// see #54
+	if (!getenv('PATH')) {
+		if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+			putenv('PATH=%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem');
+		}
+		else {
+			putenv('PATH=/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin');
+
+		}
+	}
 }
 
 /**
