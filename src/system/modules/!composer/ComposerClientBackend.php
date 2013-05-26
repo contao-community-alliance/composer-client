@@ -405,7 +405,7 @@ class ComposerClientBackend extends BackendModule
 			$tempPathname = $this->configPathname . '~';
 			$tempFile     = new File($tempPathname);
 
-			$config = $input->post('config');
+			$config = $input->postRaw('config');
 			$config = html_entity_decode($config, ENT_QUOTES, 'UTF-8');
 
 			$tempFile->write($config);
