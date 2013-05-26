@@ -1,4 +1,7 @@
 <?php
+
+use Composer\DependencyResolver\Operation\UpdateOperation;
+
 /** @var \Composer\Composer $composer */
 $composer = $this->composer;
 /** @var \Composer\Package\RootPackage $package */
@@ -9,7 +12,7 @@ $repositoryManager = $composer->getRepositoryManager();
 $localRepository = $repositoryManager->getLocalRepository();
 /** @var \Composer\Installer\InstallationManager $installationManager */
 $installationManager = $composer->getInstallationManager();
-/** @var \Composer\DependencyResolver\Operation\InstallOperation|\Composer\DependencyResolver\Operation\MarkAliasInstalledOperation $operation */
+/** @var \Composer\DependencyResolver\Operation\InstallOperation|\Composer\DependencyResolver\Operation\UpdateOperation|\Composer\DependencyResolver\Operation\MarkAliasInstalledOperation $operation */
 ?>
 
 <div class="composer_package_solve">
@@ -35,7 +38,7 @@ $installationManager = $composer->getInstallationManager();
 				</thead>
 				<tbody>
 				<?php foreach ($this->operations as $operation): ?>
-					<?php $package = $operation->getPackage(); ?>
+					<?php $package = $operation instanceof UpdateOperation ? $operation->getTargetPackage() : $operation->getPackage(); ?>
 					<tr class="even" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 						<td class="tl_file_list col_type"><?php
 							$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $package->getType());
@@ -58,6 +61,14 @@ $installationManager = $composer->getInstallationManager();
 						<td class="tl_file_list col_name">
 							<a href="contao/main.php?do=composer&amp;install=<?php echo $package->getPrettyName(); ?>">
 								<?php
+								if ($operation instanceof UpdateOperation) {
+									$initialPackage = $operation->getInitialPackage();
+
+									if ($initialPackage->getName() != $package->getName()) {
+										echo $initialPackage->getPrettyName();
+										?> &rarr; <?php
+									}
+								}
 								echo $package->getPrettyName();
 								?>
 							</a>
