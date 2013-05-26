@@ -760,7 +760,9 @@ class ComposerClientBackend extends BackendModule
 		// add requirements
 		$links = $rootPackage->getRequires();
 		foreach ($links as $link) {
-			$request->install($link->getTarget(), $link->getConstraint());
+			if ($link->getTarget() != $packageName) {
+				$request->install($link->getTarget(), $link->getConstraint());
+			}
 		}
 		foreach ($installedRepository->getPackages() as $package) {
 			$request->install($package->getName(), new VersionConstraint('=', $package->getVersion()));
