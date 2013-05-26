@@ -54,6 +54,16 @@ usort(
 	function(\Composer\Package\PackageInterface $packageA, \Composer\Package\PackageInterface $packageB) use ($dependencyMap) {
 		$packageAisDependency = isset($dependencyMap[$packageA->getName()]);
 		$packageBisDependency = isset($dependencyMap[$packageB->getName()]);
+		if (count($packageA->getReplaces())) {
+			foreach ($packageA->getReplaces() as $replace => $constraint) {
+				$packageAisDependency = $packageAisDependency || isset($dependencyMap[$replace]);
+			}
+		}
+		if (count($packageB->getReplaces())) {
+			foreach ($packageB->getReplaces() as $replace => $constraint) {
+				$packageBisDependency = $packageBisDependency || isset($dependencyMap[$replace]);
+			}
+		}
 		if ($packageAisDependency && !$packageBisDependency) {
 			return 1;
 		}
@@ -109,7 +119,21 @@ $dependencyCount = 0;
 			<td class="tl_file_list col_remove"> </td>
 		</tr>
 		<?php $n = 1; foreach ($localPackages as $localPackage): ?>
-			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (isset($dependencyMap[$localPackage->getName()])): ?> dependency<?php endif; ?>" <?php if (isset($dependencyMap[$localPackage->getName()])): ?> style="display: none"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+			<?php
+			$requiredBy = false;
+			if (isset($dependencyMap[$localPackage->getName()])) {
+				$requiredBy = $dependencyMap[$localPackage->getName()];
+			}
+			if (count($localPackage->getReplaces())) {
+				foreach ($localPackage->getReplaces() as $replace => $constraint) {
+					if (isset($dependencyMap[$replace])) {
+						$requiredBy = $dependencyMap[$replace];
+						break;
+					}
+				}
+			}
+			?>
+			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if ($requiredBy): ?> dependency<?php endif; ?>" <?php if ($requiredBy): ?> style="display: none"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 				<td class="tl_file_list col_type"><?php
 					$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $localPackage->getType());
 					if (file_exists(TL_ROOT . '/' . $icon)) {
@@ -130,12 +154,12 @@ $dependencyCount = 0;
 					?></td>
 				<td class="tl_file_list col_icon">
 					<?php
-					if (isset($dependencyMap[$localPackage->getName()])) {
+					if ($requiredBy) {
 						$dependencyCount ++;
 
 						$title = sprintf(
 							$GLOBALS['TL_LANG']['composer_client']['dependency_of'],
-							implode(', ', array_keys($dependencyMap[$localPackage->getName()]))
+							implode(', ', array_keys($requiredBy))
 						);
 						echo $this->generateImage(
 							'system/modules/!composer/assets/images/dependency.png',
@@ -156,7 +180,7 @@ $dependencyCount = 0;
 						$removePossible = isset($requires[$localPackage->getName()]) &&
 							$localPackage->getName() != 'contao-community-alliance/composer';
 						$removeRequested = !$removePossible &&
-							!isset($dependencyMap[$localPackage->getName()]) &&
+							!$requiredBy &&
 							$localPackage->getName() != 'contao-community-alliance/composer';
 
 						if (isset($requires[$localPackage->getName()])) {
@@ -178,9 +202,9 @@ $dependencyCount = 0;
 
 							unset($requires[$localPackage->getName()]);
 						}
-						if (isset($dependencyMap[$localPackage->getName()])) {
+						if ($requiredBy) {
 							$constraints = array();
-							foreach ($dependencyMap[$localPackage->getName()] as $parentName => $versionConstraint) {
+							foreach ($requiredBy as $parentName => $versionConstraint) {
 								if (preg_match('#@(dev|alpha|beta|rc|stable)#', strtolower($versionConstraint), $matches)) {
 									$stability = $matches[1];
 								}
