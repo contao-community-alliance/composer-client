@@ -841,7 +841,7 @@ class ComposerClientBackend extends BackendModule
 	{
 		$rootPackage = $this->composer->getPackage();
 
-		$pool = $this->getPool($rootPackage->getStability(), $rootPackage->getStabilityFlags());
+		$pool = $this->getPool();
 
 		$versions = array();
 		$seen     = array();
