@@ -21,9 +21,9 @@ use Composer\DependencyResolver\Solver;
 use Composer\DependencyResolver\Request;
 use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
-use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
+use Composer\Util\Filesystem;
 use Symfony\Component\Process\Process;
 
 /**
@@ -80,6 +80,16 @@ class ComposerClientBackend extends BackendModule
 
 		if ($input->get('update') == 'database') {
 			$this->updateDatabase($input);
+			return;
+		}
+
+		if ($input->get('clear') == 'composer-cache') {
+			$this->clearComposerCache($input);
+			return;
+		}
+
+		if ($input->get('settings') == 'dialog') {
+			$this->showSettingsDialog($input);
 			return;
 		}
 
@@ -390,6 +400,123 @@ class ComposerClientBackend extends BackendModule
 
 		$this->Template->setName('be_composer_client_update');
 		$this->Template->form = $form;
+	}
+
+	/**
+	 * Clear composer cache.
+	 *
+	 * @param \Input $input
+	 */
+	protected function clearComposerCache(Input $input)
+	{
+		if (is_dir(TL_ROOT . '/composer/cache')) {
+			$fs = new Filesystem();
+			$fs->removeDirectory(TL_ROOT . '/composer/cache');
+
+			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared'];
+		}
+
+		$this->redirect('contao/main.php?do=composer');
+	}
+
+	/**
+	 * Show the settings dialog.
+	 *
+	 * @param \Input $input
+	 */
+	protected function showSettingsDialog(Input $input)
+	{
+		$rootPackage = $this->composer->getPackage();
+		$config = $this->composer->getConfig();
+
+		$minimumStability = new SelectMenu(
+			array(
+				 'id'          => 'minimum-stability',
+				 'name'        => 'minimum-stability',
+				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'][0],
+				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'][1],
+				 'options'     => array(
+					 array('value' => 'stable', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_stable']),
+					 array('value' => 'RC',     'label' => $GLOBALS['TL_LANG']['composer_client']['stability_rc']),
+					 array('value' => 'beta',   'label' => $GLOBALS['TL_LANG']['composer_client']['stability_beta']),
+					 array('value' => 'alpha',  'label' => $GLOBALS['TL_LANG']['composer_client']['stability_alpha']),
+					 array('value' => 'dev',    'label' => $GLOBALS['TL_LANG']['composer_client']['stability_dev']),
+				 ),
+				 'value'       => $rootPackage->getMinimumStability(),
+				 'class'       => 'minimum-stability',
+				 'required'    => true
+			)
+		);
+		$preferStable     = new CheckBox(
+			array(
+				 'id'          => 'prefer-stable',
+				 'name'        => 'prefer-stable',
+				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][0],
+				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][1],
+				 'options'     => array(
+					 array('value' => '1', 'label' =>$GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][0]),
+				 ),
+				 'value'       => $rootPackage->getPreferStable(),
+				 'class'       => 'prefer-stable',
+				 'required'    => true
+			)
+		);
+		$preferredInstall = new SelectMenu(
+			array(
+				 'id'          => 'preferred-install',
+				 'name'        => 'preferred-install',
+				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][0],
+				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][1],
+				 'options'     => array(
+					 array('value' => 'sources', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_source']),
+					 array('value' => 'dist',    'label' => $GLOBALS['TL_LANG']['composer_client']['install_dist']),
+					 array('value' => 'auto',    'label' => $GLOBALS['TL_LANG']['composer_client']['install_auto']),
+				 ),
+				 'value'       => $config->get('preferred-install'),
+				 'class'       => 'preferred-install',
+				 'required'    => true
+			)
+		);
+
+		if ($input->post('FORM_SUBMIT') == 'tl_composer_settings') {
+			$doSave   = false;
+			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+			$config = $json->read();
+
+			$minimumStability->validate();
+			$preferStable->validate();
+			$preferredInstall->validate();
+
+			if (!$minimumStability->hasErrors()) {
+				$config['minimum-stability'] = $minimumStability->value;
+				$doSave = true;
+			}
+
+			if (!$preferStable->hasErrors()) {
+				$config['prefer-stable'] = (bool) $preferStable->value;
+				$doSave = true;
+			}
+
+			if (!$preferredInstall->hasErrors()) {
+				$config['config']['preferred-install'] = $preferredInstall->value;
+				$doSave = true;
+			}
+
+			if ($doSave) {
+				// make a backup
+				copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
+
+				// update config file
+				$json->write($config);
+			}
+
+			$this->redirect('contao/main.php?do=composer&settings=dialog');
+		}
+
+		$this->Template->setName('be_composer_client_settings');
+		$this->Template->minimumStability = $minimumStability;
+		$this->Template->preferStable     = $preferStable;
+		$this->Template->preferredInstall = $preferredInstall;
 	}
 
 	/**

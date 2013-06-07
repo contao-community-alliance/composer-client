@@ -1,0 +1,60 @@
+<div id="tl_buttons">
+	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+	</a>
+	&nbsp; :: &nbsp;
+	<a href="contao/main.php?do=composer&amp;clear=composer-cache" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']; ?>">
+		<?php echo $this->generateImage(
+			'system/modules/!composer/assets/images/clear_composer_cache.png',
+			$GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']
+		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']; ?>
+	</a>
+	&nbsp; :: &nbsp;
+	<a href="contao/main.php?do=composer&amp;settings=experts" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>">
+		<?php echo $this->generateImage(
+			'system/modules/!composer/assets/images/experts_mode.png',
+			$GLOBALS['TL_LANG']['composer_client']['experts_mode']
+		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>
+	</a>
+</div>
+
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?></h2>
+
+<?php echo $this->getMessages(); ?>
+
+<form action="contao/main.php?do=composer&amp;settings=dialog"
+	  class="tl_form" method="post" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+	<input type="hidden" name="FORM_SUBMIT" value="tl_composer_settings">
+
+	<div class="tl_formbody_edit">
+		<fieldset class="tl_tbox">
+			<div class="w50">
+				<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'][0]; ?></h3>
+				<?php echo $this->minimumStability->generate(); ?>
+				<?php if (!$this->minimumStability->hasErrors()): ?>
+					<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'][1]; ?></p>
+				<?php endif; ?>
+			</div>
+			<div class="m12 cbx w50">
+				<?php echo $this->preferStable->generate(); ?>
+				<?php if (!$this->preferStable->hasErrors()): ?>
+					<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][1]; ?></p>
+				<?php endif; ?>
+			</div>
+			<div class="w50">
+				<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][0]; ?></h3>
+				<?php echo $this->preferredInstall->generate(); ?>
+				<?php if (!$this->preferredInstall->hasErrors()): ?>
+					<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][1]; ?></p>
+				<?php endif; ?>
+			</div>
+		</fieldset>
+	</div>
+
+	<div class="tl_formbody_submit">
+		<div class="tl_submit_container">
+			<input type="submit" name="save" accesskey="s" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['save']; ?>" class="tl_submit">
+		</div>
+	</div>
+</form>

@@ -1,5 +1,5 @@
 <div id="tl_buttons">
-	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+	<a href="contao/main.php?do=composer&amp;settings=dialog" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
 		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
 	</a>
 </div>

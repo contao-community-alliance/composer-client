@@ -23,6 +23,22 @@ $GLOBALS['TL_LANG']['composer_client']['install_composer']   = 'Composer install
 $GLOBALS['TL_LANG']['composer_client']['search_placeholder'] = 'Paketname oder Suchbegriff';
 
 /**
+ * Settings dialog
+ */
+$GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'] = array(
+	'Minimale Stabilität',
+	'Minimale Stabilität in der Pakete installiert werden dürfen.'
+);
+$GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']     = array(
+	'Stabile Pakete bevorzugen',
+	'Wenn möglich sollen stabile Pakete bevorzugt werden, auch wenn die minimale Stabilität instabile Pakete erlaubt.'
+);
+$GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'] = array(
+	'Bevorzugte Installationsform',
+	'Wählen Sie hier, ob die Quellen (benötigt GIT, Mercurial oder SVN) oder Paketarchive (funktioniert immer) installiert werden sollen.'
+);
+
+/**
  * Package listing
  */
 $GLOBALS['TL_LANG']['composer_client']['package_name']              = 'Paket';
@@ -70,6 +86,22 @@ $GLOBALS['TL_LANG']['composer_client']['version_feature']  = 'Feature Releases %
 $GLOBALS['TL_LANG']['composer_client']['version_upstream'] = 'Upstream Releases ab %s (%s)';
 
 /**
+ * Stabilities
+ */
+$GLOBALS['TL_LANG']['composer_client']['stability_stable'] = 'Stabiles Release';
+$GLOBALS['TL_LANG']['composer_client']['stability_rc']     = 'Release Kandidat';
+$GLOBALS['TL_LANG']['composer_client']['stability_beta']   = 'Beta Release';
+$GLOBALS['TL_LANG']['composer_client']['stability_alpha']  = 'Alpha Release';
+$GLOBALS['TL_LANG']['composer_client']['stability_dev']    = 'Entwickler Release';
+
+/**
+ * Install source
+ */
+$GLOBALS['TL_LANG']['composer_client']['install_source'] = 'Quellen';
+$GLOBALS['TL_LANG']['composer_client']['install_dist']   = 'Archiv';
+$GLOBALS['TL_LANG']['composer_client']['install_auto']   = 'Auto';
+
+/**
  * Message
  */
 $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']   = 'Die Composer Version ist älter als 30 Tage, ein Update wird dringend empfohlen.';
@@ -85,16 +117,19 @@ $GLOBALS['TL_LANG']['composer_client']['confirmRemove']            = 'Möchten S
 $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']              = 'wird entfernt';
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Datenbank aktualisiert, %d Queries wurden ausgeführt.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']         = 'Datenbank ist aktuell.';
+$GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer Cache wurde geleert.';
 
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['composer_client']['update_database']  = 'Datenbank aktualisieren';
-$GLOBALS['TL_LANG']['composer_client']['experts_mode']     = 'Expertenmodus';
-$GLOBALS['TL_LANG']['composer_client']['update_composer']  = 'Composer aktualisieren';
-$GLOBALS['TL_LANG']['composer_client']['search']           = 'Suchen';
-$GLOBALS['TL_LANG']['composer_client']['check']            = 'Kompatibilität prüfen';
-$GLOBALS['TL_LANG']['composer_client']['mark_to_install']  = 'Paket zur Installation vormerken';
-$GLOBALS['TL_LANG']['composer_client']['mark_and_install'] = 'Paket sofort installieren';
-$GLOBALS['TL_LANG']['composer_client']['update']           = 'Pakete aktualisieren';
-$GLOBALS['TL_LANG']['composer_client']['save']             = 'Speichern';
+$GLOBALS['TL_LANG']['composer_client']['update_database']      = 'Datenbank aktualisieren';
+$GLOBALS['TL_LANG']['composer_client']['settings_dialog']      = 'Einstellungen';
+$GLOBALS['TL_LANG']['composer_client']['experts_mode']         = 'Expertenmodus';
+$GLOBALS['TL_LANG']['composer_client']['clear_composer_cache'] = 'Composer Cache leeren';
+$GLOBALS['TL_LANG']['composer_client']['update_composer']      = 'Composer aktualisieren';
+$GLOBALS['TL_LANG']['composer_client']['search']               = 'Suchen';
+$GLOBALS['TL_LANG']['composer_client']['check']                = 'Kompatibilität prüfen';
+$GLOBALS['TL_LANG']['composer_client']['mark_to_install']      = 'Paket zur Installation vormerken';
+$GLOBALS['TL_LANG']['composer_client']['mark_and_install']     = 'Paket sofort installieren';
+$GLOBALS['TL_LANG']['composer_client']['update']               = 'Pakete aktualisieren';
+$GLOBALS['TL_LANG']['composer_client']['save']                 = 'Speichern';

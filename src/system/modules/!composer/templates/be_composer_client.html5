@@ -6,11 +6,11 @@
 		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['update_database']; ?>
 	</a>
 	&nbsp; :: &nbsp;
-	<a href="contao/main.php?do=composer&amp;settings=experts" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>">
+	<a href="contao/main.php?do=composer&amp;settings=dialog" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?>">
 		<?php echo $this->generateImage(
-			'system/modules/!composer/assets/images/experts_mode.png',
-			$GLOBALS['TL_LANG']['composer_client']['experts_mode']
-		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>
+			'system/modules/!composer/assets/images/settings_dialog.png',
+			$GLOBALS['TL_LANG']['composer_client']['settings_dialog']
+		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?>
 	</a>
 	&nbsp; :: &nbsp;
 	<a href="contao/main.php?do=composer&amp;update=composer" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['update_composer']; ?>">

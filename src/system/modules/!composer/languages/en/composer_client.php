@@ -23,6 +23,22 @@ $GLOBALS['TL_LANG']['composer_client']['install_composer']   = 'Install Composer
 $GLOBALS['TL_LANG']['composer_client']['search_placeholder'] = 'Package name or keyword';
 
 /**
+ * Settings dialog
+ */
+$GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'] = array(
+	'Minimum stability',
+	'The minimum stability set the lowest stability allowed to be installed.'
+);
+$GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']     = array(
+	'Prefer stable',
+	'If possible, prefer stable packages even if minimum stability is lower than stable.'
+);
+$GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'] = array(
+	'Preferred install',
+	'Choose if you prefer source packages (require git, mercurial or svn) or dist archives (works every time).'
+);
+
+/**
  * Package listing
  */
 $GLOBALS['TL_LANG']['composer_client']['package_name']              = 'Package';
@@ -70,6 +86,22 @@ $GLOBALS['TL_LANG']['composer_client']['version_feature']  = 'Feature releases %
 $GLOBALS['TL_LANG']['composer_client']['version_upstream'] = 'Upstream releases from %s (%s)';
 
 /**
+ * Stabilities
+ */
+$GLOBALS['TL_LANG']['composer_client']['stability_stable'] = 'Stable';
+$GLOBALS['TL_LANG']['composer_client']['stability_rc']     = 'Release candidate';
+$GLOBALS['TL_LANG']['composer_client']['stability_beta']   = 'Beta release';
+$GLOBALS['TL_LANG']['composer_client']['stability_alpha']  = 'Alpha release';
+$GLOBALS['TL_LANG']['composer_client']['stability_dev']    = 'Development release';
+
+/**
+ * Install source
+ */
+$GLOBALS['TL_LANG']['composer_client']['install_source'] = 'Sources';
+$GLOBALS['TL_LANG']['composer_client']['install_dist']   = 'Dist archive';
+$GLOBALS['TL_LANG']['composer_client']['install_auto']   = 'Auto';
+
+/**
  * Message
  */
 $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']   = 'Composer version is older than 30 days, please update composer.';
@@ -85,16 +117,19 @@ $GLOBALS['TL_LANG']['composer_client']['confirmRemove']            = 'Are you su
 $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']              = 'to be removed';
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Database updated, %d queries executed.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']         = 'Database is up to date.';
+$GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer cache cleared.';
 
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['composer_client']['update_database']  = 'Update database';
-$GLOBALS['TL_LANG']['composer_client']['experts_mode']     = 'Experts mode';
-$GLOBALS['TL_LANG']['composer_client']['update_composer']  = 'Update composer';
-$GLOBALS['TL_LANG']['composer_client']['search']           = 'Search';
-$GLOBALS['TL_LANG']['composer_client']['check']            = 'Check compatibility';
-$GLOBALS['TL_LANG']['composer_client']['mark_to_install']  = 'Mark package to install';
-$GLOBALS['TL_LANG']['composer_client']['mark_and_install'] = 'Install package now';
-$GLOBALS['TL_LANG']['composer_client']['update']           = 'Update packages';
-$GLOBALS['TL_LANG']['composer_client']['save']             = 'Save';
+$GLOBALS['TL_LANG']['composer_client']['update_database']      = 'Update database';
+$GLOBALS['TL_LANG']['composer_client']['settings_dialog']      = 'Settings';
+$GLOBALS['TL_LANG']['composer_client']['experts_mode']         = 'Experts mode';
+$GLOBALS['TL_LANG']['composer_client']['clear_composer_cache'] = 'clear Composer cache';
+$GLOBALS['TL_LANG']['composer_client']['update_composer']      = 'Update composer';
+$GLOBALS['TL_LANG']['composer_client']['search']               = 'Search';
+$GLOBALS['TL_LANG']['composer_client']['check']                = 'Check compatibility';
+$GLOBALS['TL_LANG']['composer_client']['mark_to_install']      = 'Mark package to install';
+$GLOBALS['TL_LANG']['composer_client']['mark_and_install']     = 'Install package now';
+$GLOBALS['TL_LANG']['composer_client']['update']               = 'Update packages';
+$GLOBALS['TL_LANG']['composer_client']['save']                 = 'Save';
