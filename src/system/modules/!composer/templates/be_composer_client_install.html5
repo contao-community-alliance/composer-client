@@ -283,6 +283,7 @@ $source = $preferedCandidate->getSourceUrl();
 						$provides = $candidate->getProvides();
 						$conflicts = $candidate->getConflicts();
 						$replaces = $candidate->getReplaces();
+						/** @var \Composer\Package\Link $replace */
 						?>
 						<table>
 							<colgroup>
@@ -348,7 +349,7 @@ $source = $preferedCandidate->getSourceUrl();
 									<?php else: ?>
 										<ul>
 											<?php foreach ($replaces as $key => $replace): ?>
-											<li><?php var_dump($key, $replace); ?></li>
+											<li><?php echo $key; ?> <?php echo $replace->getConstraint()->getPrettyString(); ?></li>
 											<?php endforeach; ?>
 										</ul>
 									<?php endif; ?>
