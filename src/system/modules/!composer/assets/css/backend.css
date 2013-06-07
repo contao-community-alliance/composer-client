@@ -48,6 +48,97 @@ span.stability-dev {
 }
 
 /**
+ * Migration wizard
+ */
+.tl_composer_migrate h2 {
+	padding-top: 0.83em;
+	border-top: 1px solid #ddd;
+	color: #8ab858;
+	font-size: 14px;
+}
+.tl_composer_migrate p,
+.tl_composer_migrate li {
+	line-height: 1.5em;
+}
+.tl_composer_migrate .preconditions li.fail {
+	color: #990000;
+	background-image: url(../images/fail.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 16px;
+}
+.tl_composer_migrate .preconditions li.pass {
+	color: #009900;
+	background-image: url(../images/pass.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 16px;
+}
+.tl_composer_migrate .questions {
+	margin-bottom: 2em;
+}
+.tl_composer_migrate label {
+	display: block;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 1em;
+	margin: 1em 0;
+}
+.tl_composer_migrate label span.input {
+	float: left;
+}
+.tl_composer_migrate label span.text {
+	display: block;
+	margin-left: 3em;
+}
+.tl_composer_migrate .mode_upgrade {
+	border-color: #006400;
+}
+.tl_composer_migrate .mode_upgrade strong {
+	color: #006400;
+}
+.tl_composer_migrate .mode_upgrade.checked {
+	background-color: #CDFFCD;
+}
+.tl_composer_migrate .mode_clean {
+	border-color: #FFB269;
+}
+.tl_composer_migrate .mode_clean strong {
+	color: #FFB269;
+}
+.tl_composer_migrate .mode_clean.checked {
+	background-color: #FFE6CD;
+}
+.tl_composer_migrate .mode_none {
+	border-color: #990000;
+}
+.tl_composer_migrate .mode_none strong {
+	color: #990000;
+}
+.tl_composer_migrate .mode_none.checked {
+	background-color: #FFCDCD;
+}
+
+.tl_composer_migrate .setup_production {
+	border-color: #006400;
+}
+.tl_composer_migrate .setup_production strong {
+	color: #006400;
+}
+.tl_composer_migrate .setup_production.checked {
+	background-color: #CDFFCD;
+}
+.tl_composer_migrate .setup_development {
+	border-color: #002878;
+}
+.tl_composer_migrate .setup_development strong {
+	color: #002878;
+}
+.tl_composer_migrate .setup_development.checked {
+	background-color: #CDDEFF;
+}
+
+/**
  * Listing view
  */
 .col_action {

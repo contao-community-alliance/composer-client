@@ -32,10 +32,10 @@ TemplateLoader::addFiles(array
 	'be_composer_client_form'             => 'system/modules/!composer/templates',
 	'be_composer_client_update'           => 'system/modules/!composer/templates',
 	'be_composer_client_settings'         => 'system/modules/!composer/templates',
+	'be_composer_client_migrate'          => 'system/modules/!composer/templates',
 	'be_composer_client_solve'            => 'system/modules/!composer/templates',
 	'be_composer_client'                  => 'system/modules/!composer/templates',
 	'be_composer_client_errors'           => 'system/modules/!composer/templates',
 	'be_composer_client_search'           => 'system/modules/!composer/templates',
-	'be_composer_client_settings'         => 'system/modules/!composer/templates',
 	'be_composer_client_dependency_graph' => 'system/modules/!composer/templates',
 ));

@@ -122,6 +122,7 @@ $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer C
 /**
  * Buttons
  */
+$GLOBALS['TL_LANG']['composer_client']['migrate']              = 'Migrieren';
 $GLOBALS['TL_LANG']['composer_client']['update_database']      = 'Datenbank aktualisieren';
 $GLOBALS['TL_LANG']['composer_client']['settings_dialog']      = 'Einstellungen';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']         = 'Expertenmodus';
