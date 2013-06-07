@@ -111,7 +111,7 @@ class ComposerClientBackend extends BackendModule
 			return;
 		}
 
-		if ($input->post('update') == 'packages') {
+		if ($input->get('update') == 'packages' || $input->post('update') == 'packages') {
 			$this->updatePackages();
 			return;
 		}
@@ -937,7 +937,7 @@ class ComposerClientBackend extends BackendModule
 		}
 		catch (RuntimeException $e) {
 			$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
-			$this->reload();
+			$this->redirect('contao/main.php?do=composer');
 		}
 	}
 
