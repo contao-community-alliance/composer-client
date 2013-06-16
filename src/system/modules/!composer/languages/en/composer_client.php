@@ -93,14 +93,31 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_setup'] = array(
 	'Configuration setup',
 	'Please choose for which setup this installation is used.'
 );
-$GLOBALS['TL_LANG']['composer_client']['migrate_production']   = array(
-	'For production use',
-	'Only stable packages are allowed!'
+$GLOBALS['TL_LANG']['composer_client']['migrate_production_compat']   = array(
+	'For production use (compatible mode)',
+	'Only stable packages are allowed! Packages will be fetched as archives (only zip support is required).'
+);
+$GLOBALS['TL_LANG']['composer_client']['migrate_production_extended']   = array(
+	'For production use (extended mode)',
+	'Only stable packages are allowed! Packages will be fetched as sources with git, mercurial or svn.'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_development']   = array(
 	'For development use',
 	'Unstable packages are allowed! Packages will be fetched as sources with git, mercurial or svn.'
 );
+$GLOBALS['TL_LANG']['composer_client']['vcs_requirements']          = '
+<ul class="preconditions">
+<li class="{if gitAvailable==true}pass{else}fail{endif}">
+	git is {if gitAvailable==true}available{else}missing, most packages may fail to install!{endif}
+</li>
+<li class="{if hgAvailable==true}pass{else}fail{endif}">
+	mercurial is {if hgAvailable==true}available{else}missing, some packages may fail to install!{endif}
+</li>
+<li class="{if svgAvailable==true}pass{else}fail{endif}">
+	svn is {if svgAvailable==true}available{else}missing, some packages may fail to install!{endif}
+</li>
+</ul>
+';
 $GLOBALS['TL_LANG']['composer_client']['migrate_do']           = 'do migration';
 $GLOBALS['TL_LANG']['composer_client']['migrate_skip']         = 'skip migration (dangerous)';
 $GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm'] = 'Skipping the migration may be dangerous, skip migration only if you know what you do. Skip migration now?';

@@ -399,8 +399,12 @@ class ComposerClientBackend extends BackendModule
 
 		$composerSupported = !$smhEnabled && $allowUrlFopenEnabled && $pharSupportEnabled;
 
+		$gitAvailable = $this->testProc('git --version');
+		$hgAvailable  = $this->testProc('hg --version');
+		$svnAvailable = $this->testProc('svn --version');
+
 		$mode  = 'upgrade';
-		$setup = 'production';
+		$setup = $gitAvailable ? 'production_extended' : 'production_compat';
 
 		if ($composerSupported && $input->post('FORM_SUBMIT') == 'tl_composer_migrate') {
 			$target = 'contao/main.php?do=composer';
@@ -466,10 +470,16 @@ class ComposerClientBackend extends BackendModule
 				}
 
 				switch ($setup) {
-					case 'production':
+					case 'production_compat':
 						$config['minimum-stability']           = 'stable';
 						$config['prefer-stable']               = true;
 						$config['config']['preferred-install'] = 'dist';
+						break;
+
+					case 'production_extended':
+						$config['minimum-stability']           = 'stable';
+						$config['prefer-stable']               = true;
+						$config['config']['preferred-install'] = 'source';
 						break;
 
 					case 'development':
@@ -497,6 +507,9 @@ class ComposerClientBackend extends BackendModule
 		$this->Template->pharSupportEnabled   = $pharSupportEnabled;
 		$this->Template->composerSupported    = $composerSupported;
 		$this->Template->oldPackageCount      = $oldPackageCount;
+		$this->Template->gitAvailable         = $gitAvailable;
+		$this->Template->hgAvailable          = $hgAvailable;
+		$this->Template->svnAvailable         = $svnAvailable;
 		$this->Template->mode                 = $mode;
 		$this->Template->setup                = $setup;
 	}
@@ -1433,6 +1446,25 @@ class ComposerClientBackend extends BackendModule
 		$pool->addRepository($repositories);
 
 		return $pool;
+	}
+
+	private function testProc($cmd)
+	{
+		$proc = proc_open(
+			$cmd,
+			array(
+				 array('pipe', 'r'),
+				 array('pipe', 'w'),
+				 array('pipe', 'w')
+			),
+			$pipes
+		);
+
+		if (is_resource($proc)) {
+			return !proc_close($proc);
+		}
+
+		return false;
 	}
 
     private function getRootAliases(RootPackageInterface $rootPackage)
