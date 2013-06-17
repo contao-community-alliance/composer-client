@@ -1158,7 +1158,7 @@ class ComposerClientBackend extends BackendModule
         $aliases = $this->getRootAliases($rootPackage);
         $this->aliasPlatformPackages($platformRepo, $aliases);
 
-		$pool = $this->getPool($rootPackage->getStability(), $rootPackage->getStabilityFlags());
+		$pool = $this->getPool($rootPackage->getMinimumStability(), $rootPackage->getStabilityFlags());
 		$pool->addRepository($installedRepository, $aliases);
 
 		$policy = new DefaultPolicy($rootPackage->getPreferStable());
