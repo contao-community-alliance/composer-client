@@ -1448,66 +1448,123 @@ class ComposerClientBackend extends BackendModule
 		}
 	}
 
-	/**
-	 * Download an url and return or store contents.
-	 *
-	 * @param string $url
-	 * @param bool   $file
-	 *
-	 * @return bool|null|string
-	 * @throws Exception
-	 */
-	protected function download($url, $file = false)
-	{
-		$return = null;
+    /**
+     * Download an url and return or store contents.
+     *
+     * @param string $url
+     * @param bool   $file
+     *
+     * @return bool|null|string
+     * @throws Exception
+     */
+    protected function download($url, $file = false)
+    {
+        if(ini_get('allow_url_fopen')) {
+            return $this->fgetDownload($url, $file);
+        } elseif(function_exists('curl_init')) {
+            return $this->curlDownload($url, $file);
+        }
+    }
 
-		if ($file === false) {
-			$return = true;
-			$file   = 'php://temp';
-		}
+    /**
+     * @param $url
+     * @param bool $file
+     * @return bool|null|string
+     * @throws Exception
+     */
+    protected function fgetDownload($url, $file = false)
+    {
+        $return = null;
 
-		$curl = curl_init($url);
+        if ($file === false) {
+            $return = true;
+            $file   = 'php://temp';
+        }
 
-		$headerStream = fopen('php://temp', 'wb+');
-		$fileStream   = fopen($file, 'wb+');
+        $fileStream = fopen($file, 'wb+');
 
-		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
-		curl_setopt($curl, CURLOPT_WRITEHEADER, $headerStream);
-		curl_setopt($curl, CURLOPT_FILE, $fileStream);
+        fwrite($fileStream, file_get_contents($url));
+        $headers = $http_response_header;
+        $firstHeaderLine = $headers[0];
+        $firstHeaderLineParts = explode(' ', $firstHeaderLine);
 
-		curl_exec($curl);
+        if($firstHeaderLineParts[1] == 301 || $firstHeaderLineParts[1] == 302) {
+            foreach ($headers as $header) {
+                $matches = array();
+                preg_match('/^Location:(.*?)$/', $header, $matches);
+                $url = trim(array_pop($matches));
+                return $this->fgetDownload($url, $file);
+            }
+            throw new \Exception("Can't get the redirect location");
+        }
 
-		rewind($headerStream);
-		$header = stream_get_contents($headerStream);
+        if ($return) {
+            rewind($fileStream);
+            $return = stream_get_contents($fileStream);
+        }
 
-		if ($return) {
-			rewind($fileStream);
-			$return = stream_get_contents($fileStream);
-		}
+        fclose($fileStream);
 
-		fclose($headerStream);
-		fclose($fileStream);
+        return $return;
+    }
 
-		if (curl_errno($curl)) {
-			throw new Exception(
-				curl_error($curl),
-				curl_errno($curl)
-			);
-		}
+    /**
+     * @param $url
+     * @param bool $file
+     * @return bool|null|string
+     * @throws Exception
+     */
+    protected function curlDownload($url, $file = false)
+    {
+        $return = null;
 
-		$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-		curl_close($curl);
+        if ($file === false) {
+            $return = true;
+            $file   = 'php://temp';
+        }
 
-		if ($code == 301 || $code == 302) {
-			preg_match('/Location:(.*?)\n/', $header, $matches);
-			$url = trim(array_pop($matches));
+        $curl = curl_init($url);
 
-			return $this->download($url, $file);
-		}
+        $headerStream = fopen('php://temp', 'wb+');
+        $fileStream   = fopen($file, 'wb+');
 
-		return $return;
-	}
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
+        curl_setopt($curl, CURLOPT_WRITEHEADER, $headerStream);
+        curl_setopt($curl, CURLOPT_FILE, $fileStream);
+
+        curl_exec($curl);
+
+        rewind($headerStream);
+        $header = stream_get_contents($headerStream);
+
+        if ($return) {
+            rewind($fileStream);
+            $return = stream_get_contents($fileStream);
+        }
+
+        fclose($headerStream);
+        fclose($fileStream);
+
+        if (curl_errno($curl)) {
+            throw new Exception(
+                curl_error($curl),
+                curl_errno($curl)
+            );
+        }
+
+        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($code == 301 || $code == 302) {
+            preg_match('/Location:(.*?)\n/', $header, $matches);
+            $url = trim(array_pop($matches));
+
+            return $this->curlDownload($url, $file);
+        }
+
+        return $return;
+    }
 
 	protected function getPool($minimumStability = 'dev', $stabilityFlags = array())
 	{
