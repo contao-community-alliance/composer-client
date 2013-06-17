@@ -383,6 +383,12 @@ class ComposerClientBackend extends BackendModule
 		$oldPackageCount = Database::getInstance()
 			->execute('SELECT COUNT(*) AS count FROM tl_repository_installs')
 			->count;
+		$commercialPackages = Database::getInstance()
+			->execute('SELECT * FROM tl_repository_installs WHERE lickey!=\'\'')
+			->fetchEach('extension');
+		$commercialPackages = count($commercialPackages)
+			? implode(', ', $commercialPackages)
+			: false;
 
 		$smhEnabled           = $GLOBALS['TL_CONFIG']['useFTP'];
 		$allowUrlFopenEnabled = ini_get('allow_url_fopen');
@@ -502,16 +508,17 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		$this->Template->setName('be_composer_client_migrate');
-		$this->Template->smhEnabled           = $smhEnabled;
-		$this->Template->allowUrlFopenEnabled = $allowUrlFopenEnabled;
-		$this->Template->pharSupportEnabled   = $pharSupportEnabled;
-		$this->Template->composerSupported    = $composerSupported;
-		$this->Template->oldPackageCount      = $oldPackageCount;
-		$this->Template->gitAvailable         = $gitAvailable;
-		$this->Template->hgAvailable          = $hgAvailable;
-		$this->Template->svnAvailable         = $svnAvailable;
-		$this->Template->mode                 = $mode;
-		$this->Template->setup                = $setup;
+		$this->Template->smhEnabled             = $smhEnabled;
+		$this->Template->allowUrlFopenEnabled   = $allowUrlFopenEnabled;
+		$this->Template->pharSupportEnabled     = $pharSupportEnabled;
+		$this->Template->composerSupported      = $composerSupported;
+		$this->Template->oldPackageCount        = $oldPackageCount;
+		$this->Template->commercialPackages     = $commercialPackages;
+		$this->Template->gitAvailable           = $gitAvailable;
+		$this->Template->hgAvailable            = $hgAvailable;
+		$this->Template->svnAvailable           = $svnAvailable;
+		$this->Template->mode                   = $mode;
+		$this->Template->setup                  = $setup;
 	}
 
 	/**

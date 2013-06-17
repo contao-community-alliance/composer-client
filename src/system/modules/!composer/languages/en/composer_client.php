@@ -34,6 +34,7 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_text']         = '
 <li class="{if allowUrlFopenEnabled==true}pass{else}fail{endif}">allow_url_fopen is {if allowUrlFopenEnabled==true}enabled{else}disabled{endif}</li>
 <li class="{if pharSupportEnabled==true}pass{else}fail{endif}">PHAR support is {if pharSupportEnabled==true}enabled{else}disabled{endif}</li>
 <li class="{if composerSupported==true}pass{else}fail{endif}">{if composerSupported==true}You can use the composer client :-){else}You cannot use the composer client :-({endif}</li>
+{if commercialPackages!==false}<li class="fail">You have installed some commercial extensions: ##commercialPackages##.<br>You may loose them on migration.<br>Please consult the publisher, if he support composer you can continue without concern.</li>{endif}
 </ul>
 <h2>FAQ</h2>
 <p>First we want to answer the most important questions:</p>
