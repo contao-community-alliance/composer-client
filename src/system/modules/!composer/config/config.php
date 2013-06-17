@@ -29,6 +29,7 @@ if(version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '>='))
     if(!is_dir(COMPOSER_DIR_ABSOULTE))
     {
         Files::getInstance()->mkdir(COMPOSER_DIR_RELATIVE);
+		Files::getInstance()->mkdir(COMPOSER_DIR_RELATIVE . '/packages');
     }
 
     // check .htaccess exists
@@ -71,6 +72,10 @@ EOF;
         {
             "type": "composer",
             "url": "http://legacy-packages-via.contao-community-alliance.org/"
+        },
+        {
+            "type": "artifact",
+            "url": "packages/"
         }
     ]
 }
