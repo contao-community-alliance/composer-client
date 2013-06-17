@@ -30,6 +30,7 @@ TemplateLoader::addFiles(array
 	'be_composer_client_install_composer' => 'system/modules/!composer/templates',
 	'be_composer_client_editor'           => 'system/modules/!composer/templates',
 	'be_composer_client_form'             => 'system/modules/!composer/templates',
+	'be_composer_client_migrate_undo'     => 'system/modules/!composer/templates',
 	'be_composer_client_update'           => 'system/modules/!composer/templates',
 	'be_composer_client_settings'         => 'system/modules/!composer/templates',
 	'be_composer_client_migrate'          => 'system/modules/!composer/templates',

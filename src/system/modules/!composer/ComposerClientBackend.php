@@ -101,6 +101,11 @@ class ComposerClientBackend extends BackendModule
 			return;
 		}
 
+		if ($input->get('migrate') == 'undo') {
+			$this->undoMigration($input);
+			return;
+		}
+
 		if ($input->get('update') == 'database') {
 			$this->updateDatabase($input);
 			return;
@@ -519,6 +524,79 @@ class ComposerClientBackend extends BackendModule
 		$this->Template->svnAvailable           = $svnAvailable;
 		$this->Template->mode                   = $mode;
 		$this->Template->setup                  = $setup;
+	}
+
+	/**
+	 * Undo migration
+	 */
+	protected function undoMigration(Input $input)
+	{
+		if ($input->post('FORM_SUBMIT') == 'tl_composer_migrate_undo') {
+			$requires = $this->composer->getPackage()->getRequires();
+			foreach ($requires as $package => $constraint) {
+				if ($package != 'contao-community-alliance/composer') {
+					unset($requires[$package]);
+				}
+			}
+			$this->composer->getPackage()->setRequires($requires);
+
+			$lockPathname = preg_replace('#\.json$#', '.lock', $this->configPathname);
+
+			$this->composer
+				->getDownloadManager()
+				->setOutputProgress(false);
+			$installer = Installer::create($this->io, $this->composer);
+
+			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
+				$installer->setUpdate(true);
+			}
+
+			if ($installer->run()) {
+				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+			}
+			else {
+				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+
+				$this->redirect('contao/main.php?do=composer&migrate=undo');
+			}
+
+			// load config
+			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+			$config = $json->read();
+
+			// remove migration status
+			unset($config['extra']['contao']['migrated']);
+
+			// write config
+			$json->write($config);
+
+			// disable composer client and enable repository client
+			$inactiveModules = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
+			$inactiveModules[] = '!composer';
+			foreach (array('rep_base', 'rep_client', 'repository') as $module) {
+				$pos = array_search($module, $inactiveModules);
+				if ($pos !== false) {
+					unset($inactiveModules[$pos]);
+				}
+			}
+			if (version_compare(VERSION, '3', '>=')) {
+				$skipFile = new File('system/modules/!composer/.skip');
+				$skipFile->write('Remove this file to enable the module');
+				$skipFile->close();
+			}
+			if (file_exists(TL_ROOT . '/system/modules/repository/.skip')) {
+				$skipFile = new File('system/modules/repository/.skip');
+				$skipFile->delete();
+			}
+			$this->Config->update("\$GLOBALS['TL_CONFIG']['inactiveModules']", serialize($inactiveModules));
+
+			$this->redirect('contao/main.php?do=repository_manager');
+		}
+
+		$this->Template->setName('be_composer_client_migrate_undo');
+		$this->Template->output = $_SESSION['COMPOSER_OUTPUT'];
+
+		unset($_SESSION['COMPOSER_OUTPUT']);
 	}
 
 	/**
