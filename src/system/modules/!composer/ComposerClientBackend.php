@@ -1154,11 +1154,15 @@ class ComposerClientBackend extends BackendModule
 
 		$versionParser = new VersionParser();
 		$constraint = $versionParser->parseConstraints($version);
+		$stability = $versionParser->parseStability($version);
 
         $aliases = $this->getRootAliases($rootPackage);
         $this->aliasPlatformPackages($platformRepo, $aliases);
 
-		$pool = $this->getPool($rootPackage->getMinimumStability(), $rootPackage->getStabilityFlags());
+		$stabilityFlags = $rootPackage->getStabilityFlags();
+		$stabilityFlags[$packageName] = BasePackage::$stabilities[$stability];
+
+		$pool = $this->getPool($rootPackage->getMinimumStability(), $stabilityFlags);
 		$pool->addRepository($installedRepository, $aliases);
 
 		$policy = new DefaultPolicy($rootPackage->getPreferStable());
