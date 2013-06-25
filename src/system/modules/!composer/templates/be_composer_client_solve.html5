@@ -85,7 +85,12 @@ $installationManager = $composer->getInstallationManager();
 										}
 									}
 									if ($reason->getReason() == \Composer\DependencyResolver\Rule::RULE_JOB_INSTALL) {
-										echo $operation->getPackage()->getPrettyVersion();
+										if ($operation instanceof UpdateOperation) {
+											echo $operation->getInitialPackage()->getPrettyVersion();
+										}
+										else {
+											echo $operation->getPackage()->getPrettyVersion();
+										}
 										break;
 									}
 
