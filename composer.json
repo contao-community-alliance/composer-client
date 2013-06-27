@@ -27,9 +27,6 @@
 		"contao/core": ">=2.11",
 		"contao-community-alliance/composer-installer": "*"
 	},
-	"autoload": {
-		"classmap": ["src/"]
-	},
 	"extra": {
 		"contao": {
 			"symlinks": {
