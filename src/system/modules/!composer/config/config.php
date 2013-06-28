@@ -68,7 +68,7 @@ EOF;
         "post-autoload-dump": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::postAutoloadDump"
     },
     "config": {
-        "preferred-install": "dist", 
+        "preferred-install": "dist",
     	"cache-dir": "cache"
     },
     "repositories": [
@@ -105,7 +105,7 @@ EOF;
 		}
     }
 
-	if (!getenv('HOME') && !getenv('COMPOSER_HOME')) {
+	if (!getenv('COMPOSER_HOME')) {
 		putenv('COMPOSER_HOME=' . COMPOSER_DIR_ABSOULTE);
 	}
 
