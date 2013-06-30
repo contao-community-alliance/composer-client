@@ -4,6 +4,7 @@
  * Composer integration for Contao.
  *
  * PHP version 5
+ *
  * @copyright  ContaoCommunityAlliance 2013
  * @author     Dominik Zogg <dominik.zogg at gmail.com>
  * @author     Tristan Lins <tristan.lins@bit3.de>
@@ -19,40 +20,37 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 /**
  * Create initial composer.json
  */
-if(version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '>='))
-{
+if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '>=')) {
 	if (TL_MODE == 'BE') {
 		$GLOBALS['TL_HOOKS']['loadLanguageFile']['composer'] = array('ComposerClient', 'disableOldClientHook');
 	}
 
-    // check composer folder exists
-    if(!is_dir(COMPOSER_DIR_ABSOULTE))
-    {
-        Files::getInstance()->mkdir(COMPOSER_DIR_RELATIVE);
-    }
-    if(!is_dir(COMPOSER_DIR_ABSOULTE . '/packages'))
-    {
-		Files::getInstance()->mkdir(COMPOSER_DIR_RELATIVE . '/packages');
-    }
+	// check composer folder exists
+	if (!is_dir(COMPOSER_DIR_ABSOULTE)) {
+		Files::getInstance()
+			->mkdir(COMPOSER_DIR_RELATIVE);
+	}
+	if (!is_dir(COMPOSER_DIR_ABSOULTE . '/packages')) {
+		Files::getInstance()
+			->mkdir(COMPOSER_DIR_RELATIVE . '/packages');
+	}
 
-    // check .htaccess exists
-    if(!file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess'))
-    {
-        $strHtaccessContent = <<<EOF
+	// check .htaccess exists
+	if (!file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess')) {
+		$strHtaccessContent = <<<EOF
 order deny,allow
 deny from all
 EOF;
 
-        $strHtaccessFile = new File(COMPOSER_DIR_RELATIVE . '/.htaccess');
-        $strHtaccessFile->write($strHtaccessContent);
-    }
+		$strHtaccessFile = new File(COMPOSER_DIR_RELATIVE . '/.htaccess');
+		$strHtaccessFile->write($strHtaccessContent);
+	}
 
-    // check composer.json exists
-    if(!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.json'))
-    {
-        $strContaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
+	// check composer.json exists
+	if (!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.json')) {
+		$strContaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
 
-        $strComposerJsonContent = <<<EOF
+		$strComposerJsonContent = <<<EOF
 {
     "name": "contao/core",
     "description": "Contao Open Source CMS",
@@ -84,26 +82,25 @@ EOF;
 }
 EOF;
 
-        $objComposerJsonFile = new File(COMPOSER_DIR_RELATIVE . '/composer.json');
-        $objComposerJsonFile->write($strComposerJsonContent);
-    }
+		$objComposerJsonFile = new File(COMPOSER_DIR_RELATIVE . '/composer.json');
+		$objComposerJsonFile->write($strComposerJsonContent);
+	}
 
-    // check for autoload.php
-    if(file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php'))
-    {
+	// check for autoload.php
+	if (file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php')) {
 		// unregister the default autoloader
 		if (version_compare(VERSION, '3', '<')) {
-        	spl_autoload_unregister('__autoload');
+			spl_autoload_unregister('__autoload');
 		}
 
-        // register the autoloader
-        require COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php';
+		// register the autoloader
+		require COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php';
 
-        // register the default autoloader as spl autoload
+		// register the default autoloader as spl autoload
 		if (version_compare(VERSION, '3', '<')) {
-        	spl_autoload_register('__autoload');
+			spl_autoload_register('__autoload');
 		}
-    }
+	}
 
 	if (!getenv('COMPOSER_HOME')) {
 		putenv('COMPOSER_HOME=' . COMPOSER_DIR_ABSOULTE);

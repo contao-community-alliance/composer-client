@@ -91,7 +91,9 @@ class ComposerClientBackend extends BackendModule
 
 		// load composer and the composer class loader
 		$this->loadComposer();
-		$extra = $this->composer->getPackage()->getExtra();
+		$extra = $this->composer
+			->getPackage()
+			->getExtra();
 
 		if (!array_key_exists('contao', $extra) ||
 			!array_key_exists('migrated', $extra['contao']) ||
@@ -173,7 +175,7 @@ class ComposerClientBackend extends BackendModule
 		);
 
 		$this->Template->dependencyMap = $dependencyMap;
-		$this->Template->output          = $_SESSION['COMPOSER_OUTPUT'];
+		$this->Template->output        = $_SESSION['COMPOSER_OUTPUT'];
 
 		unset($_SESSION['COMPOSER_OUTPUT']);
 
@@ -372,8 +374,8 @@ class ComposerClientBackend extends BackendModule
 		do {
 			$buffer .= fread($configPathname->handle, 1024);
 		} while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches) && !feof(
-			$configPathname->handle
-		));
+				$configPathname->handle
+			));
 		if ($matches[1]) {
 			return (int) $matches[1];
 		}
@@ -385,7 +387,7 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function migrationWizard(Input $input)
 	{
-		$oldPackageCount = Database::getInstance()
+		$oldPackageCount    = Database::getInstance()
 			->execute('SELECT COUNT(*) AS count FROM tl_repository_installs')
 			->count;
 		$commercialPackages = Database::getInstance()
@@ -514,18 +516,18 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		$this->Template->setName('be_composer_client_migrate');
-		$this->Template->smhEnabled             = $smhEnabled;
-		$this->Template->allowUrlFopenEnabled   = $allowUrlFopenEnabled;
-		$this->Template->pharSupportEnabled     = $pharSupportEnabled;
-		$this->Template->composerSupported      = $composerSupported;
-		$this->Template->apcOpcodeCacheEnabled  = $apcOpcodeCacheEnabled;
-		$this->Template->oldPackageCount        = $oldPackageCount;
-		$this->Template->commercialPackages     = $commercialPackages;
-		$this->Template->gitAvailable           = $gitAvailable;
-		$this->Template->hgAvailable            = $hgAvailable;
-		$this->Template->svnAvailable           = $svnAvailable;
-		$this->Template->mode                   = $mode;
-		$this->Template->setup                  = $setup;
+		$this->Template->smhEnabled            = $smhEnabled;
+		$this->Template->allowUrlFopenEnabled  = $allowUrlFopenEnabled;
+		$this->Template->pharSupportEnabled    = $pharSupportEnabled;
+		$this->Template->composerSupported     = $composerSupported;
+		$this->Template->apcOpcodeCacheEnabled = $apcOpcodeCacheEnabled;
+		$this->Template->oldPackageCount       = $oldPackageCount;
+		$this->Template->commercialPackages    = $commercialPackages;
+		$this->Template->gitAvailable          = $gitAvailable;
+		$this->Template->hgAvailable           = $hgAvailable;
+		$this->Template->svnAvailable          = $svnAvailable;
+		$this->Template->mode                  = $mode;
+		$this->Template->setup                 = $setup;
 	}
 
 	/**
@@ -534,13 +536,17 @@ class ComposerClientBackend extends BackendModule
 	protected function undoMigration(Input $input)
 	{
 		if ($input->post('FORM_SUBMIT') == 'tl_composer_migrate_undo') {
-			$requires = $this->composer->getPackage()->getRequires();
+			$requires = $this->composer
+				->getPackage()
+				->getRequires();
 			foreach ($requires as $package => $constraint) {
 				if ($package != 'contao-community-alliance/composer') {
 					unset($requires[$package]);
 				}
 			}
-			$this->composer->getPackage()->setRequires($requires);
+			$this->composer
+				->getPackage()
+				->setRequires($requires);
 
 			$lockPathname = preg_replace('#\.json$#', '.lock', $this->configPathname);
 
@@ -573,7 +579,7 @@ class ComposerClientBackend extends BackendModule
 			$json->write($config);
 
 			// disable composer client and enable repository client
-			$inactiveModules = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
+			$inactiveModules   = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
 			$inactiveModules[] = '!composer';
 			foreach (array('rep_base', 'rep_client', 'repository') as $module) {
 				$pos = array_search($module, $inactiveModules);
@@ -606,17 +612,17 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function removeER2Files()
 	{
-		$files = Files::getInstance();
-		$file = Database::getInstance()
+		$files      = Files::getInstance();
+		$file       = Database::getInstance()
 			->query('SELECT * FROM tl_repository_instfiles ORDER BY filetype="D", filetype="F", filename DESC');
-		$fileIds = array();
+		$fileIds    = array();
 		$installIds = array();
 		while ($file->next()) {
 			$path = TL_ROOT . '/' . $file->filename;
 			switch ($file->filetype) {
 				case 'F':
 					if (file_exists($path)) {
-						$fileIds[] = $file->id;
+						$fileIds[]    = $file->id;
 						$installIds[] = $file->pid;
 						$files->delete($file->filename);
 					}
@@ -632,7 +638,12 @@ class ComposerClientBackend extends BackendModule
 		}
 		if (count($installIds)) {
 			Database::getInstance()
-				->query('UPDATE tl_repository_installs SET error=1 WHERE id IN (' . implode(',', array_unique($installIds)) . ')');
+				->query(
+					'UPDATE tl_repository_installs SET error=1 WHERE id IN (' . implode(
+						',',
+						array_unique($installIds)
+					) . ')'
+				);
 		}
 		if (count($fileIds)) {
 			Database::getInstance()
@@ -715,7 +726,7 @@ class ComposerClientBackend extends BackendModule
 	protected function showSettingsDialog(Input $input)
 	{
 		$rootPackage = $this->composer->getPackage();
-		$config = $this->composer->getConfig();
+		$config      = $this->composer->getConfig();
 
 		$minimumStability = new SelectMenu(
 			array(
@@ -725,10 +736,10 @@ class ComposerClientBackend extends BackendModule
 				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'][1],
 				 'options'     => array(
 					 array('value' => 'stable', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_stable']),
-					 array('value' => 'RC',     'label' => $GLOBALS['TL_LANG']['composer_client']['stability_rc']),
-					 array('value' => 'beta',   'label' => $GLOBALS['TL_LANG']['composer_client']['stability_beta']),
-					 array('value' => 'alpha',  'label' => $GLOBALS['TL_LANG']['composer_client']['stability_alpha']),
-					 array('value' => 'dev',    'label' => $GLOBALS['TL_LANG']['composer_client']['stability_dev']),
+					 array('value' => 'RC', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_rc']),
+					 array('value' => 'beta', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_beta']),
+					 array('value' => 'alpha', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_alpha']),
+					 array('value' => 'dev', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_dev']),
 				 ),
 				 'value'       => $rootPackage->getMinimumStability(),
 				 'class'       => 'minimum-stability',
@@ -742,7 +753,10 @@ class ComposerClientBackend extends BackendModule
 				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][0],
 				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][1],
 				 'options'     => array(
-					 array('value' => '1', 'label' =>$GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][0]),
+					 array(
+						 'value' => '1',
+						 'label' => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][0]
+					 ),
 				 ),
 				 'value'       => $rootPackage->getPreferStable(),
 				 'class'       => 'prefer-stable',
@@ -757,8 +771,8 @@ class ComposerClientBackend extends BackendModule
 				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][1],
 				 'options'     => array(
 					 array('value' => 'sources', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_source']),
-					 array('value' => 'dist',    'label' => $GLOBALS['TL_LANG']['composer_client']['install_dist']),
-					 array('value' => 'auto',    'label' => $GLOBALS['TL_LANG']['composer_client']['install_auto']),
+					 array('value' => 'dist', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_dist']),
+					 array('value' => 'auto', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_auto']),
 				 ),
 				 'value'       => $config->get('preferred-install'),
 				 'class'       => 'preferred-install',
@@ -767,7 +781,7 @@ class ComposerClientBackend extends BackendModule
 		);
 
 		if ($input->post('FORM_SUBMIT') == 'tl_composer_settings') {
-			$doSave   = false;
+			$doSave = false;
 			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
 			$config = $json->read();
 
@@ -777,17 +791,17 @@ class ComposerClientBackend extends BackendModule
 
 			if (!$minimumStability->hasErrors()) {
 				$config['minimum-stability'] = $minimumStability->value;
-				$doSave = true;
+				$doSave                      = true;
 			}
 
 			if (!$preferStable->hasErrors()) {
 				$config['prefer-stable'] = (bool) $preferStable->value;
-				$doSave = true;
+				$doSave                  = true;
 			}
 
 			if (!$preferredInstall->hasErrors()) {
 				$config['config']['preferred-install'] = $preferredInstall->value;
-				$doSave = true;
+				$doSave                                = true;
 			}
 
 			if ($doSave) {
@@ -891,7 +905,8 @@ class ComposerClientBackend extends BackendModule
 		$localPackages = array_filter(
 			$localPackages,
 			function ($localPackage) use ($dependencyMap) {
-				return !isset($dependencyMap[$localPackage->getName()]) && !($localPackage instanceof \Composer\Package\AliasPackage);
+				return !isset($dependencyMap[$localPackage->getName(
+				)]) && !($localPackage instanceof \Composer\Package\AliasPackage);
 			}
 		);
 
@@ -907,7 +922,7 @@ class ComposerClientBackend extends BackendModule
 		);
 
 		$localPackagesCount = count($localPackages);
-		$index = 0;
+		$index              = 0;
 
 		/** @var \Composer\Package\PackageInterface $package */
 		foreach ($localPackages as $package) {
@@ -943,9 +958,9 @@ class ComposerClientBackend extends BackendModule
 		$isLast,
 		$parents = 0
 	) {
-		$current = (object) array(
-			'package'  => $package,
-			'required' => (object) array(
+		$current           = (object) array(
+			'package'     => $package,
+			'required'    => (object) array(
 				'from'       => $requiredFrom,
 				'constraint' => $requiredConstraint,
 				'parents'    => $parents,
@@ -954,9 +969,9 @@ class ComposerClientBackend extends BackendModule
 		);
 		$dependencyGraph[] = $current;
 
-		$requires = $package->getRequires();
+		$requires      = $package->getRequires();
 		$requiresCount = count($requires);
-		$index = 0;
+		$index         = 0;
 		/** @var string $requireName */
 		/** @var \Composer\Package\Link $requireLink */
 		foreach ($requires as $requireName => $requireLink) {
@@ -974,8 +989,8 @@ class ComposerClientBackend extends BackendModule
 			}
 			else {
 				$dependencyGraph[] = (object) array(
-					'package'  => $requireName,
-					'required' => (object) array(
+					'package'     => $requireName,
+					'required'    => (object) array(
 						'from'       => $package,
 						'constraint' => $requireLink->getPrettyConstraint(),
 						'parents'    => $parents + 1,
@@ -1101,8 +1116,8 @@ class ComposerClientBackend extends BackendModule
 			$this->redirect(
 				'contao/main.php?' . http_build_query(
 					array(
-						 'do' => 'composer',
-						 'solve' => $packageName,
+						 'do'      => 'composer',
+						 'solve'   => $packageName,
 						 'version' => $version
 					)
 				)
@@ -1135,9 +1150,9 @@ class ComposerClientBackend extends BackendModule
 	{
 		$rootPackage = $this->composer->getPackage();
 
-        $installedRootPackage = clone $rootPackage;
-        $installedRootPackage->setRequires(array());
-        $installedRootPackage->setDevRequires(array());
+		$installedRootPackage = clone $rootPackage;
+		$installedRootPackage->setRequires(array());
+		$installedRootPackage->setDevRequires(array());
 
 		$localRepository     = $this->composer
 			->getRepositoryManager()
@@ -1152,16 +1167,16 @@ class ComposerClientBackend extends BackendModule
 		);
 
 		$packageName = $input->get('solve');
-		$version = base64_decode(rawurldecode($input->get('version')));
+		$version     = base64_decode(rawurldecode($input->get('version')));
 
 		$versionParser = new VersionParser();
-		$constraint = $versionParser->parseConstraints($version);
-		$stability = $versionParser->parseStability($version);
+		$constraint    = $versionParser->parseConstraints($version);
+		$stability     = $versionParser->parseStability($version);
 
-        $aliases = $this->getRootAliases($rootPackage);
-        $this->aliasPlatformPackages($platformRepo, $aliases);
+		$aliases = $this->getRootAliases($rootPackage);
+		$this->aliasPlatformPackages($platformRepo, $aliases);
 
-		$stabilityFlags = $rootPackage->getStabilityFlags();
+		$stabilityFlags               = $rootPackage->getStabilityFlags();
 		$stabilityFlags[$packageName] = BasePackage::$stabilities[$stability];
 
 		$pool = $this->getPool($rootPackage->getMinimumStability(), $stabilityFlags);
@@ -1173,8 +1188,8 @@ class ComposerClientBackend extends BackendModule
 
 		// add root package
 		$rootPackageConstraint = new VersionConstraint('=', $rootPackage->getVersion());
-        $rootPackageConstraint->setPrettyString($rootPackage->getPrettyVersion());
-        $request->install($rootPackage->getName(), $rootPackageConstraint);
+		$rootPackageConstraint->setPrettyString($rootPackage->getPrettyVersion());
+		$request->install($rootPackage->getName(), $rootPackageConstraint);
 
 		// add requirements
 		$links = $rootPackage->getRequires();
@@ -1201,7 +1216,9 @@ class ComposerClientBackend extends BackendModule
 			foreach ($beforeOperations as $beforeOperation) {
 				/** @var \Composer\DependencyResolver\Operation\InstallOperation $operation */
 				foreach ($operations as $index => $operation) {
-					if ($operation->getPackage()->getName() != $packageName &&
+					if ($operation
+							->getPackage()
+							->getName() != $packageName &&
 						$beforeOperation->__toString() == $operation->__toString()
 					) {
 						unset($operations[$index]);
@@ -1244,15 +1261,15 @@ class ComposerClientBackend extends BackendModule
 		}
 
 		$this->Template->setName('be_composer_client_solve');
-		$this->Template->packageName = $packageName;
-		$this->Template->packageVersion  = $version;
-		$this->Template->operations = $operations;
+		$this->Template->packageName    = $packageName;
+		$this->Template->packageVersion = $version;
+		$this->Template->operations     = $operations;
 	}
 
 	/**
 	 * Search for a single packages versions.
 	 *
-	 * @param string   $packageName
+	 * @param string $packageName
 	 *
 	 * @return PackageInterface[]
 	 */
@@ -1454,123 +1471,126 @@ class ComposerClientBackend extends BackendModule
 		}
 	}
 
-    /**
-     * Download an url and return or store contents.
-     *
-     * @param string $url
-     * @param bool   $file
-     *
-     * @return bool|null|string
-     * @throws Exception
-     */
-    protected function download($url, $file = false)
-    {
-        if(ini_get('allow_url_fopen')) {
-            return $this->fgetDownload($url, $file);
-        } elseif(function_exists('curl_init')) {
-            return $this->curlDownload($url, $file);
-        }
-    }
+	/**
+	 * Download an url and return or store contents.
+	 *
+	 * @param string $url
+	 * @param bool   $file
+	 *
+	 * @return bool|null|string
+	 * @throws Exception
+	 */
+	protected function download($url, $file = false)
+	{
+		if (ini_get('allow_url_fopen')) {
+			return $this->fgetDownload($url, $file);
+		}
+		elseif (function_exists('curl_init')) {
+			return $this->curlDownload($url, $file);
+		}
+	}
 
-    /**
-     * @param $url
-     * @param bool $file
-     * @return bool|null|string
-     * @throws Exception
-     */
-    protected function fgetDownload($url, $file = false)
-    {
-        $return = null;
+	/**
+	 * @param      $url
+	 * @param bool $file
+	 *
+	 * @return bool|null|string
+	 * @throws Exception
+	 */
+	protected function fgetDownload($url, $file = false)
+	{
+		$return = null;
 
-        if ($file === false) {
-            $return = true;
-            $file   = 'php://temp';
-        }
+		if ($file === false) {
+			$return = true;
+			$file   = 'php://temp';
+		}
 
-        $fileStream = fopen($file, 'wb+');
+		$fileStream = fopen($file, 'wb+');
 
-        fwrite($fileStream, file_get_contents($url));
-        $headers = $http_response_header;
-        $firstHeaderLine = $headers[0];
-        $firstHeaderLineParts = explode(' ', $firstHeaderLine);
+		fwrite($fileStream, file_get_contents($url));
+		$headers              = $http_response_header;
+		$firstHeaderLine      = $headers[0];
+		$firstHeaderLineParts = explode(' ', $firstHeaderLine);
 
-        if($firstHeaderLineParts[1] == 301 || $firstHeaderLineParts[1] == 302) {
-            foreach ($headers as $header) {
-                $matches = array();
-                preg_match('/^Location:(.*?)$/', $header, $matches);
-                $url = trim(array_pop($matches));
-                return $this->fgetDownload($url, $file);
-            }
-            throw new \Exception("Can't get the redirect location");
-        }
+		if ($firstHeaderLineParts[1] == 301 || $firstHeaderLineParts[1] == 302) {
+			foreach ($headers as $header) {
+				$matches = array();
+				preg_match('/^Location:(.*?)$/', $header, $matches);
+				$url = trim(array_pop($matches));
+				return $this->fgetDownload($url, $file);
+			}
+			throw new \Exception("Can't get the redirect location");
+		}
 
-        if ($return) {
-            rewind($fileStream);
-            $return = stream_get_contents($fileStream);
-        }
+		if ($return) {
+			rewind($fileStream);
+			$return = stream_get_contents($fileStream);
+		}
 
-        fclose($fileStream);
+		fclose($fileStream);
 
-        return $return;
-    }
+		return $return;
+	}
 
-    /**
-     * @param $url
-     * @param bool $file
-     * @return bool|null|string
-     * @throws Exception
-     */
-    protected function curlDownload($url, $file = false)
-    {
-        $return = null;
+	/**
+	 * @param      $url
+	 * @param bool $file
+	 *
+	 * @return bool|null|string
+	 * @throws Exception
+	 */
+	protected function curlDownload($url, $file = false)
+	{
+		$return = null;
 
-        if ($file === false) {
-            $return = true;
-            $file   = 'php://temp';
-        }
+		if ($file === false) {
+			$return = true;
+			$file   = 'php://temp';
+		}
 
-        $curl = curl_init($url);
+		$curl = curl_init($url);
 
-        $headerStream = fopen('php://temp', 'wb+');
-        $fileStream   = fopen($file, 'wb+');
+		$headerStream = fopen('php://temp', 'wb+');
+		$fileStream   = fopen($file, 'wb+');
 
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
-        curl_setopt($curl, CURLOPT_WRITEHEADER, $headerStream);
-        curl_setopt($curl, CURLOPT_FILE, $fileStream);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
+		curl_setopt($curl, CURLOPT_WRITEHEADER, $headerStream);
+		curl_setopt($curl, CURLOPT_FILE, $fileStream);
 
-        curl_exec($curl);
+		curl_exec($curl);
 
-        rewind($headerStream);
-        $header = stream_get_contents($headerStream);
+		rewind($headerStream);
+		$header = stream_get_contents($headerStream);
 
-        if ($return) {
-            rewind($fileStream);
-            $return = stream_get_contents($fileStream);
-        }
+		if ($return) {
+			rewind($fileStream);
+			$return = stream_get_contents($fileStream);
+		}
 
-        fclose($headerStream);
-        fclose($fileStream);
+		fclose($headerStream);
+		fclose($fileStream);
 
-        if (curl_errno($curl)) {
-            throw new Exception(
-                curl_error($curl),
-                curl_errno($curl)
-            );
-        }
+		if (curl_errno($curl)) {
+			throw new Exception(
+				curl_error($curl),
+				curl_errno($curl)
+			);
+		}
 
-        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+		$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		curl_close($curl);
 
-        if ($code == 301 || $code == 302) {
-            preg_match('/Location:(.*?)\n/', $header, $matches);
-            $url = trim(array_pop($matches));
+		if ($code == 301 || $code == 302) {
+			preg_match('/Location:(.*?)\n/', $header, $matches);
+			$url = trim(array_pop($matches));
 
-            return $this->curlDownload($url, $file);
-        }
+			return $this->curlDownload($url, $file);
+		}
 
-        return $return;
-    }
+		return $return;
+	}
 
 	protected function getPool($minimumStability = 'dev', $stabilityFlags = array())
 	{
@@ -1615,33 +1635,33 @@ class ComposerClientBackend extends BackendModule
 		return false;
 	}
 
-    private function getRootAliases(RootPackageInterface $rootPackage)
-    {
+	private function getRootAliases(RootPackageInterface $rootPackage)
+	{
 		$aliases = $rootPackage->getAliases();
 
-        $normalizedAliases = array();
+		$normalizedAliases = array();
 
-        foreach ($aliases as $alias) {
-            $normalizedAliases[$alias['package']][$alias['version']] = array(
-                'alias' => $alias['alias'],
-                'alias_normalized' => $alias['alias_normalized']
-            );
-        }
+		foreach ($aliases as $alias) {
+			$normalizedAliases[$alias['package']][$alias['version']] = array(
+				'alias'            => $alias['alias'],
+				'alias_normalized' => $alias['alias_normalized']
+			);
+		}
 
-        return $normalizedAliases;
-    }
+		return $normalizedAliases;
+	}
 
-    private function aliasPlatformPackages(PlatformRepository $platformRepo, $aliases)
-    {
-        foreach ($aliases as $package => $versions) {
-            foreach ($versions as $version => $alias) {
-                $packages = $platformRepo->findPackages($package, $version);
-                foreach ($packages as $package) {
-                    $aliasPackage = new AliasPackage($package, $alias['alias_normalized'], $alias['alias']);
-                    $aliasPackage->setRootPackageAlias(true);
-                    $platformRepo->addPackage($aliasPackage);
-                }
-            }
-        }
-    }
+	private function aliasPlatformPackages(PlatformRepository $platformRepo, $aliases)
+	{
+		foreach ($aliases as $package => $versions) {
+			foreach ($versions as $version => $alias) {
+				$packages = $platformRepo->findPackages($package, $version);
+				foreach ($packages as $package) {
+					$aliasPackage = new AliasPackage($package, $alias['alias_normalized'], $alias['alias']);
+					$aliasPackage->setRootPackageAlias(true);
+					$platformRepo->addPackage($aliasPackage);
+				}
+			}
+		}
+	}
 }
