@@ -67,6 +67,13 @@ span.stability-dev {
 	background-repeat: no-repeat;
 	padding-left: 16px;
 }
+.tl_composer_migrate .preconditions li.warn {
+	color: #999900;
+	background-image: url(../images/warn.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 16px;
+}
 .tl_composer_migrate .preconditions li.pass {
 	color: #009900;
 	background-image: url(../images/pass.png);

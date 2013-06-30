@@ -395,9 +395,10 @@ class ComposerClientBackend extends BackendModule
 			? implode(', ', $commercialPackages)
 			: false;
 
-		$smhEnabled           = $GLOBALS['TL_CONFIG']['useFTP'];
-		$allowUrlFopenEnabled = ini_get('allow_url_fopen');
-		$pharSupportEnabled   = false;
+		$smhEnabled            = $GLOBALS['TL_CONFIG']['useFTP'];
+		$allowUrlFopenEnabled  = ini_get('allow_url_fopen');
+		$pharSupportEnabled    = false;
+		$apcOpcodeCacheEnabled = ini_get('apc.enabled') && ini_get('apc.cache_by_default');
 
 		try {
 			if (class_exists('Phar', false)) {
@@ -517,6 +518,7 @@ class ComposerClientBackend extends BackendModule
 		$this->Template->allowUrlFopenEnabled   = $allowUrlFopenEnabled;
 		$this->Template->pharSupportEnabled     = $pharSupportEnabled;
 		$this->Template->composerSupported      = $composerSupported;
+		$this->Template->apcOpcodeCacheEnabled  = $apcOpcodeCacheEnabled;
 		$this->Template->oldPackageCount        = $oldPackageCount;
 		$this->Template->commercialPackages     = $commercialPackages;
 		$this->Template->gitAvailable           = $gitAvailable;
