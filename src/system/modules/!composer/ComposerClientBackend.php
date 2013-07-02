@@ -267,6 +267,11 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function loadComposer()
 	{
+		if(function_exists('apc_clear_cache')) {
+			apc_clear_cache();
+			ini_set('apc.cache_by_default', 0);
+		}
+
 		chdir(TL_ROOT . '/composer');
 
 		// unregister contao class loader
