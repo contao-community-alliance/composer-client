@@ -186,8 +186,12 @@ span.stability-dev {
 	font-family: monospace;
 	font-size: 10px;
 }
+.col_collapse {
+	width: 16px;
+}
 .col_name {
 	padding: 4px 0;
+	white-space: nowrap;
 }
 .col_name .toggler {
 	cursor: pointer;

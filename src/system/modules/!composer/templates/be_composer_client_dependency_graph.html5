@@ -36,6 +36,7 @@ $lastLevels = array();
 	<table class="tl_listing showColumns">
 		<thead>
 		<tr>
+			<th class="tl_folder_tlist col_collapse"></th>
 			<th class="tl_folder_tlist col_type col_name"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
 			<th class="tl_folder_tlist col_requested_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_dependend_version']; ?></th>
 			<th class="tl_folder_tlist col_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_installed_version']; ?></th>
@@ -66,10 +67,20 @@ $lastLevels = array();
 		*/ ?>
 		<?php
 		$n = 1;
+		$group = false;
 		foreach ($dependencyGraph as $item):
 			$localPackage = $item->package;
+
+			if (!$item->required->parents) {
+				$group = 'group_' . str_replace('-', '_', standardize($localPackage->getName()));
+			}
 			?>
-			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+			<tr class="<?php echo $group; if ($item->required->parents): echo '_item'; endif; if (!$item->required->parents): ?> <?php echo $n++ % 2 == 0 ? 'even' : 'odd'; endif; ?>"<?php if ($item->required->parents): ?> style="display:none;"<?php endif; ?> onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+				<td class="tl_file_list col_collapse"><?php
+					if (!$item->required->parents):
+						?><a href="javascript:toggleGroup(<?php echo str_replace('"', "'", json_encode($group)); ?>);" data-group="<?php echo $group; ?>" data-expanded="false"><img src="system/modules/!composer/assets/images/expand.png"></a><?php
+					endif;
+					?></td>
 				<td class="tl_file_list col_type col_name"><?php
 					if ($item->lastInLevel >= 0) {
 						$lastLevels[$item->lastInLevel] = true;
@@ -144,6 +155,8 @@ $lastLevels = array();
 		</tbody>
 	</table>
 </div>
+
+<script src="system/modules/!composer/assets/js/dependencyGraph.js"></script>
 
 <?php
 $template = new BackendTemplate('be_composer_client_form');
