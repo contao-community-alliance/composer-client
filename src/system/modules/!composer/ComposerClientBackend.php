@@ -1360,6 +1360,19 @@ class ComposerClientBackend extends BackendModule
 				->setOutputProgress(false);
 			$installer = Installer::create($this->io, $this->composer);
 
+			switch ($this->composer->getConfig()->get('preferred-install')) {
+				case 'source':
+					$installer->setPreferSource(true);
+					break;
+				case 'dist':
+					$installer->setPreferDist(true);
+					break;
+				case 'auto':
+				default:
+					// noop
+					break;
+			}
+
 			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
 				$installer->setUpdate(true);
 			}
