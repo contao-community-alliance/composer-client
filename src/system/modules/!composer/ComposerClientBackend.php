@@ -469,12 +469,14 @@ class ComposerClientBackend extends BackendModule
 							$major      = (int) ($oldVersion / 1000);
 
 							$version = sprintf(
-								'%d.%d.%d.%d%s',
+								'>=%d.%d.%d.%d%s,<%d.%d',
 								$major,
 								$minor,
 								$release,
 								($stability * 1000 + $build),
-								static::$versionNames[$stability]
+								static::$versionNames[$stability],
+								$major,
+								$minor + 1
 							);
 
 							$config['require'][$packageName] = $version;
