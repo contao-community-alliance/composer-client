@@ -427,6 +427,18 @@ table#sql_table td.tl_col_1 {
 table#sql_table td.tl_col_2 label {
 	font-family: Consolas, monospace;
 }
+table#sql_table .create_table {
+	color: #085AFF;
+}
+table#sql_table .alter_add {
+	color: #085AFF;
+}
+table#sql_table .alter_drop {
+	color: #FF0808;
+}
+table#sql_table .drop_table {
+	color: #FF0808;
+}
 
 /**
  * Experts mode

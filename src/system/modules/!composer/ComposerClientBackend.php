@@ -704,6 +704,27 @@ class ComposerClientBackend extends BackendModule
 			$this->redirect('contao/main.php?do=composer');
 		}
 
+		$form = preg_replace(
+			'#(<label for="sql_\d+")>(CREATE TABLE)#',
+			'$1 class="create_table">$2',
+			$form
+		);
+		$form = preg_replace(
+			'#(<label for="sql_\d+")>(ALTER TABLE `[^`]+` ADD)#',
+			'$1 class="alter_add">$2',
+			$form
+		);
+		$form = preg_replace(
+			'#(<label for="sql_\d+")>(ALTER TABLE `[^`]+` DROP)#',
+			'$1 class="alter_drop">$2',
+			$form
+		);
+		$form = preg_replace(
+			'#(<label for="sql_\d+")>(DROP TABLE)#',
+			'$1 class="drop_table">$2',
+			$form
+		);
+
 		$this->Template->setName('be_composer_client_update');
 		$this->Template->form = $form;
 	}
