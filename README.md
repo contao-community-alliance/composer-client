@@ -88,7 +88,7 @@ Click on "updated packages" and just wait until composer finished installation.
 
 ### Requirements
 * php 5.3.4 or higher
-* contao 2.11.*
+* contao 2.11.* or contao 3.1.* or higher
 
 Attribution
 -----------
