@@ -798,7 +798,7 @@ class ComposerClientBackend extends BackendModule
 				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][0],
 				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][1],
 				 'options'     => array(
-					 array('value' => 'sources', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_source']),
+					 array('value' => 'source', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_source']),
 					 array('value' => 'dist', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_dist']),
 					 array('value' => 'auto', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_auto']),
 				 ),
