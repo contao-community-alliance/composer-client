@@ -39,10 +39,12 @@ span.stability-dev {
 	vertical-align: middle;
 }
 .output {
+	font-family: monospace;
 	margin: 24px 18px;
 	padding: 6px 8px;
 	white-space: pre-line;
-	background-color: #f3f3f3;
+	background-color: #111;
+	color: #fff;
 	max-height: 20em;
 	overflow: auto;
 }
