@@ -29,9 +29,12 @@
 	},
 	"extra": {
 		"contao": {
-			"symlinks": {
+			"sources": {
 				"src/system/modules/!composer": "system/modules/!composer"
 			}
+		},
+		"branch-alias": {
+			"dev-master": "0.x-dev"
 		}
 	}
 }
