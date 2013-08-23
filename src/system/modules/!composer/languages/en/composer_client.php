@@ -115,8 +115,8 @@ $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']            = '
 <li class="{if hgAvailable==true}pass{else}fail{endif}">
 	mercurial is {if hgAvailable==true}available{else}missing, some packages may fail to install!{endif}
 </li>
-<li class="{if svgAvailable==true}pass{else}fail{endif}">
-	svn is {if svgAvailable==true}available{else}missing, some packages may fail to install!{endif}
+<li class="{if svnAvailable==true}pass{else}fail{endif}">
+	svn is {if svnAvailable==true}available{else}missing, some packages may fail to install!{endif}
 </li>
 </ul>
 ';

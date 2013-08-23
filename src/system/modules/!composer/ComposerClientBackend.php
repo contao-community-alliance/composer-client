@@ -1670,7 +1670,7 @@ class ComposerClientBackend extends BackendModule
 		);
 
 		if (is_resource($proc)) {
-			return !proc_close($proc);
+			return proc_close($proc) != -1;
 		}
 
 		return false;
