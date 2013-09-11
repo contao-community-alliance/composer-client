@@ -98,6 +98,10 @@ EOF;
 
 		// register the default autoloader as spl autoload
 		if (version_compare(VERSION, '3', '<')) {
+			// swift is not autoloaded in Contao 2.x
+			require_once(TL_ROOT . '/plugins/swiftmailer/classes/Swift.php');
+			require_once(TL_ROOT . '/plugins/swiftmailer/swift_init.php');
+
 			spl_autoload_register('__autoload');
 		}
 	}
