@@ -248,6 +248,16 @@ EOF;
 	}
 
 	/**
+	 * Determinate if suhosin is enabled.
+	 *
+	 * @return bool
+	 */
+	static public function isSuhosinEnabled()
+	{
+		return extension_loaded('suhosin');
+	}
+
+	/**
 	 * Check the local environment, return true if everything is fine, an array of errors otherwise.
 	 *
 	 * @return bool|array
@@ -273,6 +283,11 @@ EOF;
 		// check for apc and try to disable
 		if (static::isApcEnabled() && ini_set('apc.cache_by_default', 0) === false) {
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'];
+		}
+
+		// check for suhosin
+		if (static::isSuhosinEnabled()) {
+			$errors[] = $GLOBALS['TL_LANG']['composer_client']['suhosin_enabled'];
 		}
 
 		if (count($errors)) {
