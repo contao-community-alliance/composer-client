@@ -261,12 +261,10 @@ class ClientBackend extends \BackendModule
 		Runtime::registerComposerClassLoader();
 
 		// search for composer build version
-		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
-			$composerDevWarningTime = Runtime::readComposerDevWarningTime();
-			if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
-				$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
-				$this->Template->composerUpdate = true;
-			}
+		$composerDevWarningTime = Runtime::readComposerDevWarningTime();
+		if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
+			$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
+			$this->Template->composerUpdate = true;
 		}
 
 		// define pathname to config file
