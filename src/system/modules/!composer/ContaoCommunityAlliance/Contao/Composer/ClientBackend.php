@@ -677,10 +677,7 @@ class ClientBackend extends \BackendModule
 	 */
 	protected function clearComposerCache(\Input $input)
 	{
-		if (is_dir(TL_ROOT . '/composer/cache')) {
-			$fs = new Filesystem();
-			$fs->removeDirectory(TL_ROOT . '/composer/cache');
-
+		if (Runtime::clearComposerCache()) {
 			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared'];
 		}
 

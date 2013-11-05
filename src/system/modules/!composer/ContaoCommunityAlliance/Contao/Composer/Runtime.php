@@ -105,4 +105,15 @@ class Runtime
 		}
 		return false;
 	}
+
+	/**
+	 * Clear the composer cache.
+	 *
+	 * @param \Input $input
+	 */
+	static public function clearComposerCache()
+	{
+		$fs = new Filesystem();
+		return $fs->removeDirectory(TL_ROOT . '/composer/cache');
+	}
 }
