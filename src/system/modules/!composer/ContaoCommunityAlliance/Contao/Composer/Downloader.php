@@ -46,7 +46,7 @@ class Downloader
 	 */
 	static public function download($url, $file = false)
 	{
-		if (ini_get('allow_url_fopen')) {
+		if (Runtime::isAllowUrlFopenEnabled()) {
 			return static::fgetDownload($url, $file);
 		}
 		else if (Runtime::isCurlEnabled()) {

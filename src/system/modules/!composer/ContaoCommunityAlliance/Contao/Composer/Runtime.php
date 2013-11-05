@@ -146,4 +146,14 @@ class Runtime
 	{
 		return function_exists('curl_init');
 	}
+
+	/**
+	 * Determinate if allow_url_fopen is enabled.
+	 *
+	 * @return bool
+	 */
+	static public function isAllowUrlFopenEnabled()
+	{
+		return (bool) ini_get('allow_url_fopen');
+	}
 }
