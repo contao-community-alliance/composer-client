@@ -255,33 +255,10 @@ class ClientBackend extends \BackendModule
 	{
 		chdir(TL_ROOT . '/composer');
 
-		// unregister contao class loader
-		if (version_compare(VERSION, '3', '<')) {
-			spl_autoload_unregister('__autoload');
-		}
-
 		// try to increase memory limit
 		Runtime::increaseMemoryLimit();
 
-		// register composer class loader
-		if (file_exists(TL_ROOT . '/composer/vendor/composer/composer/src/Composer/Composer.php') &&
-			file_exists(TL_ROOT . '/composer/vendor/autoload.php')
-		) {
-			require_once(TL_ROOT . '/composer/vendor/autoload.php');
-		}
-
-		// register composer class loader from phar
-		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
-			$phar             = new \Phar(TL_ROOT . '/composer/composer.phar');
-			$autoloadPathname = $phar['vendor/autoload.php'];
-			require_once($autoloadPathname->getPathname());
-
-		}
-
-		// reregister contao class loader
-		if (version_compare(VERSION, '3', '<')) {
-			spl_autoload_register('__autoload');
-		}
+		Runtime::registerComposerClassLoader();
 
 		// search for composer build version
 		if (file_exists(TL_ROOT . '/composer/composer.phar')) {

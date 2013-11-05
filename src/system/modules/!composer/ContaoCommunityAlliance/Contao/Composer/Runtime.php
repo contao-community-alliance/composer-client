@@ -201,4 +201,27 @@ class Runtime
 
 		return true;
 	}
+
+	/**
+	 * Register the composer class loader from composer.phar.
+	 */
+	static public function registerComposerClassLoader()
+	{
+		// unregister contao class loader
+		if (version_compare(VERSION, '3', '<')) {
+			spl_autoload_unregister('__autoload');
+		}
+
+		// register composer class loader
+		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
+			$phar             = new \Phar(TL_ROOT . '/composer/composer.phar');
+			$autoloadPathname = $phar['vendor/autoload.php'];
+			require_once($autoloadPathname->getPathname());
+		}
+
+		// reregister contao class loader
+		if (version_compare(VERSION, '3', '<')) {
+			spl_autoload_register('__autoload');
+		}
+	}
 }
