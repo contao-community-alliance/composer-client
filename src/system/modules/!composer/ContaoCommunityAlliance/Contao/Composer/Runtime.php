@@ -44,7 +44,7 @@ class Runtime
 	static public function updateComposer()
 	{
 		$url  = 'https://getcomposer.org/composer.phar';
-		$file = TL_ROOT . '/composer/composer.phar';
+		$file = COMPOSER_DIR_ABSOULTE . '/composer.phar';
 		Downloader::download($url, $file);
 		return true;
 	}
@@ -115,7 +115,7 @@ class Runtime
 	static public function clearComposerCache()
 	{
 		$fs = new Filesystem();
-		return $fs->removeDirectory(TL_ROOT . '/composer/cache');
+		return $fs->removeDirectory(COMPOSER_DIR_ABSOULTE . '/cache');
 	}
 
 	/**
@@ -216,7 +216,7 @@ class Runtime
 
 		$registered = true;
 
-		if (file_exists(TL_ROOT . '/composer/vendor/autoload.php')) {
+		if (file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php')) {
 			$isContao2 = version_compare(VERSION, '3', '<');
 
 			// unregister contao class loader
@@ -225,7 +225,7 @@ class Runtime
 			}
 
 			// register composer vendor class loader
-			require_once(TL_ROOT . '/composer/vendor/autoload.php');
+			require_once(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php');
 
 			// reregister contao class loader
 			if ($isContao2) {
@@ -257,8 +257,8 @@ class Runtime
 		}
 
 		// register composer class loader
-		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
-			$phar             = new \Phar(TL_ROOT . '/composer/composer.phar');
+		if (file_exists(COMPOSER_DIR_ABSOULTE . '/composer.phar')) {
+			$phar             = new \Phar(COMPOSER_DIR_ABSOULTE . '/composer.phar');
 			$autoloadPathname = $phar['vendor/autoload.php'];
 			require_once($autoloadPathname->getPathname());
 		}
@@ -274,7 +274,7 @@ class Runtime
 	 */
 	static function createComposer(IOInterface $io)
 	{
-		chdir(TL_ROOT . '/composer');
+		chdir(COMPOSER_DIR_ABSOULTE);
 
 		// try to increase memory limit
 		static::increaseMemoryLimit();

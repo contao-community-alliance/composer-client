@@ -207,10 +207,10 @@ class ClientBackend extends \BackendModule
 		/*
 		 * Use composer.phar only, if composer is not installed locally
 		 */
-		if (!file_exists(TL_ROOT . '/composer/vendor/composer/composer/src/Composer/Composer.php') ||
-			!file_exists(TL_ROOT . '/composer/vendor/autoload.php')
+		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/composer/composer/src/Composer/Composer.php') ||
+			!file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php')
 		) {
-			if (!file_exists(TL_ROOT . '/composer/composer.phar')) {
+			if (!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.phar')) {
 				// switch template
 				$this->Template->setName('be_composer_client_install_composer');
 
