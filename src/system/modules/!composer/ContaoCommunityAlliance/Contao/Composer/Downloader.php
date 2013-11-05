@@ -49,7 +49,7 @@ class Downloader
 		if (ini_get('allow_url_fopen')) {
 			return static::fgetDownload($url, $file);
 		}
-		else if (function_exists('curl_init')) {
+		else if (Runtime::isCurlEnabled()) {
 			return static::curlDownload($url, $file);
 		}
 		else {

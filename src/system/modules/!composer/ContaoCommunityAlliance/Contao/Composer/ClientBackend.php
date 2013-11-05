@@ -205,7 +205,7 @@ class ClientBackend extends \BackendModule
 		}
 
 		// check for curl
-		if (!function_exists('curl_init')) {
+		if (!Runtime::isCurlEnabled()) {
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['curl_missing'];
 		}
 

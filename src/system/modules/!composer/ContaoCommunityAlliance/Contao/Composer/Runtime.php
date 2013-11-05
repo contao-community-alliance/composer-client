@@ -136,4 +136,14 @@ class Runtime
 	{
 		return (bool) version_compare(PHP_VERSION, '5.3.4', '>=');
 	}
+
+	/**
+	 * Determinate if curl is enabled.
+	 *
+	 * @return bool
+	 */
+	static public function isCurlEnabled()
+	{
+		return function_exists('curl_init');
+	}
 }
