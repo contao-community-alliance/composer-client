@@ -193,23 +193,9 @@ class ClientBackend extends \BackendModule
 	 */
 	protected function checkEnvironment(\Input $input)
 	{
-		$errors = array();
+		$errors = Runtime::checkEnvironment();
 
-		if (Runtime::isSafeModeHackEnabled()) {
-			$errors[] = $GLOBALS['TL_LANG']['composer_client']['ftp_mode'];
-		}
-
-		// check for php version
-		if (!Runtime::isPhpVersionSupported()) {
-			$errors[] = sprintf($GLOBALS['TL_LANG']['composer_client']['php_version'], PHP_VERSION);
-		}
-
-		// check for curl
-		if (!Runtime::isCurlEnabled()) {
-			$errors[] = $GLOBALS['TL_LANG']['composer_client']['curl_missing'];
-		}
-
-		if (count($errors)) {
+		if ($errors !== true && count($errors)) {
 			$this->Template->setName('be_composer_client_errors');
 			$this->Template->errors = $errors;
 			return false;

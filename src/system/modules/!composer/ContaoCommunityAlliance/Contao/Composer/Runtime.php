@@ -156,4 +156,34 @@ class Runtime
 	{
 		return (bool) ini_get('allow_url_fopen');
 	}
+
+	/**
+	 * Check the local environment, return true if everything is fine, an array of errors otherwise.
+	 *
+	 * @return bool|array
+	 */
+	static public function checkEnvironment()
+	{
+		$errors = array();
+
+		if (Runtime::isSafeModeHackEnabled()) {
+			$errors[] = $GLOBALS['TL_LANG']['composer_client']['ftp_mode'];
+		}
+
+		// check for php version
+		if (!Runtime::isPhpVersionSupported()) {
+			$errors[] = sprintf($GLOBALS['TL_LANG']['composer_client']['php_version'], PHP_VERSION);
+		}
+
+		// check for curl
+		if (!Runtime::isCurlEnabled()) {
+			$errors[] = $GLOBALS['TL_LANG']['composer_client']['curl_missing'];
+		}
+
+		if (count($errors)) {
+			return $errors;
+		}
+
+		return true;
+	}
 }
