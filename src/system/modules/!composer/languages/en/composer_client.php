@@ -15,12 +15,13 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline'] = 'Dependenc
 /**
  * References
  */
-$GLOBALS['TL_LANG']['composer_client']['ftp_mode']           = 'Safe-Mode-Hack is not supported.<br>Configure your hosting and run Contao without Safe-Mode-Hack.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Article about Safe-Mode-Hack in the Contao Wiki (german)</a>';
-$GLOBALS['TL_LANG']['composer_client']['php_version']        = 'PHP version <strong>PHP 5.3.4</strong> or newer is required. Your system runs with PHP version <strong>%s</strong>.<br>Please upgrade your PHP.';
-$GLOBALS['TL_LANG']['composer_client']['curl_missing']       = 'Curl is required to download packages.<br>Please install/enable the PHP <a href="http://php.net/curl" target="_blank">curl</a> module.';
-$GLOBALS['TL_LANG']['composer_client']['composer_missing']   = 'Composer library is not completely installed.<br>Click <strong>Install Composer</strong> to install composer and its dependencies.';
-$GLOBALS['TL_LANG']['composer_client']['install_composer']   = 'Install Composer';
-$GLOBALS['TL_LANG']['composer_client']['search_placeholder'] = 'Package name or keyword';
+$GLOBALS['TL_LANG']['composer_client']['ftp_mode']              = 'Safe-Mode-Hack is not supported.<br>Configure your hosting and run Contao without Safe-Mode-Hack.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Article about Safe-Mode-Hack in the Contao Wiki (german)</a>';
+$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'PHP version <strong>PHP 5.3.4</strong> or newer is required. Your system runs with PHP version <strong>%s</strong>.<br>Please upgrade your PHP.';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'Curl is required to download packages.<br>Please install/enable the PHP <a href="http://php.net/curl" target="_blank">curl</a> module.';
+$GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'] = 'Could not disable APC. APC and Composer produce random errors, please disable <a href="http://php.net/apc" target="_blank">APC</a>.';
+$GLOBALS['TL_LANG']['composer_client']['composer_missing']      = 'Composer library is not completely installed.<br>Click <strong>Install Composer</strong> to install composer and its dependencies.';
+$GLOBALS['TL_LANG']['composer_client']['install_composer']      = 'Install Composer';
+$GLOBALS['TL_LANG']['composer_client']['search_placeholder']    = 'Package name or keyword';
 
 /**
  * Migration wizard

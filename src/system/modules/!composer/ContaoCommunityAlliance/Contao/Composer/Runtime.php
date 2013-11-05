@@ -190,6 +190,11 @@ class Runtime
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['curl_missing'];
 		}
 
+		// check for apc and try to disable
+		if (static::isApcEnabled() && ini_set('apc.cache_by_default', 0) === false) {
+			$errors[] = $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'];
+		}
+
 		if (count($errors)) {
 			return $errors;
 		}

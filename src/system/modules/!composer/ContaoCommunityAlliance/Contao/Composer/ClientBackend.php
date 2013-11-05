@@ -253,11 +253,6 @@ class ClientBackend extends \BackendModule
 	 */
 	protected function loadComposer()
 	{
-		if (Runtime::isApcEnabled()) {
-			apc_clear_cache();
-			$this->Template->apcDisabledByUs = ini_set('apc.cache_by_default', 0);
-		}
-
 		chdir(TL_ROOT . '/composer');
 
 		// unregister contao class loader

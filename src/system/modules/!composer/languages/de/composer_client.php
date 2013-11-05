@@ -15,12 +15,13 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline'] = 'Abhängig
 /**
  * References
  */
-$GLOBALS['TL_LANG']['composer_client']['ftp_mode']           = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Richten Sie Contao so ein, dass es ohne SMH lauffähig ist.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel zum SMH im Contao Wiki</a>';
-$GLOBALS['TL_LANG']['composer_client']['php_version']        = 'Für den Einsatz des Composer Client wird <strong>PHP 5.3.4</strong> vorausgesetzt, sie verwenden <strong>PHP %s</strong>.<br>Bitte aktualisieren Sie auf eine aktuellere PHP Version.';
-$GLOBALS['TL_LANG']['composer_client']['curl_missing']       = 'Zum herunterladen von Dateien wird curl benötigt.<br>Bitte installieren Sie das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
-$GLOBALS['TL_LANG']['composer_client']['composer_missing']   = 'Die Composer Library ist nicht (vollständig) installiert.<br>Drücken Sie auf <strong>Composer installieren</strong> um Composer und alle Abhängigkeiten zu installieren.';
-$GLOBALS['TL_LANG']['composer_client']['install_composer']   = 'Composer installieren';
-$GLOBALS['TL_LANG']['composer_client']['search_placeholder'] = 'Paketname oder Suchbegriff';
+$GLOBALS['TL_LANG']['composer_client']['ftp_mode']              = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Richten Sie Contao so ein, dass es ohne SMH lauffähig ist.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel zum SMH im Contao Wiki</a>';
+$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'Für den Einsatz des Composer Client wird <strong>PHP 5.3.4</strong> vorausgesetzt, sie verwenden <strong>PHP %s</strong>.<br>Bitte aktualisieren Sie auf eine aktuellere PHP Version.';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'Zum herunterladen von Dateien wird curl benötigt.<br>Bitte installieren Sie das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
+$GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'] = 'APC konnte nicht deaktivert werden. APC und Composer verträgt sich nicht so gut, bitte deaktivieren Sie <a href="http://php.net/apc" target="_blank">APC</a>.';
+$GLOBALS['TL_LANG']['composer_client']['composer_missing']      = 'Die Composer Library ist nicht (vollständig) installiert.<br>Drücken Sie auf <strong>Composer installieren</strong> um Composer und alle Abhängigkeiten zu installieren.';
+$GLOBALS['TL_LANG']['composer_client']['install_composer']      = 'Composer installieren';
+$GLOBALS['TL_LANG']['composer_client']['search_placeholder']    = 'Paketname oder Suchbegriff';
 
 /**
  * Settings dialog
