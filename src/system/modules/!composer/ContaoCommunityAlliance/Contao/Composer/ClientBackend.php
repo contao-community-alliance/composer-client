@@ -315,7 +315,7 @@ class ClientBackend extends \BackendModule
 		$svnAvailable = Runtime::testProcess('svn --version');
 
 		$mode  = 'upgrade';
-		$setup = $gitAvailable ? 'production_extended' : 'production_compat';
+		$setup = 'production';
 
 		if ($composerSupported && $input->post('FORM_SUBMIT') == 'tl_composer_migrate') {
 			$target = 'contao/main.php?do=composer';
@@ -383,16 +383,10 @@ class ClientBackend extends \BackendModule
 				}
 
 				switch ($setup) {
-					case 'production_compat':
-						$config['minimum-stability']           = 'stable';
+					case 'production':
+						$config['minimum-stability']           = 'dev';
 						$config['prefer-stable']               = true;
 						$config['config']['preferred-install'] = 'dist';
-						break;
-
-					case 'production_extended':
-						$config['minimum-stability']           = 'stable';
-						$config['prefer-stable']               = true;
-						$config['config']['preferred-install'] = 'source';
 						break;
 
 					case 'development':

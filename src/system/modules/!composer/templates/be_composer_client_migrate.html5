@@ -10,7 +10,11 @@
 	<input type="hidden" name="FORM_SUBMIT" value="tl_composer_migrate">
 
 	<div class="tl_formbody_edit">
-		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_text'], $this->getData()); ?>
+		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_intro'], $this->getData()); ?>
+
+		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_preconditions'], $this->getData()); ?>
+
+		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_setup_pre'], $this->getData()); ?>
 
 		<?php if ($this->oldPackageCount > 0): ?>
 			<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_mode'][0]; ?></h3>
@@ -57,27 +61,15 @@
 		<p><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_setup'][1]; ?></p>
 
 		<div>
-			<label class="setup_production_compat<?php if ($this->composerSupported && $this->setup == 'production_compat'): ?> checked<?php endif; ?>">
+			<label class="setup_production<?php if ($this->composerSupported && $this->setup == 'production'): ?> checked<?php endif; ?>">
 				<span class="input">
-					<input type="radio" name="setup" value="production_compat"<?php
-						if ($this->composerSupported && $this->setup == 'production_compat'): ?> checked<?php endif;
+					<input type="radio" name="setup" value="production"<?php
+						if ($this->composerSupported && $this->setup == 'production'): ?> checked<?php endif;
 						if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
 				</span>
 				<span class="text">
-					<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production_compat'][0]; ?></strong><br>
-					<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production_compat'][1]; ?>
-				</span>
-			</label>
-			<label class="setup_production_extended<?php if ($this->composerSupported && $this->setup == 'production_extended'): ?> checked<?php endif; ?>">
-				<span class="input">
-					<input type="radio" name="setup" value="production_extended"<?php
-						if ($this->composerSupported && $this->setup == 'production_extended'): ?> checked<?php endif;
-						if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
-				</span>
-				<span class="text">
-					<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production_extended'][0]; ?></strong><br>
-					<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production_extended'][1]; ?>
-					<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['vcs_requirements'], $this->getData()); ?>
+					<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production'][0]; ?></strong><br>
+					<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production'][1]; ?>
 				</span>
 			</label>
 			<label class="setup_development<?php if ($this->composerSupported && $this->setup == 'development'): ?> checked<?php endif; ?>">
@@ -93,6 +85,8 @@
 				</span>
 			</label>
 		</div>
+
+		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_faq'], $this->getData()); ?>
 	</div>
 
 	<div class="tl_formbody_submit">

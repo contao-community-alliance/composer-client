@@ -26,9 +26,11 @@ $GLOBALS['TL_LANG']['composer_client']['search_placeholder']    = 'Package name 
 /**
  * Migration wizard
  */
-$GLOBALS['TL_LANG']['composer_client']['migrate_text']                = '
+$GLOBALS['TL_LANG']['composer_client']['migrate_intro']                = '
 <p>Dear user, this is the new Contao package manager, based on the PHP dependency manager <a href="http://getcomposer.org/" target="_blank">Composer</a>.</p>
-<p>This is a public beta phase. We need your help to test this client until end of year. This client will be the default in the new Contao 3.2 LTS release and any following release.</p>
+<p>This is a public beta phase. We need your help to test this client until it will be the default Contao extension manager.</p>';
+
+$GLOBALS['TL_LANG']['composer_client']['migrate_preconditions'] = '
 <h2>Preconditions</h2>
 <ul class="preconditions">
 <li class="{if smhEnabled==true}fail{else}pass{endif}">SafeModeHack is {if smhEnabled==true}enabled{else}disabled{endif}</li>
@@ -37,9 +39,10 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_text']                = '
 <li class="{if composerSupported==true}pass{else}fail{endif}">{if composerSupported==true}You can use the composer client :-){else}You cannot use the composer client :-({endif}</li>
 {if commercialPackages!==false}<li class="fail">You have installed some commercial extensions: ##commercialPackages##.<br>You may loose them on migration.<br>Please consult the publisher, if he support composer you can continue without concern.</li>{endif}
 <li class="{if apcOpcodeCacheEnabled==true}warn{else}pass{endif}">APC opcode cache is {if apcOpcodeCacheEnabled==true}enabled, this may produce unexpected exceptions. If you have unexpected "cannot redeclare class" errors, try to disable APC opcode cache{elseif apcDisabledByUs==true}temporary disabled by composer client{else}disabled{endif}.</li>
-</ul>
+</ul>';
+
+$GLOBALS['TL_LANG']['composer_client']['migrate_faq'] = '
 <h2>FAQ</h2>
-<p>First we want to answer the most important questions:</p>
 <ul class="questions">
 <li>
 	<h3>It is necessary to use this client?</h3>
@@ -54,7 +57,7 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_text']                = '
 </li>
 <li>
 	<h3>Will there be a new extension repository?</h3>
-	Yes, a new extension repository exists on <a href="https://repository.contao.org" target="_blank">repository.contao.org</a>.
+	Yes, a new extension repository exists on <a href="http://legacy-packages-via.contao-community-alliance.org/" target="_blank">legacy-packages-via.contao-community-alliance.org</a>.
 	Currently it is a plain packagist installation, but we will improve it shortly with all our needs.
 </li>
 <li>
@@ -72,10 +75,12 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_text']                = '
 	the official irc channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
 	or the <a href="https://github.com/ContaoCommunityAlliance/Composer/issues" target="_blank">ticket system</a>.
 </li>
-</ul>
+</ul>';
+
+$GLOBALS['TL_LANG']['composer_client']['migrate_setup_pre'] = '
 <h2>Migration setup</h2>
-<p>Before you start with the new client, we have to ask you some questions.</p>
-';
+<p>Before you start with the new client, we have to ask you some questions.</p>';
+
 $GLOBALS['TL_LANG']['composer_client']['migrate_mode']                = array(
 	'Migration mode',
 	'We detected that you have installed %d extensions with the old package manager. Now we want to ask you, what should we do with the old packages?'
@@ -96,17 +101,13 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_setup']               = array(
 	'Configuration setup',
 	'Please choose for which setup this installation is used.'
 );
-$GLOBALS['TL_LANG']['composer_client']['migrate_production_compat']   = array(
-	'For production use (compatible mode)',
-	'Only stable packages are allowed! Packages will be fetched as archives (only zip support is required).'
-);
-$GLOBALS['TL_LANG']['composer_client']['migrate_production_extended'] = array(
-	'For production use (extended mode)',
-	'Only stable packages are allowed! Packages will be fetched as sources with git, mercurial or svn.'
+$GLOBALS['TL_LANG']['composer_client']['migrate_production']   = array(
+	'For production use',
+	'Packages will be fetched as archives (only zip support is required). Files will be installed as copies.'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_development']         = array(
 	'For development use',
-	'Unstable packages are allowed! Packages will be fetched as sources with git, mercurial or svn.'
+	'Packages will be fetched as sources with git, mercurial or svn. Files will be installed as symlinks.'
 );
 $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']            = '
 <ul class="preconditions">
@@ -122,7 +123,7 @@ $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']            = '
 </ul>
 ';
 $GLOBALS['TL_LANG']['composer_client']['migrate_do']                  = 'do migration';
-$GLOBALS['TL_LANG']['composer_client']['migrate_skip']                = 'skip migration (dangerous)';
+$GLOBALS['TL_LANG']['composer_client']['migrate_skip']                = 'skip migration (only if you know what you do)';
 $GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm']        = 'Skipping the migration may be dangerous, skip migration only if you know what you do. Skip migration now?';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']         = '
 <p>Dear user, we are sorry that you decide to switch back to the old packages client.</p>

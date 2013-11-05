@@ -128,22 +128,13 @@ span.stability-dev {
 	background-color: #FFCDCD;
 }
 
-.tl_composer_migrate .setup_production_compat {
-	border-color: #645300;
-}
-.tl_composer_migrate .setup_production_compat strong {
-	color: #645300;
-}
-.tl_composer_migrate .setup_production_compat.checked {
-	background-color: #FFF7CD;
-}
-.tl_composer_migrate .setup_production_extended {
+.tl_composer_migrate .setup_production {
 	border-color: #006400;
 }
-.tl_composer_migrate .setup_production_extended strong {
+.tl_composer_migrate .setup_production strong {
 	color: #006400;
 }
-.tl_composer_migrate .setup_production_extended.checked {
+.tl_composer_migrate .setup_production.checked {
 	background-color: #CDFFCD;
 }
 .tl_composer_migrate .setup_development {
