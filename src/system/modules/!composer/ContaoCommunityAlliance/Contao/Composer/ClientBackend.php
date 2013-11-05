@@ -167,7 +167,10 @@ class ClientBackend extends \BackendModule
 		}
 
 		// update contao version if needed
-		$this->checkContaoVersion();
+		if (Runtime::updateContaoVersion($this->composer, $this->configPathname)) {
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+			$this->reload();
+		}
 
 		// calculate dependency graph
 		$dependencyMap = $this->calculateDependencyMap(
@@ -1328,27 +1331,6 @@ class ClientBackend extends \BackendModule
 		);
 
 		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-	}
-
-	/**
-	 * Check the contao version in the config file and update if necessary.
-	 */
-	protected function checkContaoVersion()
-	{
-		/** @var \Composer\Package\RootPackage $package */
-		$package       = $this->composer->getPackage();
-		$versionParser = new VersionParser();
-		$version       = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
-		$prettyVersion = $versionParser->normalize($version);
-		if ($package->getVersion() !== $prettyVersion) {
-			$configFile            = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-			$configJson            = $configFile->read();
-			$configJson['version'] = $version;
-			$configFile->write($configJson);
-
-			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-			$this->reload();
-		}
 	}
 
 	/**
