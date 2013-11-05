@@ -158,6 +158,16 @@ class Runtime
 	}
 
 	/**
+	 * Determinate if apc is enabled.
+	 *
+	 * @return bool
+	 */
+	static public function isApcEnabled()
+	{
+		return function_exists('apc_clear_cache') && !in_array('ini_set', explode(',', ini_get('disable_functions')));
+	}
+
+	/**
 	 * Check the local environment, return true if everything is fine, an array of errors otherwise.
 	 *
 	 * @return bool|array

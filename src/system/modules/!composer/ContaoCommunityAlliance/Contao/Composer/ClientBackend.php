@@ -253,7 +253,7 @@ class ClientBackend extends \BackendModule
 	 */
 	protected function loadComposer()
 	{
-		if (function_exists('apc_clear_cache') && !in_array('ini_set', explode(',', ini_get('disable_functions')))) {
+		if (Runtime::isApcEnabled()) {
 			apc_clear_cache();
 			$this->Template->apcDisabledByUs = ini_set('apc.cache_by_default', 0);
 		}
