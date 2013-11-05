@@ -263,6 +263,9 @@ class ClientBackend extends \BackendModule
 			$this->Template->composerUpdate = true;
 		}
 
+		// register composer class loader
+		Runtime::registerComposerClassLoader();
+
 		// define pathname to config file
 		$this->configPathname = 'composer/' . Factory::getComposerFile();
 

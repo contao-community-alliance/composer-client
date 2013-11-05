@@ -208,6 +208,14 @@ class Runtime
 	 */
 	static public function registerVendorClassLoader()
 	{
+		static $registered = false;
+
+		if ($registered) {
+			return;
+		}
+
+		$registered = true;
+
 		if (file_exists(TL_ROOT . '/composer/vendor/autoload.php')) {
 			$isContao2 = version_compare(VERSION, '3', '<');
 
@@ -235,6 +243,14 @@ class Runtime
 	 */
 	static public function registerComposerClassLoader()
 	{
+		static $registered = false;
+
+		if ($registered) {
+			return;
+		}
+
+		$registered = true;
+
 		// unregister contao class loader
 		if (version_compare(VERSION, '3', '<')) {
 			spl_autoload_unregister('__autoload');
