@@ -307,9 +307,9 @@ class ClientBackend extends \BackendModule
 
 		$composerSupported = !$smhEnabled && $allowUrlFopenEnabled && $pharSupportEnabled;
 
-		$gitAvailable = $this->testProc('git --version');
-		$hgAvailable  = $this->testProc('hg --version');
-		$svnAvailable = $this->testProc('svn --version');
+		$gitAvailable = Runtime::testProcess('git --version');
+		$hgAvailable  = Runtime::testProcess('hg --version');
+		$svnAvailable = Runtime::testProcess('svn --version');
 
 		$mode  = 'upgrade';
 		$setup = $gitAvailable ? 'production_extended' : 'production_compat';
@@ -1399,25 +1399,6 @@ class ClientBackend extends \BackendModule
 		$pool->addRepository($repositories);
 
 		return $pool;
-	}
-
-	private function testProc($cmd)
-	{
-		$proc = proc_open(
-			$cmd,
-			array(
-				 array('pipe', 'r'),
-				 array('pipe', 'w'),
-				 array('pipe', 'w')
-			),
-			$pipes
-		);
-
-		if (is_resource($proc)) {
-			return proc_close($proc) != -1;
-		}
-
-		return false;
 	}
 
 	private function getRootAliases(RootPackageInterface $rootPackage)

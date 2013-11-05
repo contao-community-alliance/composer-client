@@ -299,4 +299,30 @@ class Runtime
 
 		return false;
 	}
+
+	/**
+	 * Run a process for testing.
+	 *
+	 * @param string $cmd
+	 *
+	 * @return bool Return true if the process terminate without error, false otherwise.
+	 */
+	static public function testProcess($cmd)
+	{
+		$proc = proc_open(
+			$cmd,
+			array(
+				 array('pipe', 'r'),
+				 array('pipe', 'w'),
+				 array('pipe', 'w')
+			),
+			$pipes
+		);
+
+		if (is_resource($proc)) {
+			return proc_close($proc) != -1;
+		}
+
+		return false;
+	}
 }
