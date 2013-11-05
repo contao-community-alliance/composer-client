@@ -267,7 +267,7 @@ class ClientBackend extends \BackendModule
 		Runtime::registerComposerClassLoader();
 
 		// define pathname to config file
-		$this->configPathname = 'composer/' . Factory::getComposerFile();
+		$this->configPathname = COMPOSER_DIR_RELATIVE . '/' . Factory::getComposerFile();
 
 		// create io interace
 		$this->io = new BufferIO('', null, new HtmlOutputFormatter());

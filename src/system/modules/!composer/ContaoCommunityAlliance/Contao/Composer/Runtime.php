@@ -94,7 +94,7 @@ class Runtime
 	 */
 	static public function readComposerDevWarningTime()
 	{
-		$configPathname = new \File('composer/composer.phar');
+		$configPathname = new \File(COMPOSER_DIR_RELATIVE . '/composer.phar');
 		$buffer         = '';
 		do {
 			$buffer .= fread($configPathname->handle, 1024);
