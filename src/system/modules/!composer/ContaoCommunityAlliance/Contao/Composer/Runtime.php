@@ -112,7 +112,7 @@ EOF;
 			}
 		}
 
-		\ContaoCommunityAlliance\Contao\Composer\Runtime::registerVendorClassLoader();
+		static::registerVendorClassLoader();
 	}
 
 	/**
