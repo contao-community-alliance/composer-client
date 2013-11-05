@@ -250,10 +250,8 @@ class ClientBackend extends \BackendModule
 	 */
 	protected function updateComposer()
 	{
-		$url = 'https://getcomposer.org/composer.phar';
-
 		try {
-			Downloader::download($url, TL_ROOT . '/composer/composer.phar');
+			Runtime::updateComposer();
 			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
 			return true;
 		}
