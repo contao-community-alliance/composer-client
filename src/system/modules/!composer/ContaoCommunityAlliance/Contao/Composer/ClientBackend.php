@@ -509,7 +509,14 @@ class ClientBackend extends \BackendModule
 	{
 		$files      = \Files::getInstance();
 		$file       = \Database::getInstance()
-			->query('SELECT * FROM tl_repository_instfiles ORDER BY filetype="D", filetype="F", filename DESC');
+			->query(
+				'SELECT f.*
+				 FROM tl_repository_instfiles f
+				 INNER JOIN tl_repository_installs i
+				 ON i.id=f.pid
+				 WHERE i.extension!="composer"
+				 ORDER BY filetype="D", filetype="F", filename DESC'
+			);
 		$fileIds    = array();
 		$installIds = array();
 		while ($file->next()) {
