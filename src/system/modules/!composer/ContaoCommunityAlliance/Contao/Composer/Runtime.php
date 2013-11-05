@@ -37,6 +37,105 @@ use Symfony\Component\Process\Process;
 class Runtime
 {
 	/**
+	 * Initialize the composer environment.
+	 */
+	static public function initialize()
+	{
+		if (TL_MODE == 'BE') {
+			$GLOBALS['TL_HOOKS']['loadLanguageFile']['composer'] = array(
+				'ContaoCommunityAlliance\Contao\Composer\Client',
+				'disableOldClientHook'
+			);
+		}
+
+		if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '<')) {
+			return;
+		}
+
+		// check composer folder exists
+		if (!is_dir(COMPOSER_DIR_ABSOULTE)) {
+			Files::getInstance()
+				->mkdir(COMPOSER_DIR_RELATIVE);
+		}
+
+		// check artifacts folder exists
+		if (!is_dir(COMPOSER_DIR_ABSOULTE . '/packages')) {
+			Files::getInstance()
+				->mkdir(COMPOSER_DIR_RELATIVE . '/packages');
+		}
+
+		// check .htaccess exists
+		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess')) {
+			$strHtaccessContent = <<<EOF
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
+</IfModule>
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+EOF;
+
+			file_put_contents(COMPOSER_DIR_ABSOULTE . '/.htaccess', $strHtaccessContent);
+		}
+
+		// check composer.json exists
+		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.json')) {
+			$strContaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
+
+			$strComposerJsonContent = <<<EOF
+{
+    "name": "contao/core",
+    "description": "Contao Open Source CMS",
+    "license": "LGPL-3.0+",
+    "version": "$strContaoVersion",
+    "type": "metapackage",
+    "require": {
+        "contao-community-alliance/composer": "dev-master@dev"
+    },
+    "scripts": {
+        "pre-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::preUpdate",
+        "post-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::postUpdate",
+        "post-autoload-dump": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::postAutoloadDump"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "cache-dir": "cache"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://legacy-packages-via.contao-community-alliance.org/"
+        },
+        {
+            "type": "artifact",
+            "url": "packages/"
+        }
+    ]
+}
+EOF;
+
+			file_put_contents(COMPOSER_DIR_ABSOULTE . '/composer.json', $strComposerJsonContent);
+		}
+
+		if (!getenv('COMPOSER_HOME')) {
+			putenv('COMPOSER_HOME=' . COMPOSER_DIR_ABSOULTE);
+		}
+
+		// see #54
+		if (!getenv('PATH')) {
+			if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+				putenv('PATH=%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem');
+			}
+			else {
+				putenv('PATH=/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin');
+			}
+		}
+
+		\ContaoCommunityAlliance\Contao\Composer\Runtime::registerVendorClassLoader();
+	}
+
+	/**
 	 * Load and install the composer.phar.
 	 *
 	 * @return bool
