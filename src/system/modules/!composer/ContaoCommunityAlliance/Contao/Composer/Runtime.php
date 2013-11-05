@@ -135,7 +135,7 @@ class Runtime
 	 */
 	static public function isPhpVersionSupported()
 	{
-		return (bool) version_compare(PHP_VERSION, '5.3.4', '>=');
+		return (bool) version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '>=');
 	}
 
 	/**
