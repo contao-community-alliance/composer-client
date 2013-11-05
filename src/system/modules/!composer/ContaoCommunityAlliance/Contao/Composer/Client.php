@@ -2,24 +2,6 @@
 
 namespace ContaoCommunityAlliance\Contao\Composer;
 
-use Composer\Composer;
-use Composer\Factory;
-use Composer\Installer;
-use Composer\Console\HtmlOutputFormatter;
-use Composer\IO\BufferIO;
-use Composer\Json\JsonFile;
-use Composer\Package\BasePackage;
-use Composer\Package\PackageInterface;
-use Composer\Package\CompletePackageInterface;
-use Composer\Package\Version\VersionParser;
-use Composer\Repository\ComposerRepository;
-use Composer\Repository\CompositeRepository;
-use Composer\Repository\PlatformRepository;
-use Composer\Repository\RepositoryInterface;
-use Composer\Util\ConfigValidator;
-use Composer\DependencyResolver\Pool;
-use Symfony\Component\Process\Process;
-
 /**
  * Class Client
  *

@@ -13,7 +13,6 @@ use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Version\VersionParser;
-use Composer\Repository\ComposerRepository;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
@@ -25,8 +24,6 @@ use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
-use Composer\Util\Filesystem;
-use Symfony\Component\Process\Process;
 
 /**
  * Class ClientBackend
