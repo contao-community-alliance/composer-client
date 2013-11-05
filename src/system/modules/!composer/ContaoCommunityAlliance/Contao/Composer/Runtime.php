@@ -34,13 +34,13 @@ class Runtime
 
 		// check composer folder exists
 		if (!is_dir(COMPOSER_DIR_ABSOULTE)) {
-			Files::getInstance()
+			\Files::getInstance()
 				->mkdir(COMPOSER_DIR_RELATIVE);
 		}
 
 		// check artifacts folder exists
 		if (!is_dir(COMPOSER_DIR_ABSOULTE . '/packages')) {
-			Files::getInstance()
+			\Files::getInstance()
 				->mkdir(COMPOSER_DIR_RELATIVE . '/packages');
 		}
 
