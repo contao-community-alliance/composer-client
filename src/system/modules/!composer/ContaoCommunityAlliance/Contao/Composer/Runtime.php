@@ -116,4 +116,14 @@ class Runtime
 		$fs = new Filesystem();
 		return $fs->removeDirectory(TL_ROOT . '/composer/cache');
 	}
+
+	/**
+	 * Determinate if safe mode hack is enabled.
+	 *
+	 * @return bool
+	 */
+	static public function isSafeModeHackEnabled()
+	{
+		return (bool) $GLOBALS['TL_CONFIG']['useFTP'];
+	}
 }

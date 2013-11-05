@@ -195,7 +195,7 @@ class ClientBackend extends \BackendModule
 	{
 		$errors = array();
 
-		if ($GLOBALS['TL_CONFIG']['useFTP']) {
+		if (Runtime::isSafeModeHackEnabled()) {
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['ftp_mode'];
 		}
 
@@ -343,7 +343,7 @@ class ClientBackend extends \BackendModule
 			? implode(', ', $commercialPackages)
 			: false;
 
-		$smhEnabled            = $GLOBALS['TL_CONFIG']['useFTP'];
+		$smhEnabled            = Runtime::isSafeModeHackEnabled();
 		$allowUrlFopenEnabled  = ini_get('allow_url_fopen');
 		$pharSupportEnabled    = false;
 		$apcOpcodeCacheEnabled = ini_get('apc.enabled') && ini_get('apc.cache_by_default');
