@@ -7,6 +7,7 @@ use Composer\Factory;
 use Composer\Installer;
 use Composer\Console\HtmlOutputFormatter;
 use Composer\IO\BufferIO;
+use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
 use Composer\Package\PackageInterface;
@@ -250,5 +251,28 @@ class Runtime
 		if (version_compare(VERSION, '3', '<')) {
 			spl_autoload_register('__autoload');
 		}
+	}
+
+	/**
+	 * Load composer and the composer class loader.
+	 */
+	static function createComposer(IOInterface $io)
+	{
+		chdir(TL_ROOT . '/composer');
+
+		// try to increase memory limit
+		static::increaseMemoryLimit();
+
+		// register composer class loader
+		static::registerComposerClassLoader();
+
+		// create composer factory
+		/** @var \Composer\Factory $factory */
+		$factory = new Factory();
+
+		// create composer
+		$composer = $factory->createComposer($io);
+
+		return $composer;
 	}
 }

@@ -253,13 +253,6 @@ class ClientBackend extends \BackendModule
 	 */
 	protected function loadComposer()
 	{
-		chdir(TL_ROOT . '/composer');
-
-		// try to increase memory limit
-		Runtime::increaseMemoryLimit();
-
-		Runtime::registerComposerClassLoader();
-
 		// search for composer build version
 		$composerDevWarningTime = Runtime::readComposerDevWarningTime();
 		if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
@@ -273,12 +266,8 @@ class ClientBackend extends \BackendModule
 		// create io interace
 		$this->io = new BufferIO('', null, new HtmlOutputFormatter());
 
-		// create composer factory
-		/** @var \Composer\Factory $factory */
-		$factory = new Factory();
-
 		// create composer
-		$this->composer = $factory->createComposer($this->io);
+		$this->composer = Runtime::createComposer($this->io);
 
 		// assign composer to template
 		$this->Template->composer = $this->composer;
