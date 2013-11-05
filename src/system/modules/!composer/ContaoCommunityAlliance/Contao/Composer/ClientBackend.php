@@ -257,7 +257,7 @@ class ClientBackend extends \BackendModule
 			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
 			return true;
 		}
-		catch (Exception $e) {
+		catch (\Exception $e) {
 			$this->log($e->getMessage() . "\n" . $e->getTraceAsString(), 'ContaoCommunityAlliance\Contao\Composer\ClientBackend updateComposer', 'TL_ERROR');
 			$_SESSION['TL_ERROR'][] = $e->getMessage();
 			return false;
@@ -415,7 +415,7 @@ class ClientBackend extends \BackendModule
 				$pharSupportEnabled = true;
 			}
 		}
-		catch (Exception $e) {
+		catch (\Exception $e) {
 		}
 
 		$composerSupported = !$smhEnabled && $allowUrlFopenEnabled && $pharSupportEnabled;
@@ -1414,7 +1414,7 @@ class ClientBackend extends \BackendModule
 				$this->redirect('contao/main.php?do=composer');
 			}
 		}
-		catch (RuntimeException $e) {
+		catch (\RuntimeException $e) {
 			$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
 			$this->redirect('contao/main.php?do=composer');
 		}
