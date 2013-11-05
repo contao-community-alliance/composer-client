@@ -304,7 +304,7 @@ class ClientBackend extends \BackendModule
 
 		// search for composer build version
 		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
-			$composerDevWarningTime = $this->readComposerDevWarningTime();
+			$composerDevWarningTime = Runtime::readComposerDevWarningTime();
 			if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
 				$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
 				$this->Template->composerUpdate = true;
@@ -326,26 +326,6 @@ class ClientBackend extends \BackendModule
 
 		// assign composer to template
 		$this->Template->composer = $this->composer;
-	}
-
-	/**
-	 * Read the stub from the composer.phar and return the warning timestamp.
-	 *
-	 * @return bool|int
-	 */
-	protected function readComposerDevWarningTime()
-	{
-		$configPathname = new \File('composer/composer.phar');
-		$buffer         = '';
-		do {
-			$buffer .= fread($configPathname->handle, 1024);
-		} while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches) && !feof(
-				$configPathname->handle
-			));
-		if ($matches[1]) {
-			return (int) $matches[1];
-		}
-		return false;
 	}
 
 	/**

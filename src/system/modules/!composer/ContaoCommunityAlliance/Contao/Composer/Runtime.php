@@ -85,4 +85,24 @@ class Runtime
 			unset($memoryInBytes, $memoryLimit);
 		}
 	}
+
+	/**
+	 * Read the stub from the composer.phar and return the warning timestamp.
+	 *
+	 * @return bool|int
+	 */
+	static public function readComposerDevWarningTime()
+	{
+		$configPathname = new \File('composer/composer.phar');
+		$buffer         = '';
+		do {
+			$buffer .= fread($configPathname->handle, 1024);
+		} while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches) && !feof(
+				$configPathname->handle
+			));
+		if ($matches[1]) {
+			return (int) $matches[1];
+		}
+		return false;
+	}
 }
