@@ -1,12 +1,12 @@
 <?php
 
 if (!$GLOBALS['TL_CONFIG']['composerAllowRepoClient']) {
-	ComposerClient::getInstance()
+	ContaoCommunityAlliance\Contao\Composer\Client::getInstance()
 		->setInactiveModulesOptionsCallback(
 		$GLOBALS['TL_DCA']['tl_settings']['fields']['inactiveModules']['options_callback']
 	);
 	$GLOBALS['TL_DCA']['tl_settings']['fields']['inactiveModules']['options_callback'] = array(
-		'ComposerClient',
+		'ContaoCommunityAlliance\Contao\Composer\Client',
 		'getModules'
 	);
 }

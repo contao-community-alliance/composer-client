@@ -1,5 +1,7 @@
 <?php
 
+namespace ContaoCommunityAlliance\Contao\Composer;
+
 use Composer\Composer;
 use Composer\Factory;
 use Composer\Installer;
@@ -27,11 +29,11 @@ use Composer\Util\Filesystem;
 use Symfony\Component\Process\Process;
 
 /**
- * Class ComposerClientBackend
+ * Class ClientBackend
  *
  * Composer client interface.
  */
-class ComposerClientBackend extends BackendModule
+class ClientBackend extends \BackendModule
 {
 	static protected $versionNames = array
 	(
@@ -82,7 +84,7 @@ class ComposerClientBackend extends BackendModule
 	{
 		$this->loadLanguageFile('composer_client');
 
-		$input = Input::getInstance();
+		$input = \Input::getInstance();
 
 		// check the local environment
 		if (!$this->checkEnvironment($input)) {
@@ -189,7 +191,7 @@ class ComposerClientBackend extends BackendModule
 	 *
 	 * @return bool
 	 */
-	protected function checkEnvironment(Input $input)
+	protected function checkEnvironment(\Input $input)
 	{
 		$errors = array();
 
@@ -256,7 +258,7 @@ class ComposerClientBackend extends BackendModule
 			return true;
 		}
 		catch (Exception $e) {
-			$this->log($e->getMessage() . "\n" . $e->getTraceAsString(), 'ComposerClient updateComposer', 'TL_ERROR');
+			$this->log($e->getMessage() . "\n" . $e->getTraceAsString(), 'ContaoCommunityAlliance\Contao\Composer\ClientBackend updateComposer', 'TL_ERROR');
 			$_SESSION['TL_ERROR'][] = $e->getMessage();
 			return false;
 		}
@@ -291,7 +293,7 @@ class ComposerClientBackend extends BackendModule
 
 		// register composer class loader from phar
 		if (file_exists(TL_ROOT . '/composer/composer.phar')) {
-			$phar             = new Phar(TL_ROOT . '/composer/composer.phar');
+			$phar             = new \Phar(TL_ROOT . '/composer/composer.phar');
 			$autoloadPathname = $phar['vendor/autoload.php'];
 			require_once($autoloadPathname->getPathname());
 
@@ -374,7 +376,7 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function readComposerDevWarningTime()
 	{
-		$configPathname = new File('composer/composer.phar');
+		$configPathname = new \File('composer/composer.phar');
 		$buffer         = '';
 		do {
 			$buffer .= fread($configPathname->handle, 1024);
@@ -390,12 +392,12 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Migration wizard
 	 */
-	protected function migrationWizard(Input $input)
+	protected function migrationWizard(\Input $input)
 	{
-		$oldPackageCount    = Database::getInstance()
+		$oldPackageCount    = \Database::getInstance()
 			->execute('SELECT COUNT(*) AS count FROM tl_repository_installs')
 			->count;
-		$commercialPackages = Database::getInstance()
+		$commercialPackages = \Database::getInstance()
 			->execute('SELECT * FROM tl_repository_installs WHERE lickey!=\'\'')
 			->fetchEach('extension');
 		$commercialPackages = count($commercialPackages)
@@ -409,7 +411,7 @@ class ComposerClientBackend extends BackendModule
 
 		try {
 			if (class_exists('Phar', false)) {
-				new Phar(TL_ROOT . '/system/modules/!composer/config/test.phar');
+				new \Phar(TL_ROOT . '/system/modules/!composer/config/test.phar');
 				$pharSupportEnabled = true;
 			}
 		}
@@ -446,7 +448,7 @@ class ComposerClientBackend extends BackendModule
 					case 'upgrade':
 						$this->removeER2Files();
 
-						$install = Database::getInstance()
+						$install = \Database::getInstance()
 							->query('SELECT * FROM tl_repository_installs WHERE lickey=""');
 						while ($install->next()) {
 							$packageName = 'contao-legacy/' . $install->extension;
@@ -540,7 +542,7 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Undo migration
 	 */
-	protected function undoMigration(Input $input)
+	protected function undoMigration(\Input $input)
 	{
 		if ($input->post('FORM_SUBMIT') == 'tl_composer_migrate_undo') {
 			$requires = $this->composer
@@ -595,12 +597,12 @@ class ComposerClientBackend extends BackendModule
 				}
 			}
 			if (version_compare(VERSION, '3', '>=')) {
-				$skipFile = new File('system/modules/!composer/.skip');
+				$skipFile = new \File('system/modules/!composer/.skip');
 				$skipFile->write('Remove this file to enable the module');
 				$skipFile->close();
 			}
 			if (file_exists(TL_ROOT . '/system/modules/repository/.skip')) {
-				$skipFile = new File('system/modules/repository/.skip');
+				$skipFile = new \File('system/modules/repository/.skip');
 				$skipFile->delete();
 			}
 			$this->Config->update("\$GLOBALS['TL_CONFIG']['inactiveModules']", serialize($inactiveModules));
@@ -619,8 +621,8 @@ class ComposerClientBackend extends BackendModule
 	 */
 	protected function removeER2Files()
 	{
-		$files      = Files::getInstance();
-		$file       = Database::getInstance()
+		$files      = \Files::getInstance();
+		$file       = \Database::getInstance()
 			->query('SELECT * FROM tl_repository_instfiles ORDER BY filetype="D", filetype="F", filename DESC');
 		$fileIds    = array();
 		$installIds = array();
@@ -661,7 +663,7 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Update the database scheme
 	 */
-	protected function updateDatabase(Input $input)
+	protected function updateDatabase(\Input $input)
 	{
 		$this->handleRunOnce(); // PATCH
 
@@ -689,7 +691,7 @@ class ComposerClientBackend extends BackendModule
 
 		if (version_compare(VERSION, '3', '>=')) {
 			/** @var \Contao\Database\Installer $installer */
-			$installer = System::importStatic('Database\Installer');
+			$installer = \System::importStatic('Database\Installer');
 		}
 		else {
 			$this->import('DbInstaller');
@@ -734,7 +736,7 @@ class ComposerClientBackend extends BackendModule
 	 *
 	 * @param \Input $input
 	 */
-	protected function clearComposerCache(Input $input)
+	protected function clearComposerCache(\Input $input)
 	{
 		if (is_dir(TL_ROOT . '/composer/cache')) {
 			$fs = new Filesystem();
@@ -751,12 +753,12 @@ class ComposerClientBackend extends BackendModule
 	 *
 	 * @param \Input $input
 	 */
-	protected function showSettingsDialog(Input $input)
+	protected function showSettingsDialog(\Input $input)
 	{
 		$rootPackage = $this->composer->getPackage();
 		$config      = $this->composer->getConfig();
 
-		$minimumStability = new SelectMenu(
+		$minimumStability = new \SelectMenu(
 			array(
 				 'id'          => 'minimum-stability',
 				 'name'        => 'minimum-stability',
@@ -774,7 +776,7 @@ class ComposerClientBackend extends BackendModule
 				 'required'    => true
 			)
 		);
-		$preferStable     = new CheckBox(
+		$preferStable     = new \CheckBox(
 			array(
 				 'id'          => 'prefer-stable',
 				 'name'        => 'prefer-stable',
@@ -791,7 +793,7 @@ class ComposerClientBackend extends BackendModule
 				 'required'    => true
 			)
 		);
-		$preferredInstall = new SelectMenu(
+		$preferredInstall = new \SelectMenu(
 			array(
 				 'id'          => 'preferred-install',
 				 'name'        => 'preferred-install',
@@ -854,13 +856,13 @@ class ComposerClientBackend extends BackendModule
 	 *
 	 * @param \Input $input
 	 */
-	protected function showExpertsEditor(Input $input)
+	protected function showExpertsEditor(\Input $input)
 	{
-		$configFile = new File($this->configPathname);
+		$configFile = new \File($this->configPathname);
 
 		if ($input->post('save')) {
 			$tempPathname = $this->configPathname . '~';
-			$tempFile     = new File($tempPathname);
+			$tempFile     = new \File($tempPathname);
 
 			$config = $input->postRaw('config');
 			$config = html_entity_decode($config, ENT_QUOTES, 'UTF-8');
@@ -918,7 +920,7 @@ class ComposerClientBackend extends BackendModule
 	 *
 	 * @param \Input $input
 	 */
-	protected function showDependencyGraph(Input $input)
+	protected function showDependencyGraph(\Input $input)
 	{
 		$localRepository = $this->composer
 			->getRepositoryManager()
@@ -1033,9 +1035,9 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Do a package search.
 	 *
-	 * @param Input $input
+	 * @param \Input $input
 	 */
-	protected function doSearch(Input $input)
+	protected function doSearch(\Input $input)
 	{
 		$keyword = $input->get('keyword');
 
@@ -1132,9 +1134,9 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Show package details.
 	 *
-	 * @param Input $input
+	 * @param \Input $input
 	 */
-	protected function showDetails(Input $input)
+	protected function showDetails(\Input $input)
 	{
 		$packageName = $input->get('install');
 
@@ -1172,9 +1174,9 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Solve package dependencies.
 	 *
-	 * @param Input $input
+	 * @param \Input $input
 	 */
-	protected function solveDependencies(Input $input)
+	protected function solveDependencies(\Input $input)
 	{
 		$rootPackage = $this->composer->getPackage();
 
@@ -1421,9 +1423,9 @@ class ComposerClientBackend extends BackendModule
 	/**
 	 * Remove a package from the requires list.
 	 *
-	 * @param Input $input
+	 * @param \Input $input
 	 */
-	protected function removePackage(Input $input)
+	protected function removePackage(\Input $input)
 	{
 		$removeName = $input->post('remove');
 
@@ -1519,7 +1521,7 @@ class ComposerClientBackend extends BackendModule
 	 * @param bool   $file
 	 *
 	 * @return bool|null|string
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function download($url, $file = false)
 	{
@@ -1536,7 +1538,7 @@ class ComposerClientBackend extends BackendModule
 	 * @param bool $file
 	 *
 	 * @return bool|null|string
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function fgetDownload($url, $file = false)
 	{
@@ -1579,7 +1581,7 @@ class ComposerClientBackend extends BackendModule
 	 * @param bool $file
 	 *
 	 * @return bool|null|string
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function curlDownload($url, $file = false)
 	{
@@ -1614,7 +1616,7 @@ class ComposerClientBackend extends BackendModule
 		fclose($fileStream);
 
 		if (curl_errno($curl)) {
-			throw new Exception(
+			throw new \Exception(
 				curl_error($curl),
 				curl_errno($curl)
 			);

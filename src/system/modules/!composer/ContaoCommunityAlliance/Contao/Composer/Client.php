@@ -1,5 +1,7 @@
 <?php
 
+namespace ContaoCommunityAlliance\Contao\Composer;
+
 use Composer\Composer;
 use Composer\Factory;
 use Composer\Installer;
@@ -19,14 +21,14 @@ use Composer\DependencyResolver\Pool;
 use Symfony\Component\Process\Process;
 
 /**
- * Class ComposerClientBackend
+ * Class Client
  *
- * Composer client interface.
+ * Composer client integration.
  */
-class ComposerClient extends System
+class Client extends \System
 {
 	/**
-	 * @var ComposerClient
+	 * @var Client
 	 */
 	protected static $instance;
 
@@ -87,7 +89,7 @@ class ComposerClient extends System
 		}
 		if (in_array('repository', $activeModules)) {
 			$inactiveModules[] = 'repository';
-			$skipFile          = new File('system/modules/repository/.skip');
+			$skipFile          = new \File('system/modules/repository/.skip');
 			$skipFile->write('Remove this file to enable the module');
 			$skipFile->close();
 			$reset = true;

@@ -12,16 +12,10 @@
 
 
 /**
- * Register the classes
+ * Register classloader
  */
-ClassLoader::addClasses(
-	array
-	(
-	'ComposerClient'        => 'system/modules/!composer/ComposerClient.php',
-	'ComposerClientBackend' => 'system/modules/!composer/ComposerClientBackend.php',
-	)
-);
-
+include(__DIR__ . '/../ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
+\ContaoCommunityAlliance\Contao\Composer\ClassLoader::register();
 
 /**
  * Register the templates
