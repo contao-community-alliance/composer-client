@@ -126,4 +126,14 @@ class Runtime
 	{
 		return (bool) $GLOBALS['TL_CONFIG']['useFTP'];
 	}
+
+	/**
+	 * Determinate if the php version is supported by composer.
+	 *
+	 * @return bool
+	 */
+	static public function isPhpVersionSupported()
+	{
+		return (bool) version_compare(PHP_VERSION, '5.3.4', '>=');
+	}
 }

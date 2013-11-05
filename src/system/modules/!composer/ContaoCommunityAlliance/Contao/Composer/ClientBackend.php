@@ -200,7 +200,7 @@ class ClientBackend extends \BackendModule
 		}
 
 		// check for php version
-		if (version_compare(PHP_VERSION, '5.3.4', '<')) {
+		if (!Runtime::isPhpVersionSupported()) {
 			$errors[] = sprintf($GLOBALS['TL_LANG']['composer_client']['php_version'], PHP_VERSION);
 		}
 
