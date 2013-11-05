@@ -338,6 +338,11 @@ class ClientBackend extends \BackendModule
 						$install = \Database::getInstance()
 							->query('SELECT * FROM tl_repository_installs WHERE lickey=""');
 						while ($install->next()) {
+							// skip the composer package
+							if ($install->extension == 'composer') {
+								continue;
+							}
+
 							$packageName = 'contao-legacy/' . $install->extension;
 							/*
 							$packageName = preg_replace(
