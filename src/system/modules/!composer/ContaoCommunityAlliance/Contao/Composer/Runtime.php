@@ -203,6 +203,33 @@ class Runtime
 	}
 
 	/**
+	 * Register the vendor class loader.
+	 */
+	static public function registerVendorClassLoader()
+	{
+		if (file_exists(TL_ROOT . '/composer/vendor/autoload.php')) {
+			$isContao2 = version_compare(VERSION, '3', '<');
+
+			// unregister contao class loader
+			if ($isContao2) {
+				spl_autoload_unregister('__autoload');
+			}
+
+			// register composer vendor class loader
+			require_once(TL_ROOT . '/composer/vendor/autoload.php');
+
+			// reregister contao class loader
+			if ($isContao2) {
+				spl_autoload_register('__autoload');
+
+				// swift is not autoloaded in Contao 2.x
+				require_once(TL_ROOT . '/plugins/swiftmailer/classes/Swift.php');
+				require_once(TL_ROOT . '/plugins/swiftmailer/swift_init.php');
+			}
+		}
+	}
+
+	/**
 	 * Register the composer class loader from composer.phar.
 	 */
 	static public function registerComposerClassLoader()

@@ -97,25 +97,7 @@ EOF;
 		$objComposerJsonFile->write($strComposerJsonContent);
 	}
 
-	// check for autoload.php
-	if (file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php')) {
-		// unregister the default autoloader
-		if (version_compare(VERSION, '3', '<')) {
-			spl_autoload_unregister('__autoload');
-		}
-
-		// register the autoloader
-		require COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php';
-
-		// register the default autoloader as spl autoload
-		if (version_compare(VERSION, '3', '<')) {
-			spl_autoload_register('__autoload');
-
-			// swift is not autoloaded in Contao 2.x
-			require_once(TL_ROOT . '/plugins/swiftmailer/classes/Swift.php');
-			require_once(TL_ROOT . '/plugins/swiftmailer/swift_init.php');
-		}
-	}
+	\ContaoCommunityAlliance\Contao\Composer\Runtime::registerVendorClassLoader();
 
 	if (!getenv('COMPOSER_HOME')) {
 		putenv('COMPOSER_HOME=' . COMPOSER_DIR_ABSOULTE);
