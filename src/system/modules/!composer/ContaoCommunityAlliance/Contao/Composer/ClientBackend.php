@@ -532,7 +532,7 @@ class ClientBackend extends \BackendModule
 			}
 		}
 		if (count($installIds)) {
-			Database::getInstance()
+			\Database::getInstance()
 				->query(
 					'UPDATE tl_repository_installs SET error=1 WHERE id IN (' . implode(
 						',',
@@ -541,7 +541,7 @@ class ClientBackend extends \BackendModule
 				);
 		}
 		if (count($fileIds)) {
-			Database::getInstance()
+			\Database::getInstance()
 				->query('UPDATE tl_repository_instfiles SET flag="D" WHERE id IN (' . implode(',', $fileIds) . ')');
 		}
 	}
