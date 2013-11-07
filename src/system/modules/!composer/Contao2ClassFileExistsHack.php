@@ -4,6 +4,7 @@
  * Hack the Contao2 Controller::classFileExists()
  *
  * (c) Tristan Lins <tristan.lins@bit3.de>
+ *     Christian Schiffler <c.schiffler@cyberspectrum.de>
  *
  * @author  Tristan Lins <tristan.lins@bit3.de>
  * @license MIT
@@ -13,6 +14,7 @@
  * Class Contao2ClassLoaderHack
  *
  * @author Tristan Lins <tristan.lins@bit3.de>
+ * @author Christian Schiffler <c.schiffler@cyberspectrum.de>
  */
 if (version_compare(VERSION, '3', '<')) {
 	class Contao2ClassFileExistsHack extends FileCache
@@ -41,6 +43,21 @@ if (version_compare(VERSION, '3', '<')) {
 			$this->cache = $cache;
 		}
 
+		/**
+		 * {@inheritdoc}
+		 */
+		public function __destruct()
+		{
+			// no op
+		}
+
+		/**
+		 * Trigger all class loaders and try to load the class through them.
+		 *
+		 * @param string $strKey
+		 *
+		 * @return bool
+		 */
 		protected function classExists($strKey)
 		{
 			$exists = class_exists($strKey, false);
@@ -65,9 +82,11 @@ if (version_compare(VERSION, '3', '<')) {
 		 */
 		public function __isset($strKey)
 		{
-			return $this->classExists($strKey)
-				? true
-				: $this->cache->__isset($strKey);
+			$isset = $this->cache->__isset($strKey);
+
+			return $isset
+				? $isset
+				: $this->classExists($strKey);
 		}
 
 		/**
@@ -75,9 +94,11 @@ if (version_compare(VERSION, '3', '<')) {
 		 */
 		public function __get($strKey)
 		{
-			return  $this->classExists($strKey)
-				? true
-				: $this->cache->__get($strKey);
+			$value = $this->cache->__get($strKey);
+
+			return  $value
+				? $value
+				: $this->classExists($strKey);
 		}
 
 		/**
