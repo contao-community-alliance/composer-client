@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * Hack the Contao2 Controller::classFileExists()
+ *
+ * (c) Tristan Lins <tristan.lins@bit3.de>
+ *
+ * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @license MIT
+ */
+
+/**
+ * Class Contao2ClassLoaderHack
+ *
+ * @author Tristan Lins <tristan.lins@bit3.de>
+ */
+if (version_compare(VERSION, '3', '<')) {
+	class Contao2ClassFileExistsHack extends FileCache
+	{
+		static public function register()
+		{
+			$cache = FileCache::getInstance('classes');
+
+			if (!$cache instanceof Contao2ClassFileExistsHack) {
+				FileCache::$arrInstances['classes'] = new Contao2ClassFileExistsHack($cache);
+			}
+		}
+
+		/**
+		 * The internal cache.
+		 *
+		 * @var FileCache
+		 */
+		protected $cache;
+
+		/**
+		 * @param FileCache $cache
+		 */
+		public function __construct(FileCache $cache)
+		{
+			$this->cache = $cache;
+		}
+
+		protected function classExists($strKey)
+		{
+			$exists = class_exists($strKey, false);
+			if (!$exists) {
+				$functions = spl_autoload_functions();
+				while (!$exists && count($functions)) {
+					$function = array_shift($functions);
+
+					if ($function == '__autoload') {
+						continue;
+					}
+
+					call_user_func($function, $strKey);
+					$exists = class_exists($strKey, false);
+				}
+			}
+			return $exists;
+		}
+
+		/**
+		 * {@inheritdoc}
+		 */
+		public function __isset($strKey)
+		{
+			return $this->classExists($strKey)
+				? true
+				: $this->cache->__isset($strKey);
+		}
+
+		/**
+		 * {@inheritdoc}
+		 */
+		public function __get($strKey)
+		{
+			return  $this->classExists($strKey)
+				? true
+				: $this->cache->__get($strKey);
+		}
+
+		/**
+		 * {@inheritdoc}
+		 */
+		public function __set($strKey, $varValue)
+		{
+			$this->cache->__set($strKey, $varValue);
+		}
+
+		/**
+		 * {@inheritdoc}
+		 */
+		public function __unset($strKey)
+		{
+			$this->cache->__unset($strKey);
+		}
+	}
+}
+else {
+	class Contao2ClassFileExistsHack
+	{
+		static public function register()
+		{
+			// no op
+		}
+	}
+}

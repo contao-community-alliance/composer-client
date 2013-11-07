@@ -22,6 +22,7 @@ if (version_compare(VERSION, '3', '<')) {
 	include(__DIR__ . '/../ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
 	\ContaoCommunityAlliance\Contao\Composer\ClassLoader::register();
 	spl_autoload_register('__autoload');
+	\Contao2ClassFileExistsHack::register();
 }
 
 define('COMPOSER_MIN_PHPVERSION', '5.3.4');
