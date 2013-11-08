@@ -14,7 +14,7 @@
  */
 
 if (version_compare(PHP_VERSION, '5.3', '<')) {
-	trigger_error('Composer client require PHP 5.3, even with Contao 2.11', E_USER_ERROR);
+	trigger_error('Composer client requires PHP 5.3, even with Contao 2.11', E_USER_ERROR);
 	return;
 }
 
