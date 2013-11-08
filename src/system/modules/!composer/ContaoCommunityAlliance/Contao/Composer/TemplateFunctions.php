@@ -60,4 +60,17 @@ class TemplateFunctions
 
 		return true;
 	}
+
+	static public function getRequireConstraint($name, $require, $replaces)
+	{
+		if (isset($require[$name])) {
+			return $require[$name];
+		}
+
+		if (isset($replaces[$name])) {
+			return static::getRequireConstraint($replaces[$name], $require, $replaces);
+		}
+
+		return null;
+	}
 }

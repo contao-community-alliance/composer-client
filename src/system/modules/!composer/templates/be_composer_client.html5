@@ -198,9 +198,9 @@ $dependencyCount = 0;
 						$removeRequested = !$removePossible &&
 							TemplateFunctions::isRemoveRequested($localPackage->getName(), $requires, $replacedBy);
 
-						if (isset($requires[$localPackage->getName()])) {
+						$link = TemplateFunctions::getRequireConstraint($localPackage->getName(), $requires, $replaceThat);
+						if ($link) {
 							/** @var \Composer\Package\Link $link */
-							$link = $requires[$localPackage->getName()];
 
 							if (isset($stabilityFlags[$localPackage->getName()])) {
 								$stability = $stabilitiesReverseMap[$stabilityFlags[$localPackage->getName()]];
