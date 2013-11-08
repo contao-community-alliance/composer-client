@@ -196,6 +196,13 @@ span.stability-dev {
 	color: #666;
 	margin-top: 12px;
 }
+.col_name .replace {
+	color: #aaa;
+}
+.col_name .replace:before {
+	content: "\2190";
+	margin-right: .25em;
+}
 p.dependencies {
 	padding: 2px 6px 3px;
 }

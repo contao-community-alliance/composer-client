@@ -24,6 +24,8 @@
 <h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['installed_headline']; ?></h2>
 
 <?php
+use ContaoCommunityAlliance\Contao\Composer\TemplateFunctions;
+
 /** @var \Composer\Composer $composer */
 $composer = $this->composer;
 /** @var \Composer\Package\RootPackage $package */
@@ -42,6 +44,9 @@ $stabilityFlags = $package->getStabilityFlags();
 $stabilitiesReverseMap = array_flip(\Composer\Package\BasePackage::$stabilities);
 /** @var array $dependencyMap */
 $dependencyMap = $this->dependencyMap;
+/** @var array $replacedBy */
+$replacedBy = $this->replaceMap;
+$replaceThat = array_flip($replacedBy);
 /** @var array $localPackages */
 $localPackages = $localRepository->getPackages();
 foreach ($localPackages as $index => $localPackage) {
@@ -172,16 +177,26 @@ $dependencyCount = 0;
 				<td class="tl_file_list col_name">
 					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
 						<?php
-						echo $localPackage->getPrettyName();
+						echo $localPackage->getPrettyName()
 						?>
 					</a>
+					<?php
+					if (isset($replaceThat[$localPackage->getName()]) && isset($requires[$replaceThat[$localPackage->getName()]])) {
+						printf(
+							'<span class="replace">%s</span>',
+							$replaceThat[$localPackage->getName()]
+						);
+					}
+					?>
 				</td>
 				<td class="tl_file_list col_requested_version"><?php
-						$removePossible = isset($requires[$localPackage->getName()]) &&
-							$localPackage->getName() != 'contao-community-alliance/composer';
+						$removePossible = TemplateFunctions::isRemoveable(
+							$localPackage->getName(),
+							$requires,
+							$replaceThat
+						);
 						$removeRequested = !$removePossible &&
-							!$requiredBy &&
-							$localPackage->getName() != 'contao-community-alliance/composer';
+							TemplateFunctions::isRemoveRequested($localPackage->getName(), $requires, $replacedBy);
 
 						if (isset($requires[$localPackage->getName()])) {
 							/** @var \Composer\Package\Link $link */
@@ -269,6 +284,11 @@ $dependencyCount = 0;
 			</tr>
 		<?php endforeach; ?>
 		<?php foreach ($requires as $requireName => $requireLink): ?>
+			<?php
+			if (isset($replacedBy[$requireName])) {
+				continue;
+			}
+			?>
 			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 				<td class="tl_file_list col_type"></td>
 				<td class="tl_file_list col_icon"><?php

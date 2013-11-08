@@ -176,7 +176,14 @@ class ClientBackend extends \BackendModule
 				->getLocalRepository()
 		);
 
+		$replaceMap = $this->calculateReplaceMap(
+			$this->composer
+				->getRepositoryManager()
+				->getLocalRepository()
+		);
+
 		$this->Template->dependencyMap = $dependencyMap;
+		$this->Template->replaceMap    = $replaceMap;
 		$this->Template->output        = $_SESSION['COMPOSER_OUTPUT'];
 
 		unset($_SESSION['COMPOSER_OUTPUT']);
@@ -1381,6 +1388,27 @@ class ClientBackend extends \BackendModule
 				$dependencyMap[$requireLink->getTarget()][$package->getName()] = $requireLink->getPrettyConstraint();
 			}
 		}
+	}
+
+	/**
+	 * Build replacement map for installed packages.
+	 *
+	 * @param RepositoryInterface $repository
+	 *
+	 * @return array
+	 */
+	protected function calculateReplaceMap(RepositoryInterface $repository, $inverted = false)
+	{
+		$replaceMap = array();
+
+		/** @var \Composer\Package\PackageInterface $package */
+		foreach ($repository->getPackages() as $package) {
+			foreach ($package->getReplaces() as $replace => $constraint) {
+				$replaceMap[$replace] = $package->getName();
+			}
+		}
+
+		return $replaceMap;
 	}
 
 	protected function getPool($minimumStability = 'dev', $stabilityFlags = array())
