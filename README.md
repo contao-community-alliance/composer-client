@@ -1,9 +1,9 @@
-Composer integration for contao
+Composer integration for Contao
 ===============================
 
-Module which loads the composer autoloader, creates initial composer.json and provide a backend client.
+Module which loads the Composer autoloader, creates initial composer.json and provide a back end client.
 
-![Backend module](http://img59.imageshack.us/img59/830/composer1.png)
+![Back end module](http://img59.imageshack.us/img59/830/composer1.png)
 
 ### Installation
 
@@ -13,7 +13,7 @@ Checkout this repository and link it to system/modules (initial)
 
 ```
 cd /path/to/my/project/documentroot
-git clone git://github.com/ContaoCommunityAlliance/Composer.git composer/vendor/contao-community-alliance/composer
+git clone git@github.com:contao-community-alliance/composer.git composer/vendor/contao-community-alliance/composer
 cd system/modules
 ln -s ../../composer/vendor/contao-community-alliance/composer/src/system/modules/\!composer .
 cd ../..
@@ -23,18 +23,18 @@ cd ../..
 
 Do a normal page request, this will prepare the folder structure and the default composer.json
 
-##### Download composer (the manual way)
+##### Download Composer (the manual way)
 
-Download composer as explained here: http://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
+Download Composer as explained here: http://getcomposer.org/doc/00-intro.md#downloading-the-composer-executable
 
 ```
 cd composer
 curl -sS https://getcomposer.org/installer | php
 ```
 
-##### Download composer (with backend client)
+##### Download Composer (with back end client)
 
-Just call the backend client from the menu, it will tell you that composer is not installed and install it automatically.
+Just call the back end client from the menu, it will tell you that Composer is not installed and install it automatically.
 
 ##### Add some vendors (the manual way)
 
@@ -48,7 +48,7 @@ Open the composer/composer.json in your prefered editor and add some dependencie
 }
 ```
 
-##### Add some vendors (with backend client)
+##### Add some vendors (with back end client)
 
 ###### Via integrated search
 
@@ -65,7 +65,7 @@ Select prefered version and version contraint to install.
 
 ![Advanced editor](http://img199.imageshack.us/img199/9184/composer2.png)
 
-Click on "advanced mode" in the backend client and add some dependencies as explained here: http://getcomposer.org/doc/04-schema.md
+Click on "advanced mode" in the back end client and add some dependencies as explained here: http://getcomposer.org/doc/04-schema.md
 
 ```json
 "require": {
@@ -82,13 +82,13 @@ Tell composer to download the configured vendors
 php composer.phar install
 ```
 
-##### Install the vendors (with backend client)
+##### Install the vendors (with back end client)
 
-Click on "updated packages" and just wait until composer finished installation.
+Click on "updated packages" and just wait until Composer finished installation.
 
 ### Requirements
-* php 5.3.4 or higher
-* contao 2.11.* or contao 3.1.* or higher
+* PHP 5.3.4 or higher
+* Contao 2.11.* or Contao 3.1.* or higher
 
 Attribution
 -----------
