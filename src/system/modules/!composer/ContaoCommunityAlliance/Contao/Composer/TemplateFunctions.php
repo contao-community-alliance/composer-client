@@ -37,7 +37,7 @@ class TemplateFunctions
 			return true;
 		}
 
-		if (isset($replaces[$name])) {
+		if (isset($replaces[$name]) && $replaces[$name] != $name) {
 			return static::isRemoveable($replaces[$name], $required, $replaces);
 		}
 
@@ -54,7 +54,7 @@ class TemplateFunctions
 			return false;
 		}
 
-		if (isset($replaces[$name])) {
+		if (isset($replaces[$name]) && $replaces[$name] != $name) {
 			return static::isRemoveRequested($replaces[$name], $required, $replaces);
 		}
 
@@ -67,7 +67,7 @@ class TemplateFunctions
 			return $require[$name];
 		}
 
-		if (isset($replaces[$name])) {
+		if (isset($replaces[$name]) && $replaces[$name] != $name) {
 			return static::getRequireConstraint($replaces[$name], $require, $replaces);
 		}
 
