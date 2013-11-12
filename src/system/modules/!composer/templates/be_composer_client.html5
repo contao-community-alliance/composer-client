@@ -268,11 +268,12 @@ $dependencyCount = 0;
 					?></td>
 				<td class="tl_file_list col_remove">
 					<?php if ($removePossible): ?>
+						<?php $requirePackageName = TemplateFunctions::getRequirePackageName($localPackage->getName(), $requires, $replaceThat); ?>
 					<form action="contao/main.php?do=composer" class="tl_form" method="post"
 						  enctype="application/x-www-form-urlencoded"
 						  onsubmit="return confirm(<?php echo str_replace('"', "'", json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemove'], $localPackage->getName()))); ?>);">
 						<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
-						<input type="hidden" name="remove" value="<?php echo specialchars($localPackage->getName()); ?>">
+						<input type="hidden" name="remove" value="<?php echo specialchars($requirePackageName); ?>">
 						<input type="image" src="system/modules/!composer/assets/images/remove.png"
 							   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['removePackage']); ?>">
 					</form>

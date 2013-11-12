@@ -73,4 +73,17 @@ class TemplateFunctions
 
 		return null;
 	}
+
+	static public function getRequirePackageName($name, $require, $replaces)
+	{
+		if (isset($require[$name])) {
+			return $name;
+		}
+
+		if (isset($replaces[$name]) && $replaces[$name] != $name) {
+			return static::getRequirePackageName($replaces[$name], $require, $replaces);
+		}
+
+		return null;
+	}
 }
