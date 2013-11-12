@@ -1416,7 +1416,7 @@ class ClientBackend extends \BackendModule
 		/** @var \Composer\Package\PackageInterface $package */
 		foreach ($repository->getPackages() as $package) {
 			foreach ($package->getReplaces() as $replace => $constraint) {
-				$replaceMap[$replace] = $package->getName();
+				$replaceMap[$constraint->getTarget()] = $constraint->getSource();
 			}
 		}
 
