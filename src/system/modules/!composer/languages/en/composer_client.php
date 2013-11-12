@@ -15,12 +15,12 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline'] = 'Dependenc
 /**
  * References
  */
-$GLOBALS['TL_LANG']['composer_client']['ftp_mode']              = 'Safe-Mode-Hack is not supported.<br>Configure your hosting and run Contao without Safe-Mode-Hack.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Article about Safe-Mode-Hack in the Contao Wiki (german)</a>';
+$GLOBALS['TL_LANG']['composer_client']['ftp_mode']              = 'Safe-Mode-Hack is not supported.<br>Configure your hosting and run Contao without Safe-Mode-Hack.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Article about Safe-Mode-Hack in the Contao Wiki (German)</a>';
 $GLOBALS['TL_LANG']['composer_client']['php_version']           = 'PHP version <strong>PHP ' . COMPOSER_MIN_PHPVERSION . '</strong> or newer is required. Your system runs with PHP version <strong>%s</strong>.<br>Please upgrade your PHP.';
-$GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'Curl is required to download packages.<br>Please install/enable the PHP <a href="http://php.net/curl" target="_blank">curl</a> module.';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'cURL is required to download packages.<br>Please install/enable the PHP <a href="http://php.net/curl" target="_blank">curl</a> module.';
 $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'] = 'Could not disable APC.<br>APC and Composer produce random errors, please disable <a href="http://php.net/apc" target="_blank">APC</a>.';
-$GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']       = 'Suhosin is enabled.<br>Suhosin will break the PHAR support, please disable <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
-$GLOBALS['TL_LANG']['composer_client']['composer_missing']      = 'Composer library is not completely installed.<br>Click <strong>Install Composer</strong> to install composer and its dependencies.';
+$GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']       = 'Suhosin is enabled.<br>Suhosin will break the Phar support, please disable <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
+$GLOBALS['TL_LANG']['composer_client']['composer_missing']      = 'Composer library is not completely installed.<br>Click <strong>Install Composer</strong> to install Composer and its dependencies.';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']      = 'Install Composer';
 $GLOBALS['TL_LANG']['composer_client']['search_placeholder']    = 'Package name or keyword';
 
@@ -37,9 +37,9 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_preconditions'] = '
 <li class="{if smhEnabled==true}fail{else}pass{endif}">SafeModeHack is {if smhEnabled==true}enabled{else}disabled{endif}</li>
 <li class="{if allowUrlFopenEnabled==true}pass{else}fail{endif}">allow_url_fopen is {if allowUrlFopenEnabled==true}enabled{else}disabled{endif}</li>
 <li class="{if pharSupportEnabled==true}pass{else}fail{endif}">PHAR support is {if pharSupportEnabled==true}enabled{else}disabled{endif}</li>
-<li class="{if composerSupported==true}pass{else}fail{endif}">{if composerSupported==true}You can use the composer client :-){else}You cannot use the composer client :-({endif}</li>
-{if commercialPackages!==false}<li class="fail">You have installed some commercial extensions: ##commercialPackages##.<br>You may loose them on migration.<br>Please consult the publisher, if he support composer you can continue without concern.</li>{endif}
-<li class="{if apcOpcodeCacheEnabled==true}warn{else}pass{endif}">APC opcode cache is {if apcOpcodeCacheEnabled==true}enabled, this may produce unexpected exceptions. If you have unexpected "cannot redeclare class" errors, try to disable APC opcode cache{elseif apcDisabledByUs==true}temporary disabled by composer client{else}disabled{endif}.</li>
+<li class="{if composerSupported==true}pass{else}fail{endif}">{if composerSupported==true}You can use the Composer client :-){else}You cannot use the Composer client :-({endif}</li>
+{if commercialPackages!==false}<li class="fail">You have installed some commercial extensions: ##commercialPackages##.<br>You may loose them on migration.<br>Please consult the publisher, if he support Composer you can continue without concern.</li>{endif}
+<li class="{if apcOpcodeCacheEnabled==true}warn{else}pass{endif}">APC opcode cache is {if apcOpcodeCacheEnabled==true}enabled, this may produce unexpected exceptions. If you have unexpected "cannot redeclare class" errors, try to disable APC opcode cache{elseif apcDisabledByUs==true}temporary disabled by Composer client{else}disabled{endif}.</li>
 </ul>';
 
 $GLOBALS['TL_LANG']['composer_client']['migrate_faq'] = '
@@ -53,8 +53,8 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_faq'] = '
 <li>
 	<h3>Can I install packages, that are available in the current extension repository?</h3>
 	Yes you can. All public packages are synchronized into the new repository (they are prefixed with <em>contao-legacy/</em>).<br>
-	<em>Please note that existing commercial extensions cannot be installed with composer due to license limitations.
-	Please ask the publisher to support composer.</em>
+	<em>Please note that existing commercial extensions cannot be installed with Composer due to license limitations.
+	Please ask the publisher to support Composer.</em>
 </li>
 <li>
 	<h3>Will there be a new extension repository?</h3>
@@ -67,14 +67,14 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_faq'] = '
 </li>
 <li>
 	<h3>Can I switch back to the old package manager?</h3>
-	Yes you can, go to the composer client settings dialog and chose "switch back to old client".
+	Yes you can. Go to the Composer client settings dialog and choose "switch back to old client".
 </li>
 <li>
 	<h3>I have problems with the new client, where can I ask for help?</h3>
 	This client is driven by the community.
 	You can ask in the <a href="https://community.contao.org/de/forumdisplay.php?6-Entwickler-Fragen" target="_blank">community board</a>,
-	the official irc channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
-	or the <a href="https://github.com/ContaoCommunityAlliance/Composer/issues" target="_blank">ticket system</a>.
+	the official IRC channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
+	or the <a href="https://github.com/contao-community-alliance/composer/issues" target="_blank">ticket system</a>.
 </li>
 </ul>';
 
@@ -88,7 +88,7 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_mode']                = array(
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade']             = array(
 	'Upgrade packages to Composer',
-	'Existing packages will be added to composer package manager and reinstalled.<br>'
+	'Existing packages will be added to Composer package manager and reinstalled.<br>'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_clean']               = array(
 	'Remove packages',
@@ -132,7 +132,7 @@ $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']         = '
 <ul>
 <li>Before switching, all installed packages will be removed.</li>
 <li>Migration status will be reset.</li>
-<li>The composer client will be disabled</li>
+<li>The Composer client will be disabled</li>
 <li>The repository client will be enabled</li>
 <li>You need to reinstall all extensions, that are managed by the repository client!</li>
 </ul>
@@ -168,7 +168,7 @@ $GLOBALS['TL_LANG']['composer_client']['package_keywords']          = 'Keywords'
 $GLOBALS['TL_LANG']['composer_client']['package_reference']         = 'Reference';
 $GLOBALS['TL_LANG']['composer_client']['package_type']              = 'Type';
 $GLOBALS['TL_LANG']['composer_client']['package_support']           = 'Support';
-$GLOBALS['TL_LANG']['composer_client']['package_support_email']     = 'E-Mail';
+$GLOBALS['TL_LANG']['composer_client']['package_support_email']     = 'Email';
 $GLOBALS['TL_LANG']['composer_client']['package_support_issues']    = 'Issues';
 $GLOBALS['TL_LANG']['composer_client']['package_support_wiki']      = 'Wiki';
 $GLOBALS['TL_LANG']['composer_client']['package_support_irc']       = 'IRC chat';
@@ -224,10 +224,10 @@ $GLOBALS['TL_LANG']['composer_client']['install_auto']   = 'Auto';
  */
 $GLOBALS['TL_LANG']['composer_client']['migrationSkipped']         = 'Migration was skipped.';
 $GLOBALS['TL_LANG']['composer_client']['migrationDone']            = 'Migration successfully finished.';
-$GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']   = 'Composer version is older than 30 days, please update composer.';
+$GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']   = 'Composer version is older than 30 days, please update Composer.';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdated']          = 'Composer was updated!';
 $GLOBALS['TL_LANG']['composer_client']['noSearchResult']           = 'No packages found for <em>%s</em>!';
-$GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'] = 'No candicate found for <em>%s</em>!';
+$GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'] = 'No candidate found for <em>%s</em>!';
 $GLOBALS['TL_LANG']['composer_client']['unknown_license']          = 'unknown license';
 $GLOBALS['TL_LANG']['composer_client']['added_candidate']          = 'Package %s added in version %s. Update packages to apply changes.';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']          = 'Package %s removed. Update packages to apply changes.';
@@ -245,10 +245,10 @@ $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer c
 $GLOBALS['TL_LANG']['composer_client']['migrate']              = 'Migrate';
 $GLOBALS['TL_LANG']['composer_client']['update_database']      = 'Update database';
 $GLOBALS['TL_LANG']['composer_client']['settings_dialog']      = 'Settings';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'switch back to old client';
-$GLOBALS['TL_LANG']['composer_client']['clear_composer_cache'] = 'clear Composer cache';
+$GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'Switch back to old client';
+$GLOBALS['TL_LANG']['composer_client']['clear_composer_cache'] = 'Clear Composer cache';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']         = 'Experts mode';
-$GLOBALS['TL_LANG']['composer_client']['update_composer']      = 'Update composer';
+$GLOBALS['TL_LANG']['composer_client']['update_composer']      = 'Update Composer';
 $GLOBALS['TL_LANG']['composer_client']['search']               = 'Search';
 $GLOBALS['TL_LANG']['composer_client']['check']                = 'Check compatibility';
 $GLOBALS['TL_LANG']['composer_client']['mark_to_install']      = 'Mark package to install';

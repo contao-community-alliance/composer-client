@@ -1,3 +1,6 @@
 <?php
 
-$GLOBALS['TL_LANG']['MOD']['composer'] = array('Package management');
+/**
+ * Back end modules
+ */
+$GLOBALS['TL_LANG']['MOD']['composer'] = array('Package management', 'Install and manage packages');

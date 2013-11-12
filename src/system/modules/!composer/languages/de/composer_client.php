@@ -16,11 +16,11 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline'] = 'Abhängig
  * References
  */
 $GLOBALS['TL_LANG']['composer_client']['ftp_mode']              = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Richten Sie Contao so ein, dass es ohne SMH lauffähig ist.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel zum SMH im Contao Wiki</a>';
-$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'Für den Einsatz des Composer Client wird <strong>PHP ' . COMPOSER_MIN_PHPVERSION . '</strong> vorausgesetzt, sie verwenden <strong>PHP %s</strong>.<br>Bitte aktualisieren Sie auf eine aktuellere PHP Version.';
-$GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'Zum herunterladen von Dateien wird curl benötigt.<br>Bitte installieren Sie das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
-$GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'] = 'APC konnte nicht deaktivert werden.<br>APC und Composer verträgt sich nicht so gut, bitte deaktivieren Sie <a href="http://php.net/apc" target="_blank">APC</a>.';
-$GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']       = 'Suhosin ist aktiviert.<br>Suhosin verhindert die korrekte Ausführung von PHAR Dateien, bitte deaktivieren Sie <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
-$GLOBALS['TL_LANG']['composer_client']['composer_missing']      = 'Die Composer Library ist nicht (vollständig) installiert.<br>Drücken Sie auf <strong>Composer installieren</strong> um Composer und alle Abhängigkeiten zu installieren.';
+$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'Für den Einsatz des Composer Client wird <strong>PHP ' . COMPOSER_MIN_PHPVERSION . '</strong> vorausgesetzt. Sie verwenden zurzeit <strong>PHP %s</strong>.<br>Bitte aktualisieren Sie auf eine aktuellere PHP Version.';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'Zum Herunterladen von Dateien wird cURL benötigt.<br>Bitte installieren Sie das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
+$GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'] = 'APC konnte nicht deaktiviert werden.<br>Das Ausführen von APC und Composer kann zu Zufallsfehlern führen. Bitte deaktivieren Sie <a href="http://php.net/apc" target="_blank">APC</a>.';
+$GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']       = 'Suhosin ist aktiviert.<br>Suhosin verhindert die korrekte Ausführung von Phar Dateien. Bitte deaktivieren Sie <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
+$GLOBALS['TL_LANG']['composer_client']['composer_missing']      = 'Die Composer Library ist nicht (vollständig) installiert.<br>Drücken Sie auf <strong>Composer installieren</strong>, um Composer und alle Abhängigkeiten zu installieren.';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']      = 'Composer installieren';
 $GLOBALS['TL_LANG']['composer_client']['search_placeholder']    = 'Paketname oder Suchbegriff';
 
@@ -29,11 +29,11 @@ $GLOBALS['TL_LANG']['composer_client']['search_placeholder']    = 'Paketname ode
  */
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'] = array(
 	'Minimale Stabilität',
-	'Minimale Stabilität in der Pakete installiert werden dürfen.'
+	'Minimale Stabilität, in der Pakete installiert werden dürfen.'
 );
 $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']     = array(
 	'Stabile Pakete bevorzugen',
-	'Wenn möglich sollen stabile Pakete bevorzugt werden, auch wenn die minimale Stabilität instabile Pakete erlaubt.'
+	'Stabile Pakete werden bevorzugt, auch wenn die minimale Stabilität instabile Pakete erlaubt.'
 );
 $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'] = array(
 	'Bevorzugte Installationsform',
@@ -106,18 +106,18 @@ $GLOBALS['TL_LANG']['composer_client']['install_auto']   = 'Auto';
 /**
  * Message
  */
-$GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']   = 'Die Composer Version ist älter als 30 Tage, ein Update wird dringend empfohlen.';
+$GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']   = 'Die Composer Version ist älter als 30 Tage. Ein Update wird dringend empfohlen!';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdated']          = 'Composer wurde aktualisiert!';
-$GLOBALS['TL_LANG']['composer_client']['noSearchResult']           = 'Es wurde kein package für <em>%s</em> gefunden!';
+$GLOBALS['TL_LANG']['composer_client']['noSearchResult']           = 'Es wurde kein Paket für <em>%s</em> gefunden!';
 $GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'] = 'Keine Kandidaten für <em>%s</em> gefunden!';
 $GLOBALS['TL_LANG']['composer_client']['unknown_license']          = 'unbekannte Lizenz';
-$GLOBALS['TL_LANG']['composer_client']['added_candidate']          = 'Paket %s in Version %s hinzugefügt. Aktualisieren Sie die Pakete um die Änderungen anzuwenden.';
-$GLOBALS['TL_LANG']['composer_client']['removeCandidate']          = 'Paket %s wurde entfernt. Aktualisieren Sie die Pakete um die Änderungen anzuwenden.';
-$GLOBALS['TL_LANG']['composer_client']['configValid']              = 'Die Konfiguration ist valid.';
+$GLOBALS['TL_LANG']['composer_client']['added_candidate']          = 'Paket %s in Version %s hinzugefügt. Aktualisieren Sie die Pakete, um die Änderungen anzuwenden.';
+$GLOBALS['TL_LANG']['composer_client']['removeCandidate']          = 'Paket %s wurde entfernt. Aktualisieren Sie die Pakete, um die Änderungen anzuwenden.';
+$GLOBALS['TL_LANG']['composer_client']['configValid']              = 'Die Konfiguration ist gültig.';
 $GLOBALS['TL_LANG']['composer_client']['removePackage']            = 'Paket entfernen';
-$GLOBALS['TL_LANG']['composer_client']['confirmRemove']            = 'Möchten Sie das Paket %s wirklich entferen?';
+$GLOBALS['TL_LANG']['composer_client']['confirmRemove']            = 'Möchten Sie das Paket %s wirklich entfernen?';
 $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']              = 'wird entfernt';
-$GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Datenbank aktualisiert, %d Queries wurden ausgeführt.';
+$GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Datenbank aktualisiert. %d Queries wurden ausgeführt.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']         = 'Datenbank ist aktuell.';
 $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer Cache wurde geleert.';
 
