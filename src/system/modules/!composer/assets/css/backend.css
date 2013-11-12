@@ -200,11 +200,19 @@ span.stability-dev {
 	margin-top: 12px;
 }
 .col_name .replace {
+	display: block;
 	color: #aaa;
 }
 .col_name .replace:before {
-	content: "\2190";
+	display: inline-block;
+	content: "\2936";
+	margin-left: .25em;
 	margin-right: .25em;
+	-webkit-transform:rotate(90deg);
+	-moz-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	-o-transform:rotate(90deg);
+	transform:rotate(90deg);
 }
 p.dependencies {
 	padding: 2px 6px 3px;
