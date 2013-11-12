@@ -190,12 +190,13 @@ $dependencyCount = 0;
 					?>
 				</td>
 				<td class="tl_file_list col_requested_version"><?php
-						$removePossible = TemplateFunctions::isRemoveable(
+						$removePossible = empty($requiredBy) && TemplateFunctions::isRemoveable(
 							$localPackage->getName(),
 							$requires,
 							$replaceThat
 						);
 						$removeRequested = !$removePossible &&
+							empty($requiredBy) &&
 							TemplateFunctions::isRemoveRequested($localPackage->getName(), $requires, $replacedBy);
 
 						$link = TemplateFunctions::getRequireConstraint($localPackage->getName(), $requires, $replaceThat);
