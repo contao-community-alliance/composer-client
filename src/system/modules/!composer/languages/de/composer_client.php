@@ -120,6 +120,7 @@ $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']              = 'wird entfe
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Datenbank aktualisiert. %d Queries wurden ausgeführt.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']         = 'Datenbank ist aktuell.';
 $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer Cache wurde geleert.';
+$GLOBALS['TL_LANG']['composer_client']['restartOperation']         = 'Die Composer Einstellungen wurden aktualisiert, bitte wiederholen Sie die letzte Aktion.';
 
 /**
  * Buttons

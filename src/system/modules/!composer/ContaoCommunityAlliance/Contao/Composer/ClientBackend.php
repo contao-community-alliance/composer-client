@@ -24,6 +24,7 @@ use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
+use ContaoCommunityAlliance\ComposerInstaller\ConfigUpdateException;
 
 /**
  * Class ClientBackend
@@ -1311,8 +1312,19 @@ class ClientBackend extends \BackendModule
 				$this->redirect('contao/main.php?do=composer');
 			}
 		}
+		catch (ConfigUpdateException $e) {
+			do {
+				$_SESSION['TL_CONFIRM'][] = str_replace(TL_ROOT, '', $e->getMessage());
+				$e = $e->getPrevious();
+			} while ($e);
+			$_SESSION['TL_INFO'][]    = $GLOBALS['TL_LANG']['composer_client']['restartOperation'];
+			$this->redirect('contao/main.php?do=composer');
+		}
 		catch (\RuntimeException $e) {
-			$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
+			do {
+				$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
+				$e = $e->getPrevious();
+			} while ($e);
 			$this->redirect('contao/main.php?do=composer');
 		}
 	}
