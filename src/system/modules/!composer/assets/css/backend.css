@@ -195,6 +195,9 @@ span.stability-dev {
 .col_name .name {
 	color: maroon;
 }
+.col_name .description {
+	white-space: normal;
+}
 .col_name .description p {
 	color: #666;
 	margin-top: 12px;
