@@ -2,21 +2,18 @@
 	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
 		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
 	</a>
-	&nbsp; :: &nbsp;
 	<a href="contao/main.php?do=composer&amp;migrate=undo" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['undo_migration']; ?>">
 		<?php echo $this->generateImage(
 			'system/modules/!composer/assets/images/undo_migration.png',
 			$GLOBALS['TL_LANG']['composer_client']['undo_migration']
 		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['undo_migration']; ?>
 	</a>
-	&nbsp; :: &nbsp;
 	<a href="contao/main.php?do=composer&amp;clear=composer-cache" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']; ?>">
 		<?php echo $this->generateImage(
 			'system/modules/!composer/assets/images/clear_composer_cache.png',
 			$GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']
 		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']; ?>
 	</a>
-	&nbsp; :: &nbsp;
 	<a href="contao/main.php?do=composer&amp;settings=experts" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>">
 		<?php echo $this->generateImage(
 			'system/modules/!composer/assets/images/experts_mode.png',

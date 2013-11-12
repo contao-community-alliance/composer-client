@@ -35,7 +35,10 @@ span.stability-dev {
 /**
  * Some generic styles
  */
-#tl_buttons * {
+#tl_buttons a {
+	margin-left: 15px;
+}
+#tl_buttons img {
 	vertical-align: middle;
 }
 .output {
