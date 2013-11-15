@@ -385,7 +385,7 @@ $source = $preferedCandidate->getSourceUrl();
 											);
 
 											if (strlen($build)) {
-												$constraint = sprintf('>=%s,<%s.%s.%s', $version . $prettyStability, $major, $minor, $build+1) . $stability;
+												$constraint = sprintf('>=%s,<%s.%s.%s-dev', $version . $prettyStability, $major, $minor, $build+1) . $stability;
 												$micro = sprintf('%s.%s.%s.*', $major, $minor, $build) . $prettyStability;
 												$versions[$constraint] = sprintf(
 													$GLOBALS['TL_LANG']['composer_client']['version_micro'],
@@ -395,7 +395,7 @@ $source = $preferedCandidate->getSourceUrl();
 											}
 
 											if (strlen($minor)) {
-												$constraint = sprintf('>=%s,<%s.%s', $version . $prettyStability, $major, $minor+1) . $stability;
+												$constraint = sprintf('>=%s,<%s.%s-dev', $version . $prettyStability, $major, $minor+1) . $stability;
 												$bugfix = sprintf('%s.%s.*', $major, $minor) . $prettyStability;
 												$versions[$constraint] = sprintf(
 													$GLOBALS['TL_LANG']['composer_client']['version_bugfix'],
