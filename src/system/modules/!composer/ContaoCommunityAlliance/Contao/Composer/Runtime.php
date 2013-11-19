@@ -300,7 +300,7 @@ EOF;
 		}
 
 		// check for apc and try to disable
-		if (static::isApcEnabled() && !in_array('ini_set', explode(',', ini_get('disable_functions'))) && ini_set('apc.cache_by_default', 0) === false) {
+		if (static::isApcEnabled() && (in_array('ini_set', explode(',', ini_get('disable_functions'))) || ini_set('apc.cache_by_default', 0) === false)) {
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'];
 		}
 
