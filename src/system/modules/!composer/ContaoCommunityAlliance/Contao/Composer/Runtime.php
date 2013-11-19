@@ -237,6 +237,8 @@ EOF;
 		return (bool) ini_get('allow_url_fopen');
 	}
 
+	const APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT = '3.0.13';
+
 	/**
 	 * Determinate if apc is enabled.
 	 *
@@ -244,7 +246,24 @@ EOF;
 	 */
 	static public function isApcEnabled()
 	{
-		return function_exists('apc_clear_cache') && !in_array('ini_set', explode(',', ini_get('disable_functions')));
+		if(extension_loaded('apcu')) {
+			return false;
+		}
+
+		if(!function_exists('apc_clear_cache')) {
+			return false;
+		}
+
+		if(!in_array('ini_set', explode(',', ini_get('disable_functions')))) {
+			return true;
+		}
+
+		$apc = new \ReflectionExtension('apc');
+		if(version_compare($apc->getVersion(), self::APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT, '<')) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
