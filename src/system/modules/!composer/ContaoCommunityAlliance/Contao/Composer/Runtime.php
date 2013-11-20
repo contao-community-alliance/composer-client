@@ -254,10 +254,6 @@ EOF;
 			return false;
 		}
 
-		if(!in_array('ini_set', explode(',', ini_get('disable_functions')))) {
-			return true;
-		}
-
 		$apc = new \ReflectionExtension('apc');
 		if(version_compare($apc->getVersion(), self::APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT, '<')) {
 			return true;
