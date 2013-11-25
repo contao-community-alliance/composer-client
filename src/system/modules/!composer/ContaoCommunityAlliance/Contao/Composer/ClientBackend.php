@@ -32,6 +32,7 @@ use ContaoCommunityAlliance\Contao\Composer\Controller\DetailsController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\ExpertsEditorController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\MigrationWizardController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\PinController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\RemovePackageController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\SearchController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\SettingsController;
@@ -177,6 +178,11 @@ class ClientBackend extends \Backend
 		// do update packages
 		if ($input->get('update') == 'packages' || $input->post('update') == 'packages') {
 			$controller = new UpdatePackagesController();
+		}
+
+		// do pin/unpin package version
+		if ($input->post('pin')) {
+			$controller = new PinController();
 		}
 
 		// do remove package

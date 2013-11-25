@@ -28,6 +28,8 @@ use ContaoCommunityAlliance\Contao\Composer\TemplateFunctions;
 $composer = $this->composer;
 /** @var \Composer\Package\RootPackage $package */
 $package = $composer->getPackage();
+$extra = $package->getExtra();
+$versionLocks = isset($extra['contao']['version-locks']) ? (array) $extra['contao']['version-locks'] : array();
 /** @var \Composer\Repository\RepositoryManager $repositoryManager */
 $repositoryManager = $composer->getRepositoryManager();
 /** @var \Composer\Repository\RepositoryInterface $localRepository */
@@ -211,7 +213,7 @@ $dependencyCount = 0;
 							}
 
 							printf(
-								'<span class="stability-%s">%s</span><br>',
+								'<span class="stability-%s">%s</span>',
 								strtolower($stability),
 								$link->getPrettyConstraint()
 							);
@@ -269,7 +271,23 @@ $dependencyCount = 0;
 						);
 					?></td>
 				<td class="tl_file_list col_remove">
-					<?php if ($removePossible): ?>
+					<?php if (!$removeRequested && preg_match('~(^dev-|-dev$)~', $localPackage->getPrettyVersion())): ?>
+						<img src="system/modules/!composer/assets/images/version_unpinable.png"
+							   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['unpinablePackage']); ?>">
+					<?php elseif (!$removeRequested): ?>
+					<form action="contao/main.php?do=composer" class="tl_form" method="post"
+						  enctype="application/x-www-form-urlencoded">
+						<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+						<input type="hidden" name="pin" value="<?php echo specialchars($requirePackageName); ?>">
+						<?php if (isset($versionLocks[$requirePackageName])): ?>
+						<input type="image" src="system/modules/!composer/assets/images/version_locked.png"
+							   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['unpinPackage']); ?>">
+						<?php else: ?>
+						<input type="image" src="system/modules/!composer/assets/images/version_unlocked.png"
+							   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['pinPackage']); ?>">
+						<?php endif; ?>
+					</form>
+					<?php endif; if ($removePossible): ?>
 					<form action="contao/main.php?do=composer" class="tl_form" method="post"
 						  enctype="application/x-www-form-urlencoded"
 						  onsubmit="return confirm(<?php echo str_replace('"', "'", json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemove'], $localPackage->getName()))); ?>);">

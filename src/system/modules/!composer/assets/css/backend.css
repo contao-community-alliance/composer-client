@@ -217,6 +217,12 @@ span.stability-dev {
 	-o-transform:rotate(90deg);
 	transform:rotate(90deg);
 }
+.col_remove form {
+	display: inline;
+}
+.col_remove input[type="image"] {
+	vertical-align: -4px;
+}
 p.dependencies {
 	padding: 2px 6px 3px;
 }
