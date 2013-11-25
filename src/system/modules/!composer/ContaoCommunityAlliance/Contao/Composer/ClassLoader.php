@@ -21,7 +21,10 @@ class ClassLoader
 			$className = str_replace('\\', '/', $className);
 			$className .= '.php';
 
-			require(dirname(__FILE__) . '/' . $className);
+			$pathname = dirname(__FILE__) . '/' . $className;
+			if (is_file($pathname)) {
+				require($pathname);
+			}
 		}
 	}
 }

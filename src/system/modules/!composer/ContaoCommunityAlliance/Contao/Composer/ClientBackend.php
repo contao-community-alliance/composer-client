@@ -10,6 +10,7 @@ use Composer\IO\BufferIO;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
 use Composer\Package\PackageInterface;
+use Composer\Package\RootPackage;
 use Composer\Package\RootPackageInterface;
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Version\VersionParser;
@@ -25,35 +26,27 @@ use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
 use ContaoCommunityAlliance\ComposerInstaller\ConfigUpdateException;
+use ContaoCommunityAlliance\Contao\Composer\Controller\ClearComposerCacheController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\DependencyGraphController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\DetailsController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\ExpertsEditorController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\MigrationWizardController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\RemovePackageController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\SearchController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\SettingsController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\SolveController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\UndoMigrationController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\UpdateDatabaseController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
 
 /**
  * Class ClientBackend
  *
  * Composer client interface.
  */
-class ClientBackend extends \BackendModule
+class ClientBackend extends \Backend
 {
-	static protected $versionNames = array
-	(
-		0 => '-alpha',
-		1 => '-alpha',
-		2 => '-alpha',
-		3 => '-beta',
-		4 => '-beta',
-		5 => '-beta',
-		6 => '-RC',
-		7 => '-RC',
-		8 => '-RC',
-		9 => ''
-	);
-
-	/**
-	 * The template name
-	 *
-	 * @var string
-	 */
-	protected $strTemplate = 'be_composer_client';
-
 	/**
 	 * The pathname to the composer config file.
 	 *
@@ -78,91 +71,47 @@ class ClientBackend extends \BackendModule
 	/**
 	 * Compile the current element
 	 */
-	protected function compile()
+	public function generate()
 	{
 		$this->loadLanguageFile('composer_client');
 
 		$input = \Input::getInstance();
 
-		// check the local environment
-		if (!$this->checkEnvironment($input)) {
-			return;
+		// check the environment
+		$errors = Runtime::checkEnvironment();
+
+		if ($errors !== true && count($errors)) {
+			$template = new \BackendTemplate('be_composer_client_errors');
+			$template->errors = $errors;
+			return $template->parse();
+		}
+
+		// check composer.phar is installed
+		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.phar')) {
+			// switch template
+			$template = new \BackendTemplate('be_composer_client_install_composer');
+
+			// do install composer library
+			if ($input->post('install')) {
+				$this->updateComposer();
+				$this->reload();
+			}
+
+			return $template->parse();
+		}
+
+		// update composer.phar if requested
+		if ($input->get('update') == 'composer') {
+			$this->updateComposer();
+			$this->redirect('contao/main.php?do=composer');
 		}
 
 		// load composer and the composer class loader
 		$this->loadComposer();
-		$extra = $this->composer
-			->getPackage()
-			->getExtra();
 
-		if (!array_key_exists('contao', $extra) ||
-			!array_key_exists('migrated', $extra['contao']) ||
-			!$extra['contao']['migrated']
-		) {
-			$this->migrationWizard($input);
-			return;
-		}
-
-		if ($input->get('migrate') == 'undo') {
-			$this->undoMigration($input);
-			return;
-		}
-
-		if ($input->get('update') == 'database') {
-			$this->updateDatabase($input);
-			return;
-		}
-
-		if ($input->get('clear') == 'composer-cache') {
-			$this->clearComposerCache($input);
-			return;
-		}
-
-		if ($input->get('settings') == 'dialog') {
-			$this->showSettingsDialog($input);
-			return;
-		}
-
-		if ($input->get('settings') == 'experts') {
-			$this->showExpertsEditor($input);
-			return;
-		}
-
-		if ($input->get('show') == 'dependency-graph') {
-			$this->showDependencyGraph($input);
-			return;
-		}
-
-		// do search
-		if ($input->get('keyword')) {
-			$this->doSearch($input);
-			return;
-		}
-
-		// do install
-		if ($input->get('install')) {
-			$this->showDetails($input);
-			return;
-		}
-
-		// do solve
-		if ($input->get('solve')) {
-			$this->solveDependencies($input);
-			return;
-		}
-
-		if ($input->get('update') == 'packages' || $input->post('update') == 'packages') {
-			$this->updatePackages();
-			return;
-		}
-
-		/**
-		 * Remove package
-		 */
-		if ($input->post('remove')) {
-			$this->removePackage($input);
-			$this->redirect('contao/main.php?do=composer');
-		}
+		/** @var RootPackage $rootPackage */
+		$rootPackage = $this->composer->getPackage();
+		$extra = $rootPackage->getExtra();
 
 		// update contao version if needed
 		if (Runtime::updateContaoVersion($this->composer, $this->configPathname)) {
@@ -170,71 +119,83 @@ class ClientBackend extends \BackendModule
 			$this->reload();
 		}
 
-		// calculate dependency graph
-		$dependencyMap = $this->calculateDependencyMap(
-			$this->composer
-				->getRepositoryManager()
-				->getLocalRepository()
-		);
+		$controller = null;
 
-		$replaceMap = $this->calculateReplaceMap(
-			$this->composer
-				->getRepositoryManager()
-				->getLocalRepository()
-		);
+		// do migration
+		if (!array_key_exists('contao', $extra) ||
+			!array_key_exists('migrated', $extra['contao']) ||
+			!$extra['contao']['migrated']
+		) {
+			$controller = new MigrationWizardController();
+		}
 
-		$this->Template->dependencyMap = $dependencyMap;
-		$this->Template->replaceMap    = $replaceMap;
-		$this->Template->output        = $_SESSION['COMPOSER_OUTPUT'];
+		// undo migration
+		if ($input->get('migrate') == 'undo') {
+			$controller = new UndoMigrationController();
+		}
 
-		unset($_SESSION['COMPOSER_OUTPUT']);
+		// do update database
+		if ($input->get('update') == 'database') {
+			$controller = new UpdateDatabaseController();
+		}
+
+		// do clear composer cache
+		if ($input->get('clear') == 'composer-cache') {
+			$controller = new ClearComposerCacheController();
+		}
+
+		// show settings dialog
+		if ($input->get('settings') == 'dialog') {
+			$controller = new SettingsController();
+		}
+
+		// show experts editor
+		if ($input->get('settings') == 'experts') {
+			$controller = new ExpertsEditorController();
+		}
+
+		// show dependency graph
+		if ($input->get('show') == 'dependency-graph') {
+			$controller = new DependencyGraphController();
+		}
+
+		// do search
+		if ($input->get('keyword')) {
+			$controller = new SearchController();
+		}
+
+		// do install
+		if ($input->get('install')) {
+			$controller = new DetailsController();
+		}
+
+		// do solve
+		if ($input->get('solve')) {
+			$controller = new SolveController();
+		}
+
+		// do update packages
+		if ($input->get('update') == 'packages' || $input->post('update') == 'packages') {
+			$controller = new UpdatePackagesController();
+		}
+
+		// do remove package
+		if ($input->post('remove')) {
+			$controller = new RemovePackageController();
+		}
+
+		if (!$controller) {
+			$controller = new InstalledController();
+		}
+
+		$controller->setConfigPathname($this->configPathname);
+		$controller->setIo($this->io);
+		$controller->setComposer($this->composer);
+		$output = $controller->handle($input);
 
 		chdir(TL_ROOT);
-	}
 
-	/**
-	 * Check the local environment, return false if there are problems.
-	 *
-	 * @param \Input $input
-	 *
-	 * @return bool
-	 */
-	protected function checkEnvironment(\Input $input)
-	{
-		$errors = Runtime::checkEnvironment();
-
-		if ($errors !== true && count($errors)) {
-			$this->Template->setName('be_composer_client_errors');
-			$this->Template->errors = $errors;
-			return false;
-		}
-
-		/*
-		 * Use composer.phar only, if composer is not installed locally
-		 */
-		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/composer/composer/src/Composer/Composer.php') ||
-			!file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php')
-		) {
-			if (!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.phar')) {
-				// switch template
-				$this->Template->setName('be_composer_client_install_composer');
-
-				// do install composer library
-				if ($input->post('install')) {
-					$this->updateComposer();
-					$this->reload();
-				}
-
-				return false;
-			}
-
-			if ($input->get('update') == 'composer') {
-				$this->updateComposer();
-				$this->redirect('contao/main.php?do=composer');
-			}
-		}
-
-		return true;
+		return $output;
 	}
 
 	/**
@@ -279,1201 +240,5 @@ class ClientBackend extends \BackendModule
 
 		// create composer
 		$this->composer = Runtime::createComposer($this->io);
-
-		// assign composer to template
-		$this->Template->composer = $this->composer;
-	}
-
-	/**
-	 * Migration wizard
-	 */
-	protected function migrationWizard(\Input $input)
-	{
-		$oldPackageCount    = \Database::getInstance()
-			->execute('SELECT COUNT(*) AS count FROM tl_repository_installs')
-			->count;
-		$commercialPackages = \Database::getInstance()
-			->execute('SELECT * FROM tl_repository_installs WHERE lickey!=\'\'')
-			->fetchEach('extension');
-		$commercialPackages = count($commercialPackages)
-			? implode(', ', $commercialPackages)
-			: false;
-
-		$smhEnabled            = Runtime::isSafeModeHackEnabled();
-		$allowUrlFopenEnabled  = ini_get('allow_url_fopen');
-		$pharSupportEnabled    = false;
-		$apcOpcodeCacheEnabled = ini_get('apc.enabled') && ini_get('apc.cache_by_default');
-
-		try {
-			if (class_exists('Phar', false)) {
-				new \Phar(TL_ROOT . '/system/modules/!composer/config/test.phar');
-				$pharSupportEnabled = true;
-			}
-		}
-		catch (\Exception $e) {
-		}
-
-		$composerSupported = !$smhEnabled && $allowUrlFopenEnabled && $pharSupportEnabled;
-
-		$gitAvailable = Runtime::testProcess('git --version');
-		$hgAvailable  = Runtime::testProcess('hg --version');
-		$svnAvailable = Runtime::testProcess('svn --version');
-
-		$mode  = 'upgrade';
-		$setup = 'production';
-
-		if ($composerSupported && $input->post('FORM_SUBMIT') == 'tl_composer_migrate') {
-			$target = 'contao/main.php?do=composer';
-
-			$mode  = $input->post('mode');
-			$setup = $input->post('setup');
-
-			// load config
-			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-			$config = $json->read();
-
-			if ($input->post('skip')) {
-				// mark migration skipped
-				$config['extra']['contao']['migrated'] = 'skipped';
-
-				$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['migrationSkipped'];
-			}
-			else {
-				switch ($mode) {
-					case 'upgrade':
-						$this->removeER2Files();
-
-						$install = \Database::getInstance()
-							->query('SELECT * FROM tl_repository_installs WHERE lickey=""');
-						while ($install->next()) {
-							// skip the composer package
-							if ($install->extension == 'composer') {
-								continue;
-							}
-
-							$packageName = 'contao-legacy/' . $install->extension;
-							/*
-							$packageName = preg_replace(
-								'{(?:([a-z])([A-Z])|([A-Z])([A-Z][a-z]))}',
-								'\\1\\3-\\2\\4',
-								$packageName
-							);
-							*/
-							$packageName = strtolower($packageName);
-
-							$oldVersion = $install->version;
-							$build      = $install->build;
-							$stability  = $oldVersion % 10;
-							$oldVersion = (int) ($oldVersion / 10);
-							$release    = $oldVersion % 1000;
-							$oldVersion = (int) ($oldVersion / 1000);
-							$minor      = $oldVersion % 1000;
-							$major      = (int) ($oldVersion / 1000);
-
-							$version = sprintf(
-								'>=%d.%d.%d.%d%s,<%d.%d',
-								$major,
-								$minor,
-								$release,
-								($stability * 1000 + $build),
-								static::$versionNames[$stability],
-								$major,
-								$minor + 1
-							);
-
-							$config['require'][$packageName] = $version;
-						}
-
-						$target = 'contao/main.php?do=composer&update=packages';
-						break;
-
-					case 'clean':
-						$this->removeER2Files();
-						break;
-				}
-
-				switch ($setup) {
-					case 'production':
-						$config['minimum-stability']           = 'dev';
-						$config['prefer-stable']               = true;
-						$config['config']['preferred-install'] = 'dist';
-						break;
-
-					case 'development':
-						$config['minimum-stability']           = 'dev';
-						$config['prefer-stable']               = true;
-						$config['config']['preferred-install'] = 'source';
-						break;
-				}
-
-				// mark migration done
-				$config['extra']['contao']['migrated'] = 'done';
-
-				$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['migrationDone'];
-			}
-
-			// write config
-			$json->write($config);
-
-			$this->redirect($target);
-		}
-
-		$this->Template->setName('be_composer_client_migrate');
-		$this->Template->smhEnabled            = $smhEnabled;
-		$this->Template->allowUrlFopenEnabled  = $allowUrlFopenEnabled;
-		$this->Template->pharSupportEnabled    = $pharSupportEnabled;
-		$this->Template->composerSupported     = $composerSupported;
-		$this->Template->apcOpcodeCacheEnabled = $apcOpcodeCacheEnabled;
-		$this->Template->oldPackageCount       = $oldPackageCount;
-		$this->Template->commercialPackages    = $commercialPackages;
-		$this->Template->gitAvailable          = $gitAvailable;
-		$this->Template->hgAvailable           = $hgAvailable;
-		$this->Template->svnAvailable          = $svnAvailable;
-		$this->Template->mode                  = $mode;
-		$this->Template->setup                 = $setup;
-	}
-
-	/**
-	 * Undo migration
-	 */
-	protected function undoMigration(\Input $input)
-	{
-		if ($input->post('FORM_SUBMIT') == 'tl_composer_migrate_undo') {
-			$requires = $this->composer
-				->getPackage()
-				->getRequires();
-			foreach ($requires as $package => $constraint) {
-				if ($package != 'contao-community-alliance/composer') {
-					unset($requires[$package]);
-				}
-			}
-			$this->composer
-				->getPackage()
-				->setRequires($requires);
-
-			$lockPathname = preg_replace('#\.json$#', '.lock', $this->configPathname);
-
-			$this->composer
-				->getDownloadManager()
-				->setOutputProgress(false);
-			$installer = Installer::create($this->io, $this->composer);
-
-			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
-				$installer->setUpdate(true);
-			}
-
-			if ($installer->run()) {
-				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-			}
-			else {
-				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-
-				$this->redirect('contao/main.php?do=composer&migrate=undo');
-			}
-
-			// load config
-			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-			$config = $json->read();
-
-			// remove migration status
-			unset($config['extra']['contao']['migrated']);
-
-			// write config
-			$json->write($config);
-
-			// disable composer client and enable repository client
-			$inactiveModules   = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
-			$inactiveModules[] = '!composer';
-			foreach (array('rep_base', 'rep_client', 'repository') as $module) {
-				$pos = array_search($module, $inactiveModules);
-				if ($pos !== false) {
-					unset($inactiveModules[$pos]);
-				}
-			}
-			if (version_compare(VERSION, '3', '>=')) {
-				$skipFile = new \File('system/modules/!composer/.skip');
-				$skipFile->write('Remove this file to enable the module');
-				$skipFile->close();
-			}
-			if (file_exists(TL_ROOT . '/system/modules/repository/.skip')) {
-				$skipFile = new \File('system/modules/repository/.skip');
-				$skipFile->delete();
-			}
-			$this->Config->update("\$GLOBALS['TL_CONFIG']['inactiveModules']", serialize($inactiveModules));
-
-			$this->redirect('contao/main.php?do=repository_manager');
-		}
-
-		$this->Template->setName('be_composer_client_migrate_undo');
-		$this->Template->output = $_SESSION['COMPOSER_OUTPUT'];
-
-		unset($_SESSION['COMPOSER_OUTPUT']);
-	}
-
-	/**
-	 * Remove all files installed with ER2 client
-	 */
-	protected function removeER2Files()
-	{
-		$files      = \Files::getInstance();
-		$file       = \Database::getInstance()
-			->query(
-				'SELECT f.*
-				 FROM tl_repository_instfiles f
-				 INNER JOIN tl_repository_installs i
-				 ON i.id=f.pid
-				 WHERE i.extension!="composer"
-				 ORDER BY filetype="D", filetype="F", filename DESC'
-			);
-		$fileIds    = array();
-		$installIds = array();
-		while ($file->next()) {
-			$path = TL_ROOT . '/' . $file->filename;
-			switch ($file->filetype) {
-				case 'F':
-					if (file_exists($path)) {
-						$fileIds[]    = $file->id;
-						$installIds[] = $file->pid;
-						$files->delete($file->filename);
-					}
-					break;
-
-				case 'D':
-					if (is_dir($path) && !count(scan($path))) {
-						$installIds[] = $file->pid;
-						$files->rmdir($file->filename);
-					}
-					break;
-			}
-		}
-		if (count($installIds)) {
-			\Database::getInstance()
-				->query(
-					'UPDATE tl_repository_installs SET error=1 WHERE id IN (' . implode(
-						',',
-						array_unique($installIds)
-					) . ')'
-				);
-		}
-		if (count($fileIds)) {
-			\Database::getInstance()
-				->query('UPDATE tl_repository_instfiles SET flag="D" WHERE id IN (' . implode(',', $fileIds) . ')');
-		}
-	}
-
-	/**
-	 * Update the database scheme
-	 */
-	protected function updateDatabase(\Input $input)
-	{
-		$this->handleRunOnce(); // PATCH
-
-		if ($input->post('FORM_SUBMIT') == 'database-update') {
-			$count = 0;
-			$sql   = deserialize($input->post('sql'));
-			if (is_array($sql)) {
-				foreach ($sql as $key) {
-					if (isset($_SESSION['sql_commands'][$key])) {
-						$this->Database->query(
-							str_replace(
-								'DEFAULT CHARSET=utf8;',
-								'DEFAULT CHARSET=utf8 COLLATE ' . $GLOBALS['TL_CONFIG']['dbCollation'] . ';',
-								$_SESSION['sql_commands'][$key]
-							)
-						);
-						$count++;
-					}
-				}
-			}
-			$_SESSION['sql_commands'] = array();
-			$_SESSION['TL_CONFIRM'][] = sprintf($GLOBALS['TL_LANG']['composer_client']['databaseUpdated'], $count);
-			$this->reload();
-		}
-
-		if (version_compare(VERSION, '3', '>=')) {
-			/** @var \Contao\Database\Installer $installer */
-			$installer = \System::importStatic('Database\Installer');
-		}
-		else {
-			$this->import('DbInstaller');
-			/** @var \DbInstaller $installer */
-			$installer = $this->DbInstaller;
-		}
-
-		$form = $installer->generateSqlForm();
-
-		if (empty($_SESSION['sql_commands'])) {
-			$_SESSION['TL_INFO'][] = $GLOBALS['TL_LANG']['composer_client']['databaseUptodate'];
-			$this->redirect('contao/main.php?do=composer');
-		}
-
-		$form = preg_replace(
-			'#(<label for="sql_\d+")>(CREATE TABLE)#',
-			'$1 class="create_table">$2',
-			$form
-		);
-		$form = preg_replace(
-			'#(<label for="sql_\d+")>(ALTER TABLE `[^`]+` ADD)#',
-			'$1 class="alter_add">$2',
-			$form
-		);
-		$form = preg_replace(
-			'#(<label for="sql_\d+")>(ALTER TABLE `[^`]+` DROP)#',
-			'$1 class="alter_drop">$2',
-			$form
-		);
-		$form = preg_replace(
-			'#(<label for="sql_\d+")>(DROP TABLE)#',
-			'$1 class="drop_table">$2',
-			$form
-		);
-
-		$this->Template->setName('be_composer_client_update');
-		$this->Template->form = $form;
-	}
-
-	/**
-	 * Clear composer cache.
-	 *
-	 * @param \Input $input
-	 */
-	protected function clearComposerCache(\Input $input)
-	{
-		if (Runtime::clearComposerCache()) {
-			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared'];
-		}
-
-		$this->redirect('contao/main.php?do=composer');
-	}
-
-	/**
-	 * Show the settings dialog.
-	 *
-	 * @param \Input $input
-	 */
-	protected function showSettingsDialog(\Input $input)
-	{
-		$rootPackage = $this->composer->getPackage();
-		$config      = $this->composer->getConfig();
-
-		$minimumStability = new \SelectMenu(
-			array(
-				 'id'          => 'minimum-stability',
-				 'name'        => 'minimum-stability',
-				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'][0],
-				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'][1],
-				 'options'     => array(
-					 array('value' => 'stable', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_stable']),
-					 array('value' => 'RC', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_rc']),
-					 array('value' => 'beta', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_beta']),
-					 array('value' => 'alpha', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_alpha']),
-					 array('value' => 'dev', 'label' => $GLOBALS['TL_LANG']['composer_client']['stability_dev']),
-				 ),
-				 'value'       => $rootPackage->getMinimumStability(),
-				 'class'       => 'minimum-stability',
-				 'required'    => true
-			)
-		);
-		$preferStable     = new \CheckBox(
-			array(
-				 'id'          => 'prefer-stable',
-				 'name'        => 'prefer-stable',
-				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][0],
-				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][1],
-				 'options'     => array(
-					 array(
-						 'value' => '1',
-						 'label' => $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable'][0]
-					 ),
-				 ),
-				 'value'       => $rootPackage->getPreferStable(),
-				 'class'       => 'prefer-stable',
-				 'required'    => true
-			)
-		);
-		$preferredInstall = new \SelectMenu(
-			array(
-				 'id'          => 'preferred-install',
-				 'name'        => 'preferred-install',
-				 'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][0],
-				 'description' => $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][1],
-				 'options'     => array(
-					 array('value' => 'source', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_source']),
-					 array('value' => 'dist', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_dist']),
-					 array('value' => 'auto', 'label' => $GLOBALS['TL_LANG']['composer_client']['install_auto']),
-				 ),
-				 'value'       => $config->get('preferred-install'),
-				 'class'       => 'preferred-install',
-				 'required'    => true
-			)
-		);
-
-		if ($input->post('FORM_SUBMIT') == 'tl_composer_settings') {
-			$doSave = false;
-			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-			$config = $json->read();
-
-			$minimumStability->validate();
-			$preferStable->validate();
-			$preferredInstall->validate();
-
-			if (!$minimumStability->hasErrors()) {
-				$config['minimum-stability'] = $minimumStability->value;
-				$doSave                      = true;
-			}
-
-			if (!$preferStable->hasErrors()) {
-				$config['prefer-stable'] = (bool) $preferStable->value;
-				$doSave                  = true;
-			}
-
-			if (!$preferredInstall->hasErrors()) {
-				$config['config']['preferred-install'] = $preferredInstall->value;
-				$doSave                                = true;
-			}
-
-			if ($doSave) {
-				// make a backup
-				copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
-
-				// update config file
-				$json->write($config);
-			}
-
-			$this->redirect('contao/main.php?do=composer&settings=dialog');
-		}
-
-		$this->Template->setName('be_composer_client_settings');
-		$this->Template->minimumStability = $minimumStability;
-		$this->Template->preferStable     = $preferStable;
-		$this->Template->preferredInstall = $preferredInstall;
-	}
-
-	/**
-	 * Show the experts editor and handle updates.
-	 *
-	 * @param \Input $input
-	 */
-	protected function showExpertsEditor(\Input $input)
-	{
-		$configFile = new \File($this->configPathname);
-
-		if ($input->post('save')) {
-			$tempPathname = $this->configPathname . '~';
-			$tempFile     = new \File($tempPathname);
-
-			$config = $input->postRaw('config');
-			$config = html_entity_decode($config, ENT_QUOTES, 'UTF-8');
-
-			$tempFile->write($config);
-			$tempFile->close();
-
-			$validator = new ConfigValidator($this->io);
-			list($errors, $publishErrors, $warnings) = $validator->validate(TL_ROOT . '/' . $tempPathname);
-
-			if (!$errors && !$publishErrors) {
-				$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['configValid'];
-				$this->import('Files');
-				$this->Files->rename($tempPathname, $this->configPathname);
-			}
-			else {
-				$tempFile->delete();
-				$_SESSION['COMPOSER_EDIT_CONFIG'] = $config;
-
-				if ($errors) {
-					foreach ($errors as $message) {
-						$_SESSION['TL_ERROR'][] = 'Error: ' . $message;
-					}
-				}
-
-				if ($publishErrors) {
-					foreach ($publishErrors as $message) {
-						$_SESSION['TL_ERROR'][] = 'Publish error: ' . $message;
-					}
-				}
-			}
-
-			if ($warnings) {
-				foreach ($warnings as $message) {
-					$_SESSION['TL_ERROR'][] = 'Warning: ' . $message;
-				}
-			}
-
-			$this->reload();
-		}
-
-		if (isset($_SESSION['COMPOSER_EDIT_CONFIG'])) {
-			$config = $_SESSION['COMPOSER_EDIT_CONFIG'];
-			unset($_SESSION['COMPOSER_EDIT_CONFIG']);
-		}
-		else {
-			$config = $configFile->getContent();
-		}
-		$this->Template->setName('be_composer_client_editor');
-		$this->Template->config = $config;
-	}
-
-	/**
-	 * Show graph of dependencies.
-	 *
-	 * @param \Input $input
-	 */
-	protected function showDependencyGraph(\Input $input)
-	{
-		$localRepository = $this->composer
-			->getRepositoryManager()
-			->getLocalRepository();
-
-		$dependencyMap = $this->calculateDependencyMap($localRepository);
-
-		$dependencyGraph = array();
-
-		$localPackages = $localRepository->getPackages();
-
-		$localPackages = array_filter(
-			$localPackages,
-			function ($localPackage) use ($dependencyMap) {
-				return !isset($dependencyMap[$localPackage->getName(
-				)]) && !($localPackage instanceof \Composer\Package\AliasPackage);
-			}
-		);
-
-		$allLocalPackages = $localRepository->getPackages();
-		$allLocalPackages = array_combine(
-			array_map(
-				function ($localPackage) {
-					return $localPackage->getName();
-				},
-				$allLocalPackages
-			),
-			$allLocalPackages
-		);
-
-		$localPackagesCount = count($localPackages);
-		$index              = 0;
-
-		/** @var \Composer\Package\PackageInterface $package */
-		foreach ($localPackages as $package) {
-			$this->buildDependencyGraph(
-				$allLocalPackages,
-				$localRepository,
-				$package,
-				null,
-				$package->getPrettyVersion(),
-				$dependencyGraph,
-				++$index == $localPackagesCount
-			);
-		}
-
-		$this->Template->setName('be_composer_client_dependency_graph');
-		$this->Template->dependencyGraph = $dependencyGraph;
-	}
-
-	/**
-	 * Build the dependency graph with installed packages.
-	 *
-	 * @param RepositoryInterface $repository
-	 * @param PackageInterface    $package
-	 * @param array               $dependencyGraph
-	 */
-	protected function buildDependencyGraph(
-		array $localPackages,
-		RepositoryInterface $repository,
-		PackageInterface $package,
-		$requiredFrom,
-		$requiredConstraint,
-		array &$dependencyGraph,
-		$isLast,
-		$parents = 0
-	) {
-		$current           = (object) array(
-			'package'     => $package,
-			'required'    => (object) array(
-				'from'       => $requiredFrom,
-				'constraint' => $requiredConstraint,
-				'parents'    => $parents,
-			),
-			'lastInLevel' => $isLast ? $parents - 1 : -1
-		);
-		$dependencyGraph[] = $current;
-
-		$requires      = $package->getRequires();
-		$requiresCount = count($requires);
-		$index         = 0;
-		/** @var string $requireName */
-		/** @var \Composer\Package\Link $requireLink */
-		foreach ($requires as $requireName => $requireLink) {
-			if (isset($localPackages[$requireName])) {
-				$this->buildDependencyGraph(
-					$localPackages,
-					$repository,
-					$localPackages[$requireName],
-					$package,
-					$requireLink->getPrettyConstraint(),
-					$dependencyGraph,
-					++$index == $requiresCount,
-					$parents + 1
-				);
-			}
-			else {
-				$dependencyGraph[] = (object) array(
-					'package'     => $requireName,
-					'required'    => (object) array(
-						'from'       => $package,
-						'constraint' => $requireLink->getPrettyConstraint(),
-						'parents'    => $parents + 1,
-					),
-					'lastInLevel' => ++$index == $requiresCount ? $parents : -1
-				);
-			}
-		}
-	}
-
-
-	/**
-	 * Do a package search.
-	 *
-	 * @param \Input $input
-	 */
-	protected function doSearch(\Input $input)
-	{
-		$keyword = $input->get('keyword');
-
-		$tokens = explode(' ', $keyword);
-		$tokens = array_map('trim', $tokens);
-		$tokens = array_filter($tokens);
-
-		$searchName = count($tokens) == 1 && strpos($tokens[0], '/') !== false;
-
-		if (empty($tokens)) {
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
-			$this->redirect('contao/main.php?do=composer');
-		}
-
-		$packages = $this->searchPackages(
-			$tokens,
-			$searchName ? RepositoryInterface::SEARCH_NAME : RepositoryInterface::SEARCH_FULLTEXT
-		);
-
-		if (empty($packages)) {
-			$_SESSION['TL_ERROR'][] = sprintf(
-				$GLOBALS['TL_LANG']['composer_client']['noSearchResult'],
-				$keyword
-			);
-
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
-			$this->redirect('contao/main.php?do=composer');
-		}
-
-		$this->Template->setName('be_composer_client_search');
-		$this->Template->keyword  = $keyword;
-		$this->Template->packages = $packages;
-	}
-
-	/**
-	 * Search for packages.
-	 *
-	 * @param array $tokens
-	 * @param int   $searchIn
-	 *
-	 * @return CompletePackageInterface[]
-	 */
-	protected function searchPackages(array $tokens, $searchIn)
-	{
-		$platformRepo        = new PlatformRepository;
-		$localRepository     = $this->composer
-			->getRepositoryManager()
-			->getLocalRepository();
-		$installedRepository = new CompositeRepository(
-			array($localRepository, $platformRepo)
-		);
-		$repositories        = new CompositeRepository(
-			array_merge(
-				array($installedRepository),
-				$this->composer
-					->getRepositoryManager()
-					->getRepositories()
-			)
-		);
-
-		/*
-		$localRepository       = $this->composer
-			->getRepositoryManager()
-			->getLocalRepository();
-		$platformRepository    = new PlatformRepository();
-		$installedRepositories = new CompositeRepository(
-			array(
-				$localRepository,
-				$platformRepository
-			)
-		);
-		$repositories          = array_merge(
-			array($installedRepositories),
-			$this->composer
-				->getRepositoryManager()
-				->getRepositories()
-		);
-
-		$repositories = new CompositeRepository($repositories);
-		*/
-
-		$results = $repositories->search(implode(' ', $tokens), $searchIn);
-
-		$packages = array();
-		foreach ($results as $result) {
-			if (!isset($packages[$result['name']])) {
-				$packages[$result['name']] = $result;
-			}
-		}
-
-		return $packages;
-	}
-
-	/**
-	 * Show package details.
-	 *
-	 * @param \Input $input
-	 */
-	protected function showDetails(\Input $input)
-	{
-		$packageName = $input->get('install');
-
-		if ($input->post('version')) {
-			$version = $input->post('version');
-
-			$this->redirect(
-				'contao/main.php?' . http_build_query(
-					array(
-						 'do'      => 'composer',
-						 'solve'   => $packageName,
-						 'version' => $version
-					)
-				)
-			);
-		}
-
-		$installationCandidates = $this->searchPackage($packageName);
-
-		if (empty($installationCandidates)) {
-			$_SESSION['TL_ERROR'][] = sprintf(
-				$GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'],
-				$packageName
-			);
-
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
-			$this->redirect('contao/main.php?do=composer');
-		}
-
-		$this->Template->setName('be_composer_client_install');
-		$this->Template->packageName = $packageName;
-		$this->Template->candidates  = $installationCandidates;
-	}
-
-	/**
-	 * Solve package dependencies.
-	 *
-	 * @param \Input $input
-	 */
-	protected function solveDependencies(\Input $input)
-	{
-		$rootPackage = $this->composer->getPackage();
-
-		$installedRootPackage = clone $rootPackage;
-		$installedRootPackage->setRequires(array());
-		$installedRootPackage->setDevRequires(array());
-
-		$localRepository     = $this->composer
-			->getRepositoryManager()
-			->getLocalRepository();
-		$platformRepo        = new PlatformRepository;
-		$installedRepository = new CompositeRepository(
-			array(
-				 $localRepository,
-				 new InstalledArrayRepository(array($installedRootPackage)),
-				 $platformRepo
-			)
-		);
-
-		$packageName = $input->get('solve');
-		$version     = base64_decode(rawurldecode($input->get('version')));
-
-		$versionParser = new VersionParser();
-		$constraint    = $versionParser->parseConstraints($version);
-		$stability     = $versionParser->parseStability($version);
-
-		$aliases = $this->getRootAliases($rootPackage);
-		$this->aliasPlatformPackages($platformRepo, $aliases);
-
-		$stabilityFlags               = $rootPackage->getStabilityFlags();
-		$stabilityFlags[$packageName] = BasePackage::$stabilities[$stability];
-
-		$pool = $this->getPool($rootPackage->getMinimumStability(), $stabilityFlags);
-		$pool->addRepository($installedRepository, $aliases);
-
-		$policy = new DefaultPolicy($rootPackage->getPreferStable());
-
-		$request = new Request($pool);
-
-		// add root package
-		$rootPackageConstraint = new VersionConstraint('=', $rootPackage->getVersion());
-		$rootPackageConstraint->setPrettyString($rootPackage->getPrettyVersion());
-		$request->install($rootPackage->getName(), $rootPackageConstraint);
-
-		// add requirements
-		$links = $rootPackage->getRequires();
-		foreach ($links as $link) {
-			if ($link->getTarget() != $packageName) {
-				$request->install($link->getTarget(), $link->getConstraint());
-			}
-		}
-		foreach ($installedRepository->getPackages() as $package) {
-			$request->install($package->getName(), new VersionConstraint('=', $package->getVersion()));
-		}
-
-		$operations = array();
-		try {
-			$solver = new Solver($policy, $pool, $installedRepository);
-
-			$beforeOperations = $solver->solve($request);
-
-			$request->install($packageName, $constraint);
-
-			$operations = $solver->solve($request);
-
-			/** @var \Composer\DependencyResolver\Operation\SolverOperation $beforeOperation */
-			foreach ($beforeOperations as $beforeOperation) {
-				/** @var \Composer\DependencyResolver\Operation\InstallOperation $operation */
-				foreach ($operations as $index => $operation) {
-					if ($operation
-							->getPackage()
-							->getName() != $packageName &&
-						$beforeOperation->__toString() == $operation->__toString()
-					) {
-						unset($operations[$index]);
-					}
-				}
-			}
-
-			if ($input->post('mark') || $input->post('install')) {
-				// make a backup
-				copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
-
-				// update requires
-				$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-				$config = $json->read();
-				if (!array_key_exists('require', $config)) {
-					$config['require'] = array();
-				}
-				$config['require'][$packageName] = $version;
-				$json->write($config);
-
-				$_SESSION['TL_INFO'][] = sprintf(
-					$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
-					$packageName,
-					$version
-				);
-
-				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-
-				if ($input->post('install')) {
-					$this->redirect('contao/main.php?do=composer&update=packages');
-				}
-				$this->redirect('contao/main.php?do=composer');
-			}
-		}
-		catch (SolverProblemsException $e) {
-			$_SESSION['TL_ERROR'][] = sprintf(
-				'<span style="white-space: pre-line">%s</span>',
-				trim($e->getMessage())
-			);
-		}
-
-		$this->Template->setName('be_composer_client_solve');
-		$this->Template->packageName    = $packageName;
-		$this->Template->packageVersion = $version;
-		$this->Template->operations     = $operations;
-	}
-
-	/**
-	 * Search for a single packages versions.
-	 *
-	 * @param string $packageName
-	 *
-	 * @return PackageInterface[]
-	 */
-	protected function searchPackage($packageName)
-	{
-		$rootPackage = $this->composer->getPackage();
-
-		$pool = $this->getPool();
-
-		$versions = array();
-		$seen     = array();
-		$matches  = $pool->whatProvides($packageName);
-		foreach ($matches as $package) {
-			// skip providers/replacers
-			if ($package->getName() !== $packageName) {
-				continue;
-			}
-			// add each version only once to skip installed version.
-			if (!in_array($package->getPrettyVersion(), $seen)) {
-				$seen[]     = $package->getPrettyVersion();
-				$versions[] = $package;
-			}
-		}
-
-		usort(
-			$versions,
-			function (PackageInterface $packageA, PackageInterface $packageB) {
-				// is this a wise idea?
-				if (($dsa = $packageA->getReleaseDate()) && ($dsb = $packageB->getReleaseDate())) {
-					return $dsb->getTimestamp() - $dsa->getTimestamp();
-				}
-
-				/*
-				$versionA = $this->reformatVersion($packageA);
-				$versionB = $this->reformatVersion($packageB);
-
-				$classicA = preg_match('#^\d(\.\d+)*$#', $versionA);
-				$classicB = preg_match('#^\d(\.\d+)*$#', $versionB);
-
-				$branchA = 'dev-' == substr($packageA->getPrettyVersion(), 0, 4);
-				$branchB = 'dev-' == substr($packageB->getPrettyVersion(), 0, 4);
-
-				if ($branchA && $branchB) {
-					return strcasecmp($branchA, $branchB);
-				}
-				if ($classicA && $classicB) {
-					if ($packageA->getPrettyVersion() == 'dev-master') {
-						return -1;
-					}
-					if ($packageB->getPrettyVersion() == 'dev-master') {
-						return 1;
-					}
-					return version_compare($versionB, $versionA);
-				}
-				if ($classicA) {
-					return -1;
-				}
-				if ($classicB) {
-					return 1;
-				}
-				return 0;
-				*/
-			}
-		);
-
-		return $versions;
-	}
-
-	/**
-	 * Run the package update process.
-	 */
-	protected function updatePackages()
-	{
-		try {
-			if (version_compare(VERSION, '3', '<')) {
-				spl_autoload_unregister('__autoload');
-			}
-
-			$lockPathname = preg_replace('#\.json$#', '.lock', $this->configPathname);
-
-			$this->composer
-				->getDownloadManager()
-				->setOutputProgress(false);
-			$installer = Installer::create($this->io, $this->composer);
-
-			switch ($this->composer->getConfig()->get('preferred-install')) {
-				case 'source':
-					$installer->setPreferSource(true);
-					break;
-				case 'dist':
-					$installer->setPreferDist(true);
-					break;
-				case 'auto':
-				default:
-					// noop
-					break;
-			}
-
-			if (file_exists(TL_ROOT . '/' . $lockPathname)) {
-				$installer->setUpdate(true);
-			}
-
-			if ($installer->run()) {
-				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-
-				// redirect to database update
-				$this->redirect('contao/main.php?do=composer&update=database');
-			}
-			else {
-				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-
-				$this->redirect('contao/main.php?do=composer');
-			}
-		}
-		catch (ConfigUpdateException $e) {
-			do {
-				$_SESSION['TL_CONFIRM'][] = str_replace(TL_ROOT, '', $e->getMessage());
-				$e = $e->getPrevious();
-			} while ($e);
-			$_SESSION['TL_INFO'][]    = $GLOBALS['TL_LANG']['composer_client']['restartOperation'];
-			$this->redirect('contao/main.php?do=composer');
-		}
-		catch (\RuntimeException $e) {
-			do {
-				$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
-				$e = $e->getPrevious();
-			} while ($e);
-			$this->redirect('contao/main.php?do=composer');
-		}
-	}
-
-	/**
-	 * Remove a package from the requires list.
-	 *
-	 * @param \Input $input
-	 */
-	protected function removePackage(\Input $input)
-	{
-		$removeName = $input->post('remove');
-
-		// make a backup
-		copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
-
-		// update requires
-		$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-		$config = $json->read();
-		if (!array_key_exists('require', $config)) {
-			$config['require'] = array();
-		}
-		unset($config['require'][$removeName]);
-		$json->write($config);
-
-		$_SESSION['TL_INFO'][] = sprintf(
-			$GLOBALS['TL_LANG']['composer_client']['removeCandidate'],
-			$removeName
-		);
-
-		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-	}
-
-	/**
-	 * Build dependency graph of installed packages.
-	 *
-	 * @param RepositoryInterface $repository
-	 *
-	 * @return array
-	 */
-	protected function calculateDependencyMap(RepositoryInterface $repository, $inverted = false)
-	{
-		$dependencyMap = array();
-
-		/** @var \Composer\Package\PackageInterface $package */
-		foreach ($repository->getPackages() as $package) {
-			$this->fillDependencyMap($repository, $package, $dependencyMap, $inverted);
-		}
-
-		return $dependencyMap;
-	}
-
-	/**
-	 * Fill the dependency graph with installed packages.
-	 *
-	 * @param RepositoryInterface $repository
-	 * @param PackageInterface    $package
-	 * @param array               $dependencyMap
-	 */
-	protected function fillDependencyMap(
-		RepositoryInterface $repository,
-		PackageInterface $package,
-		array &$dependencyMap,
-		$inverted
-	) {
-		/** @var string $requireName */
-		/** @var \Composer\Package\Link $requireLink */
-		foreach ($package->getRequires() as $requireName => $requireLink) {
-			if ($inverted) {
-				$dependencyMap[$package->getName()][$requireLink->getTarget()] = $requireLink->getPrettyConstraint();
-			}
-			else {
-				$dependencyMap[$requireLink->getTarget()][$package->getName()] = $requireLink->getPrettyConstraint();
-			}
-		}
-	}
-
-	/**
-	 * Build replacement map for installed packages.
-	 *
-	 * @param RepositoryInterface $repository
-	 *
-	 * @return array
-	 */
-	protected function calculateReplaceMap(RepositoryInterface $repository, $inverted = false)
-	{
-		$replaceMap = array();
-
-		/** @var \Composer\Package\PackageInterface $package */
-		foreach ($repository->getPackages() as $package) {
-			foreach ($package->getReplaces() as $replace => $constraint) {
-				$replaceMap[$constraint->getTarget()] = $constraint->getSource();
-			}
-		}
-
-		return $replaceMap;
-	}
-
-	protected function getPool($minimumStability = 'dev', $stabilityFlags = array())
-	{
-		$platformRepo        = new PlatformRepository;
-		$localRepository     = $this->composer
-			->getRepositoryManager()
-			->getLocalRepository();
-		$installedRepository = new CompositeRepository(
-			array($localRepository, $platformRepo)
-		);
-		$repositories        = new CompositeRepository(
-			array_merge(
-				array($installedRepository),
-				$this->composer
-					->getRepositoryManager()
-					->getRepositories()
-			)
-		);
-
-		$pool = new Pool($minimumStability, $stabilityFlags);
-		$pool->addRepository($repositories);
-
-		return $pool;
-	}
-
-	private function getRootAliases(RootPackageInterface $rootPackage)
-	{
-		$aliases = $rootPackage->getAliases();
-
-		$normalizedAliases = array();
-
-		foreach ($aliases as $alias) {
-			$normalizedAliases[$alias['package']][$alias['version']] = array(
-				'alias'            => $alias['alias'],
-				'alias_normalized' => $alias['alias_normalized']
-			);
-		}
-
-		return $normalizedAliases;
-	}
-
-	private function aliasPlatformPackages(PlatformRepository $platformRepo, $aliases)
-	{
-		foreach ($aliases as $package => $versions) {
-			foreach ($versions as $version => $alias) {
-				$packages = $platformRepo->findPackages($package, $version);
-				foreach ($packages as $package) {
-					$aliasPackage = new AliasPackage($package, $alias['alias_normalized'], $alias['alias']);
-					$aliasPackage->setRootPackageAlias(true);
-					$platformRepo->addPackage($aliasPackage);
-				}
-			}
-		}
 	}
 }
