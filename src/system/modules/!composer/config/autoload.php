@@ -14,7 +14,7 @@
 /**
  * Register classloader
  */
-include(__DIR__ . '/../ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
+include(TL_ROOT . '/system/modules/!composer/ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
 \ContaoCommunityAlliance\Contao\Composer\ClassLoader::register();
 
 /**

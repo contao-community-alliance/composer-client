@@ -19,7 +19,7 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 }
 
 if (version_compare(VERSION, '3', '<')) {
-	include(__DIR__ . '/../ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
+	include(TL_ROOT . '/system/modules/!composer/ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
 	\ContaoCommunityAlliance\Contao\Composer\ClassLoader::register();
 	spl_autoload_register('__autoload');
 	\Contao2ClassFileExistsHack::register();
