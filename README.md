@@ -3,7 +3,7 @@ Composer integration for Contao
 
 Module which loads the Composer autoloader, creates initial composer.json and provides a back end client.
 
-![Back end module](http://img59.imageshack.us/img59/830/composer1.png)
+![Back end module](http://i.imagebanana.com/img/spkcchmv/composer.png)
 
 ### Installation
 
