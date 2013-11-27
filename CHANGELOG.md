@@ -3,6 +3,11 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.8.1
+-------------
+
+* Bugfix: Re-run all runonces when the contao version has changes.
+
 Version 0.8
 -----------
 
