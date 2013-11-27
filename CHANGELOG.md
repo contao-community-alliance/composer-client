@@ -3,6 +3,11 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.8.2
+-------------
+
+* Bugfix: #112, disable all TL_HOOKS, while in the composer client backend.
+
 Version 0.8.1
 -------------
 
