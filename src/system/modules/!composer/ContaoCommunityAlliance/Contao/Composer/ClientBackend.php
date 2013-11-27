@@ -74,6 +74,9 @@ class ClientBackend extends \Backend
 	 */
 	public function generate()
 	{
+		// disable all hooks
+		$GLOBALS['TL_HOOKS'] = array();
+
 		$this->loadLanguageFile('composer_client');
 
 		$input = \Input::getInstance();
