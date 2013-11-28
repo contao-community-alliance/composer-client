@@ -49,6 +49,36 @@ class SolveController extends AbstractController
 	 */
 	public function handle(\Input $input)
 	{
+		$packageName = $input->get('solve');
+		$version     = base64_decode(rawurldecode($input->get('version')));
+
+		if ($input->post('mark') || $input->post('install')) {
+			// make a backup
+			copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
+
+			// update requires
+			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+			$config = $json->read();
+			if (!array_key_exists('require', $config)) {
+				$config['require'] = array();
+			}
+			$config['require'][$packageName] = $version;
+			$json->write($config);
+
+			$_SESSION['TL_INFO'][] = sprintf(
+				$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
+				$packageName,
+				$version
+			);
+
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+
+			if ($input->post('install')) {
+				$this->redirect('contao/main.php?do=composer&update=packages');
+			}
+			$this->redirect('contao/main.php?do=composer');
+		}
+
 		/** @var RootPackage $rootPackage */
 		$rootPackage = $this->composer->getPackage();
 
@@ -66,9 +96,6 @@ class SolveController extends AbstractController
 				$platformRepo
 			)
 		);
-
-		$packageName = $input->get('solve');
-		$version     = base64_decode(rawurldecode($input->get('version')));
 
 		$versionParser = new VersionParser();
 		$constraint    = $versionParser->parseConstraints($version);
@@ -127,33 +154,6 @@ class SolveController extends AbstractController
 						unset($operations[$index]);
 					}
 				}
-			}
-
-			if ($input->post('mark') || $input->post('install')) {
-				// make a backup
-				copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
-
-				// update requires
-				$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-				$config = $json->read();
-				if (!array_key_exists('require', $config)) {
-					$config['require'] = array();
-				}
-				$config['require'][$packageName] = $version;
-				$json->write($config);
-
-				$_SESSION['TL_INFO'][] = sprintf(
-					$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
-					$packageName,
-					$version
-				);
-
-				$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-
-				if ($input->post('install')) {
-					$this->redirect('contao/main.php?do=composer&update=packages');
-				}
-				$this->redirect('contao/main.php?do=composer');
 			}
 		}
 		catch (SolverProblemsException $e) {
