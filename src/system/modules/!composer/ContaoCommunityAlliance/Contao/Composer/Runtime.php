@@ -71,28 +71,10 @@ EOF;
     "license": "LGPL-3.0+",
     "version": "$strContaoVersion",
     "type": "metapackage",
-    "require": {
-        "contao-community-alliance/composer": "*"
-    },
-    "scripts": {
-        "pre-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::preUpdate",
-        "post-update-cmd": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::postUpdate",
-        "post-autoload-dump": "ContaoCommunityAlliance\\\\ComposerInstaller\\\\ModuleInstaller::postAutoloadDump"
-    },
     "config": {
         "preferred-install": "dist",
         "cache-dir": "cache"
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://legacy-packages-via.contao-community-alliance.org/"
-        },
-        {
-            "type": "artifact",
-            "url": "packages/"
-        }
-    ]
+    }
 }
 EOF;
 
