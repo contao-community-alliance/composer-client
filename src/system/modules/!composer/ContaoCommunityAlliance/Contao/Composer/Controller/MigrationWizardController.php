@@ -52,15 +52,21 @@ class MigrationWizardController extends AbstractController
 	 */
 	public function handle(\Input $input)
 	{
-		$oldPackageCount    = \Database::getInstance()
-			->execute('SELECT COUNT(*) AS count FROM tl_repository_installs')
-			->count;
-		$commercialPackages = \Database::getInstance()
-			->execute('SELECT * FROM tl_repository_installs WHERE lickey!=\'\'')
-			->fetchEach('extension');
-		$commercialPackages = count($commercialPackages)
-			? implode(', ', $commercialPackages)
-			: false;
+		if (\Database::getInstance()->tableExists('tl_repository_installs')) {
+			$oldPackageCount    = \Database::getInstance()
+				->execute('SELECT COUNT(*) AS count FROM tl_repository_installs')
+				->count;
+			$commercialPackages = \Database::getInstance()
+				->execute('SELECT * FROM tl_repository_installs WHERE lickey!=\'\'')
+				->fetchEach('extension');
+			$commercialPackages = count($commercialPackages)
+				? implode(', ', $commercialPackages)
+				: false;
+		}
+		else {
+			$oldPackageCount    = 0;
+			$commercialPackages = array();
+		}
 
 		$smhEnabled            = Runtime::isSafeModeHackEnabled();
 		$allowUrlFopenEnabled  = ini_get('allow_url_fopen');
@@ -102,57 +108,59 @@ class MigrationWizardController extends AbstractController
 				$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['migrationSkipped'];
 			}
 			else {
-				switch ($mode) {
-					case 'upgrade':
-						$this->removeER2Files();
+				if (\Database::getInstance()->tableExists('tl_repository_installs')) {
+					switch ($mode) {
+						case 'upgrade':
+							$this->removeER2Files();
 
-						$install = \Database::getInstance()
-							->query('SELECT * FROM tl_repository_installs WHERE lickey=""');
-						while ($install->next()) {
-							// skip the composer package
-							if ($install->extension == 'composer') {
-								continue;
+							$install = \Database::getInstance()
+								->query('SELECT * FROM tl_repository_installs WHERE lickey=""');
+							while ($install->next()) {
+								// skip the composer package
+								if ($install->extension == 'composer') {
+									continue;
+								}
+
+								$packageName = 'contao-legacy/' . $install->extension;
+								/*
+								$packageName = preg_replace(
+									'{(?:([a-z])([A-Z])|([A-Z])([A-Z][a-z]))}',
+									'\\1\\3-\\2\\4',
+									$packageName
+								);
+								*/
+								$packageName = strtolower($packageName);
+
+								$oldVersion = $install->version;
+								$build      = $install->build;
+								$stability  = $oldVersion % 10;
+								$oldVersion = (int) ($oldVersion / 10);
+								$release    = $oldVersion % 1000;
+								$oldVersion = (int) ($oldVersion / 1000);
+								$minor      = $oldVersion % 1000;
+								$major      = (int) ($oldVersion / 1000);
+
+								$version = sprintf(
+									'>=%d.%d.%d.%d%s,<%d.%d',
+									$major,
+									$minor,
+									$release,
+									($stability * 1000 + $build),
+									static::$versionNames[$stability],
+									$major,
+									$minor + 1
+								);
+
+								$config['require'][$packageName] = $version;
 							}
 
-							$packageName = 'contao-legacy/' . $install->extension;
-							/*
-							$packageName = preg_replace(
-								'{(?:([a-z])([A-Z])|([A-Z])([A-Z][a-z]))}',
-								'\\1\\3-\\2\\4',
-								$packageName
-							);
-							*/
-							$packageName = strtolower($packageName);
+							$target = 'contao/main.php?do=composer&update=packages';
+							break;
 
-							$oldVersion = $install->version;
-							$build      = $install->build;
-							$stability  = $oldVersion % 10;
-							$oldVersion = (int) ($oldVersion / 10);
-							$release    = $oldVersion % 1000;
-							$oldVersion = (int) ($oldVersion / 1000);
-							$minor      = $oldVersion % 1000;
-							$major      = (int) ($oldVersion / 1000);
-
-							$version = sprintf(
-								'>=%d.%d.%d.%d%s,<%d.%d',
-								$major,
-								$minor,
-								$release,
-								($stability * 1000 + $build),
-								static::$versionNames[$stability],
-								$major,
-								$minor + 1
-							);
-
-							$config['require'][$packageName] = $version;
-						}
-
-						$target = 'contao/main.php?do=composer&update=packages';
-						break;
-
-					case 'clean':
-						$this->removeER2Files();
-						break;
+						case 'clean':
+							$this->removeER2Files();
+							break;
+					}
 				}
 
 				switch ($setup) {
