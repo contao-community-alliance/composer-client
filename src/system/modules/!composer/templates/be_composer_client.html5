@@ -215,7 +215,7 @@ $dependencyCount = 0;
 							}
 
 							printf(
-								'<span class="stability-%s">%s</span>',
+								'<span class="stability-%s">%s</span><br>',
 								strtolower($stability),
 								$link->getPrettyConstraint()
 							);
