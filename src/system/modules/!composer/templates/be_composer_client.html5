@@ -103,6 +103,7 @@ $dependencyCount = 0;
 		</tr>
 		</thead>
 		<tbody>
+		<?php /*
 		<tr class="even" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
 			<td class="tl_file_list col_type"><?php
 				echo $this->generateImage(
@@ -123,6 +124,7 @@ $dependencyCount = 0;
 				?></td>
 			<td class="tl_file_list col_remove"> </td>
 		</tr>
+		*/ ?>
 		<?php $n = 1; foreach ($localPackages as $localPackage): ?>
 			<?php
 			$requiredBy = false;
