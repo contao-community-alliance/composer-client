@@ -14,6 +14,8 @@ use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Version\VersionParser;
+use Composer\Plugin\CommandEvent;
+use Composer\Plugin\PluginEvents;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
@@ -26,6 +28,8 @@ use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
 use ContaoCommunityAlliance\Composer\Plugin\ConfigUpdateException;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * Class UpdatePackagesController
@@ -47,6 +51,13 @@ class UpdatePackagesController extends AbstractController
 			/** @var DownloadManager $downloadManager */
 			$downloadManager = $this->composer->getDownloadManager();
 			$downloadManager->setOutputProgress(false);
+
+			$outputStream = fopen('php://memory', 'rw');
+			$argvInput = new ArgvInput(array(false, 'update'));
+			$streamOutput = new StreamOutput($outputStream);
+
+			$commandEvent = new CommandEvent(PluginEvents::COMMAND, 'update', $argvInput, $streamOutput);
+			$this->composer->getEventDispatcher()->dispatch($commandEvent->getName(), $commandEvent);
 
 			$installer = Installer::create($this->io, $this->composer);
 
