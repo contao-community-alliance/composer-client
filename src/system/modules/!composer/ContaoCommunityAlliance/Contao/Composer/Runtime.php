@@ -251,7 +251,13 @@ EOF;
 	 */
 	static public function isSuhosinEnabled()
 	{
-		return extension_loaded('suhosin');
+		if(!extension_loaded('suhosin')) {
+			return false;
+		}
+		if(strpos(ini_get('suhosin.executor.include.whitelist'), 'phar') > -1) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
