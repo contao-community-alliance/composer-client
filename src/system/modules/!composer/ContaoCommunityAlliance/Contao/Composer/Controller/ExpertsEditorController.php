@@ -24,13 +24,6 @@ use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
-use ContaoCommunityAlliance\ComposerInstaller\ConfigUpdateException;
-use ContaoCommunityAlliance\Contao\Composer\Controller\ClearComposerCacheController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\MigrationWizardController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\SearchController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\SettingsController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\UndoMigrationController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\UpdateDatabaseController;
 
 /**
  * Class ExpertsEditorController

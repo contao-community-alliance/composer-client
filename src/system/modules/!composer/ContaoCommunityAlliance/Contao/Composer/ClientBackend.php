@@ -25,7 +25,6 @@ use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
-use ContaoCommunityAlliance\ComposerInstaller\ConfigUpdateException;
 use ContaoCommunityAlliance\Contao\Composer\Controller\ClearComposerCacheController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\DependencyGraphController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\DetailsController;

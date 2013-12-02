@@ -24,18 +24,6 @@ use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
-use ContaoCommunityAlliance\ComposerInstaller\ConfigUpdateException;
-use ContaoCommunityAlliance\Contao\Composer\Controller\ClearComposerCacheController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\DependencyGraphController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\DetailsController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\ExpertsEditorController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\MigrationWizardController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\SearchController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\SettingsController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\SolveController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\UndoMigrationController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\UpdateDatabaseController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
 
 /**
  * Class RemovePackageController

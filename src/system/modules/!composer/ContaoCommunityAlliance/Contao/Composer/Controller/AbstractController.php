@@ -25,8 +25,6 @@ use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
-use Contao\BackendTemplate;
-use ContaoCommunityAlliance\ComposerInstaller\ConfigUpdateException;
 
 /**
  * Class AbstractController
