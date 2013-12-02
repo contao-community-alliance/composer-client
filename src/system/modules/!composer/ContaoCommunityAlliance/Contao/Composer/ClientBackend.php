@@ -116,12 +116,6 @@ class ClientBackend extends \Backend
 		$rootPackage = $this->composer->getPackage();
 		$extra = $rootPackage->getExtra();
 
-		// update contao version if needed
-		if (Runtime::updateContaoVersion($this->io, $this->composer, $this->configPathname)) {
-			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
-			$this->redirect('contao/main.php?do=composer&update=database');
-		}
-
 		$controller = null;
 
 		// do migration

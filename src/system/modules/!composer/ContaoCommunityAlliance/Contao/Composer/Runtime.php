@@ -8,7 +8,6 @@ use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\Version\VersionParser;
 use Composer\Util\Filesystem;
-use ContaoCommunityAlliance\ComposerInstaller\ModuleInstaller;
 
 /**
  * Class Runtime
@@ -382,34 +381,6 @@ EOF;
 		$composer = $factory->createComposer($io);
 
 		return $composer;
-	}
-
-	/**
-	 * Update the contao version in the config file and update if necessary.
-	 *
-	 * @return bool Return true, if the version is updated, false otherwise.
-	 */
-	static public function updateContaoVersion(IOInterface $io, Composer $composer, $configPathname)
-	{
-		/** @var \Composer\Package\RootPackage $package */
-		$package       = $composer->getPackage();
-		$versionParser = new VersionParser();
-		$version       = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
-		$prettyVersion = $versionParser->normalize($version);
-		if ($package->getVersion() !== $prettyVersion) {
-			$configFile            = new JsonFile(TL_ROOT . '/' . $configPathname);
-			$configJson            = $configFile->read();
-			$configJson['version'] = $version;
-			$configFile->write($configJson);
-
-			$installer = new ModuleInstaller($io, $composer);
-			$installer->updateAllRunonces();
-			$installer->createRunonces($io, TL_ROOT);
-
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
