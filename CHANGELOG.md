@@ -3,6 +3,18 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.9.0
+-------------
+
+* Improvement: Switch from the old contao-community-alliance/composer-installer to the contao-community-alliance/composer-plugin.
+
+Version 0.8.3
+-------------
+
+* Improvement: Optimize the performance of the solver dialog.
+* Improvement: Initialize the composer.json with a stable constraint for the composer client.
+* Bugfix: Fix #124, check if the repository client table exist, when migrade old ER2 packages.
+
 Version 0.8.2
 -------------
 
