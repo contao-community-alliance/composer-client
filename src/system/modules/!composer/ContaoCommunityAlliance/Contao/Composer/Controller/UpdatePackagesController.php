@@ -48,6 +48,9 @@ class UpdatePackagesController extends AbstractController
 	public function handle(\Input $input)
 	{
 		try {
+			// disable all hooks
+			$GLOBALS['TL_HOOKS'] = array();
+
 			if (version_compare(VERSION, '3', '<')) {
 				spl_autoload_unregister('__autoload');
 			}
