@@ -17,6 +17,8 @@ use ContaoCommunityAlliance\ComposerInstaller\ModuleInstaller;
  */
 class Runtime
 {
+	const APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT = '3.0.13';
+
 	/**
 	 * Initialize the composer environment.
 	 */
@@ -238,8 +240,6 @@ EOF;
 		return (bool) ini_get('allow_url_fopen');
 	}
 
-	const APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT = '3.0.13';
-
 	/**
 	 * Determinate if apc is enabled.
 	 *
@@ -255,12 +255,7 @@ EOF;
 			return false;
 		}
 
-		$apc = new \ReflectionExtension('apc');
-		if(version_compare($apc->getVersion(), self::APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT, '<')) {
-			return true;
-		}
-
-		return false;
+		return ini_get('apc.enabled') && ini_get('apc.cache_by_default');
 	}
 
 	/**
@@ -303,7 +298,15 @@ EOF;
 		}
 
 		// check for apc and try to disable
-		if (static::isApcEnabled() && (in_array('ini_set', explode(',', ini_get('disable_functions'))) || ini_set('apc.cache_by_default', 0) === false)) {
+		$apc = new \ReflectionExtension('apc');
+		if (
+			static::isApcEnabled() &&
+			(
+				in_array('ini_set', explode(',', ini_get('disable_functions'))) ||
+				version_compare($apc->getVersion(), self::APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT, '<') ||
+				ini_set('apc.cache_by_default', 0) === false
+			)
+		) {
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'];
 		}
 
