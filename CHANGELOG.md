@@ -3,6 +3,23 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.8.5
+-------------
+
+* Bugfix: Disable the hooks only while updating packages.
+
+Version 0.8.4
+-------------
+
+* Bugfix: Ignore suhosin, if PHAR files are whitelisted.
+
+Version 0.8.3
+-------------
+
+* Improvement: Optimize the performance of the solver dialog.
+* Improvement: Initialize the composer.json with a stable constraint for the composer client.
+* Bugfix: Fix #124, check if the repository client table exist, when migrade old ER2 packages.
+
 Version 0.8.2
 -------------
 
