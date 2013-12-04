@@ -405,7 +405,7 @@ $source = $preferedCandidate->getSourceUrl();
 												$preferedVersion = $constraint;
 											}
 
-											$constraint = sprintf('~%s', $version) . $prettyStability . $stability;
+											$constraint = sprintf('>=%s,<%s-dev', $version . $prettyStability, $major+1) . $stability;
 											$feature = sprintf('%s.*', $major) . $prettyStability;
 											$versions[$constraint] = sprintf(
 												$GLOBALS['TL_LANG']['composer_client']['version_feature'],
