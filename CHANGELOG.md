@@ -8,6 +8,16 @@ Version 0.9.0
 
 * Improvement: Switch from the old contao-community-alliance/composer-installer to the contao-community-alliance/composer-plugin.
 
+Version 0.8.5
+-------------
+
+* Bugfix: Disable the hooks only while updating packages.
+
+Version 0.8.4
+-------------
+
+* Bugfix: Ignore suhosin, if PHAR files are whitelisted.
+
 Version 0.8.3
 -------------
 
