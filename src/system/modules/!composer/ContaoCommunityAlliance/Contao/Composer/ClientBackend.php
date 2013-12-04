@@ -227,8 +227,8 @@ class ClientBackend extends \Backend
 		// search for composer build version
 		$composerDevWarningTime = Runtime::readComposerDevWarningTime();
 		if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
-			$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
-			$this->Template->composerUpdate = true;
+			Runtime::updateComposer();
+			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
 		}
 
 		// register composer class loader
