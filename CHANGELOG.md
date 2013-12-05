@@ -7,6 +7,15 @@ Version 0.9.0
 -------------
 
 * Improvement: Switch from the old contao-community-alliance/composer-installer to the contao-community-alliance/composer-plugin.
+Version 0.8.7
+-------------
+
+* Bugfix: Fix the generated constraint for feature releases.
+
+Version 0.8.6
+-------------
+
+* Bugfix: Fix the check, if APC is enabled for APC >= 3.0.13.
 
 Version 0.8.5
 -------------
