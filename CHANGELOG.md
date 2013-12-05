@@ -3,6 +3,11 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.8.6
+-------------
+
+* Bugfix: Fix the check, if APC is enabled for APC >= 3.0.13.
+
 Version 0.8.5
 -------------
 
