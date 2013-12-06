@@ -51,8 +51,13 @@ class PinController extends AbstractController
 		$config = $json->read();
 		$versionLocks = isset($config['extra']['contao']['version-locks']) ? (array) $config['extra']['contao']['version-locks'] : array();
 
-		if (isset($versionLocks[$packageName])) {
-			$config['require'][$packageName] = $versionLocks[$packageName];
+		if (array_key_exists($packageName, $versionLocks)) {
+			if ($versionLocks[$packageName] === null) {
+				unset($config['require'][$packageName]);
+			}
+			else {
+				$config['require'][$packageName] = $versionLocks[$packageName];
+			}
 			unset($versionLocks[$packageName]);
 		}
 		else {
@@ -68,7 +73,13 @@ class PinController extends AbstractController
 				$this->redirect('contao/main.php?do=composer');
 			}
 
-			$versionLocks[$packageName] = $config['require'][$packageName];
+			if (isset($config['require'][$packageName])) {
+				$versionLocks[$packageName] = $config['require'][$packageName];
+			}
+			else {
+				$versionLocks[$packageName] = null;
+			}
+
 			$config['require'][$packageName] = $packages[0]->getVersion();
 		}
 
