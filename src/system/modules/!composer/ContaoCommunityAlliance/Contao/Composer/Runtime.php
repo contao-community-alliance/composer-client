@@ -275,6 +275,25 @@ EOF;
 	}
 
 	/**
+	 * Try to disable APC.
+	 *
+	 * @return bool Return true on success, false if not.
+	 */
+	static public function disableApc()
+	{
+		if (in_array('ini_set', explode(',', ini_get('disable_functions')))) {
+			return false;
+		}
+
+		$apc = new \ReflectionExtension('apc');
+		if (version_compare($apc->getVersion(), self::APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT, '<')) {
+			return false;
+		}
+
+		return ini_set('apc.cache_by_default', 0) === false;
+	}
+
+	/**
 	 * Check the local environment, return true if everything is fine, an array of errors otherwise.
 	 *
 	 * @return bool|array
@@ -298,15 +317,8 @@ EOF;
 		}
 
 		// check for apc and try to disable
-		$apc = new \ReflectionExtension('apc');
-		if (
-			static::isApcEnabled() &&
-			(
-				in_array('ini_set', explode(',', ini_get('disable_functions'))) ||
-				version_compare($apc->getVersion(), self::APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT, '<') ||
-				ini_set('apc.cache_by_default', 0) === false
-			)
-		) {
+
+		if (static::isApcEnabled() && !static::disableApc()) {
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'];
 		}
 
