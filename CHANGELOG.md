@@ -7,6 +7,11 @@ Version 0.9.0
 -------------
 
 * Improvement: Switch from the old contao-community-alliance/composer-installer to the contao-community-alliance/composer-plugin.
+Version 0.8.8
+-------------
+
+* Bugfix: Prevent exception if the APC extension is not loaded.
+
 Version 0.8.7
 -------------
 
