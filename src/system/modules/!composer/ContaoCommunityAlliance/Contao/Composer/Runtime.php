@@ -255,7 +255,7 @@ EOF;
 			return false;
 		}
 
-		return ini_get('apc.enabled') && ini_get('apc.cache_by_default');
+		return extension_loaded('apc') && ini_get('apc.enabled') && ini_get('apc.cache_by_default');
 	}
 
 	/**
