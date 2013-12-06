@@ -290,7 +290,7 @@ EOF;
 			return false;
 		}
 
-		return ini_set('apc.cache_by_default', 0) === false;
+		return ini_set('apc.cache_by_default', 0) !== false;
 	}
 
 	/**
