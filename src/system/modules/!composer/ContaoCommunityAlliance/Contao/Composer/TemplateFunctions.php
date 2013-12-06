@@ -9,6 +9,7 @@ use Composer\Console\HtmlOutputFormatter;
 use Composer\IO\BufferIO;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
+use Composer\Package\Link;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Package\CompletePackageInterface;
@@ -61,6 +62,13 @@ class TemplateFunctions
 		return true;
 	}
 
+	/**
+	 * @param $name
+	 * @param $require
+	 * @param $replaces
+	 *
+	 * @return Link|null
+	 */
 	static public function getRequireConstraint($name, $require, $replaces)
 	{
 		if (isset($require[$name])) {

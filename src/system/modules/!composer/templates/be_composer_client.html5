@@ -90,8 +90,11 @@ $dependencyCount = 0;
 		<tr>
 			<th class="tl_folder_tlist col_type">&nbsp;</th>
 			<th class="tl_folder_tlist col_icon">&nbsp;</th>
+			<th class="tl_folder_tlist col_stability">&nbsp;</th>
 			<th class="tl_folder_tlist col_name"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
+			<?php /*
 			<th class="tl_folder_tlist col_requested_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_requested_version']; ?></th>
+ 			*/ ?>
 			<th class="tl_folder_tlist col_version"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_installed_version']; ?></th>
 			<th class="tl_folder_tlist col_remove"> </th>
 		</tr>
@@ -153,8 +156,7 @@ $dependencyCount = 0;
 						);
 					}
 					?></td>
-				<td class="tl_file_list col_icon">
-					<?php
+				<td class="tl_file_list col_icon"><?php
 					if ($requiredBy) {
 						$dependencyCount ++;
 
@@ -168,8 +170,27 @@ $dependencyCount = 0;
 							'title="' . specialchars($title) . '"'
 						);
 					}
-					?>
-				</td>
+				?></td>
+				<td class="tl_file_list col_stability"><?php
+					$link = TemplateFunctions::getRequireConstraint($localPackage->getName(), $requires, $replaceThat);
+					if ($link) {
+						$stability = 'dev';
+
+						$prettyConstraint = $link->getConstraint()->getPrettyString();
+						if (preg_match('~@(\w+)$~', $prettyConstraint, $matches)) {
+							$stability = $matches[1];
+						}
+
+						$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/stability-%s.png', $stability);
+						if (file_exists(TL_ROOT . '/' . $icon)) {
+							echo $this->generateImage(
+								$icon,
+								$stability,
+								sprintf('title="%s"', $stability)
+							);
+						}
+					}
+				?></td>
 				<td class="tl_file_list col_name">
 					<a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
 						<?php
@@ -185,6 +206,8 @@ $dependencyCount = 0;
 					}
 					?>
 				</td>
+				<?php
+				 /*
 				<td class="tl_file_list col_requested_version"><?php
 						$removePossible = empty($requiredBy) && TemplateFunctions::isRemoveable(
 							$localPackage->getName(),
@@ -199,7 +222,7 @@ $dependencyCount = 0;
 
 						$link = TemplateFunctions::getRequireConstraint($localPackage->getName(), $requires, $replaceThat);
 						if ($link) {
-							/** @var \Composer\Package\Link $link */
+							/** @var \Composer\Package\Link $link * /
 
 							if (isset($stabilityFlags[$localPackage->getName()])) {
 								$stability = $stabilitiesReverseMap[$stabilityFlags[$localPackage->getName()]];
@@ -259,6 +282,7 @@ $dependencyCount = 0;
 							}
 						}
 					?></td>
+				*/ ?>
 				<td class="tl_file_list col_version"><?php
 						printf(
 							'<span class="stability-%s">%s</span>',
@@ -297,6 +321,7 @@ $dependencyCount = 0;
 					<?php endif; ?>
 				</td>
 			</tr>
+			<?php unset($requires[$localPackage->getName()]); ?>
 		<?php endforeach; ?>
 		<?php foreach ($requires as $requireName => $requireLink): ?>
 			<?php

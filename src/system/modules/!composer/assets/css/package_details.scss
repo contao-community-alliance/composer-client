@@ -1,0 +1,123 @@
+#tl_composer_install {
+	.type {
+		float: right;
+		font-size: 22px;
+		font-weight: bold;
+		color: #ffffff;
+		margin-top: -70px;
+	}
+
+	.keywords {
+		font-size: 10px;
+		line-height: 10px;
+		margin-top: 6px;
+
+		.keyword {
+			display: inline-block;
+			background-color: #666;
+			color: white;
+			padding: 6px;
+			-moz-border-radius: 6px;
+			-webkit-border-radius: 6px;
+			-o-border-radius: 6px;
+			-ms-border-radius: 6px;
+			border-radius: 6px;
+		}
+	}
+
+	#ctrl_composer_details {
+		.tabs > ul > li {
+			width: 26.66%;
+
+			&:first-child {
+				width: 20%;
+			}
+		}
+	}
+
+	#ctrl_composer_version {
+		.tabs > ul > li {
+			width: 40%;
+
+			&:first-child {
+				width: 20%;
+			}
+		}
+	}
+
+	fieldset {
+		margin: 0;
+		padding: 0;
+		border: none;
+
+		&.ctrl_composer_stability {
+			display: table;
+			width: 100%;
+			margin: 12px 0;
+
+			label {
+				display: table-cell;
+				width: 20%;
+				padding: 8px 12px;
+
+				&.stability-dev {
+					background-color: #ccc;
+					border-radius: 5px 0 0 5px;
+				}
+				&.stability-alpha {
+					background-color: #E19B9B;
+				}
+				&.stability-beta {
+					background-color: #E1E19B;
+				}
+				&.stability-rc {
+					background-color: #9BD6E1;
+				}
+				&.stability-stable {
+					background-color: #9BE19B;
+					border-radius: 0 5px 5px 0;
+				}
+			}
+		}
+
+		&.ctrl_composer_version {
+			display: table;
+			width: 100%;
+			margin: 12px 0;
+
+			label {
+				display: table-cell;
+				width: 25%;
+				padding: 8px 12px;
+
+				&.version-fix {
+					background-color: #ccc;
+					border-radius: 5px 0 0 5px;
+				}
+				&.version-bugfix {
+					background-color: #E1E19B;
+				}
+				&.version-feature {
+					background-color: #9BD6E1;
+				}
+				&.version-all {
+					background-color: #9BE19B;
+					border-radius: 0 5px 5px 0;
+				}
+			}
+			.styled_select, select {
+				width: 100px;
+			}
+		}
+	}
+
+	#experts input {
+		display: block;
+		width: 100%;
+		padding: 8px 12px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		box-sizing: border-box;
+		font-size: 18px;
+	}
+}

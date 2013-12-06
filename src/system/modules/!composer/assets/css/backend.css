@@ -303,29 +303,7 @@ span.dependency-indent.child.last span.vertical {
 #ctrl_composer_name .name {
 	margin-right: 12px;
 }
-#tl_composer_install .type {
-	float: right;
-	font-size: 22px;
-	font-weight: bold;
-	color: #ffffff;
-	margin-top: -70px;
-}
-#tl_composer_install .keywords {
-	font-size: 10px;
-	line-height: 10px;
-	margin-top: 6px;
-}
-#tl_composer_install .keywords .keyword {
-	display: inline-block;
-	background-color: #666;
-	color: white;
-	padding: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	-o-border-radius: 6px;
-	-ms-border-radius: 6px;
-	border-radius: 6px;
-}
+
 #ctrl_composer_details {
 	margin: 12px 0;
 }

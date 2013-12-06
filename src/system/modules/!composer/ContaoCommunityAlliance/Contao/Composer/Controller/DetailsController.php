@@ -63,6 +63,10 @@ class DetailsController extends AbstractController
 			$this->redirect('contao/main.php?do=composer');
 		}
 
+		$GLOBALS['TL_CSS'][] = 'system/modules/!composer/assets/css/tabs.css';
+		$GLOBALS['TL_CSS'][] = 'system/modules/!composer/assets/css/package_details.css';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/!composer/assets/js/tabs.js';
+
 		$template              = new \BackendTemplate('be_composer_client_install');
 		$template->composer    = $this->composer;
 		$template->packageName = $packageName;
