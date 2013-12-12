@@ -37,9 +37,14 @@ class DetailsController extends AbstractController
 	{
 		$packageName = $input->get('install');
 
-		if ($input->post('version')) {
-			$version = $input->post('version');
+		if ($packageName == 'contao/core') {
+			$this->redirect('contao/main.php?do=composer');
+		}
 
+		if ($input->post('version')) {
+			$version = base64_decode($input->post('version'));
+
+			/*
 			$this->redirect(
 				'contao/main.php?' . http_build_query(
 					array(
@@ -49,6 +54,29 @@ class DetailsController extends AbstractController
 					)
 				)
 			);
+			*/
+
+			// make a backup
+			copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
+
+			// update requires
+			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+			$config = $json->read();
+			if (!array_key_exists('require', $config)) {
+				$config['require'] = array();
+			}
+			$config['require'][$packageName] = $version;
+			$json->write($config);
+
+			$_SESSION['TL_INFO'][] = sprintf(
+				$GLOBALS['TL_LANG']['composer_client']['added_candidate'],
+				$packageName,
+				$version
+			);
+
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+
+			$this->redirect('contao/main.php?do=composer');
 		}
 
 		$installationCandidates = $this->searchPackage($packageName);

@@ -438,7 +438,7 @@ $source = $preferedCandidate->getSourceUrl();
 											<?php endforeach; ?>
 										</select>
 										<input type="submit" name="install" id="install" class="tl_submit" accesskey="i"
-											   value="<?php echo $GLOBALS['TL_LANG']['composer_client']['check']; ?>">
+											   value="<?php echo $GLOBALS['TL_LANG']['composer_client']['mark_to_install']; ?>">
 									</form>
 								</td>
 							</tr>
