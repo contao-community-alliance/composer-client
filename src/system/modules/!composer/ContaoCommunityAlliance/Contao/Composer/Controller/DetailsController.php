@@ -42,7 +42,7 @@ class DetailsController extends AbstractController
 		}
 
 		if ($input->post('version')) {
-			$version = base64_decode($input->post('version'));
+			$version = base64_decode(rawurldecode($input->post('version')));
 
 			/*
 			$this->redirect(
