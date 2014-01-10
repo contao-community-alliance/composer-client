@@ -1,0 +1,25 @@
+<div id="tl_buttons">
+	<br>
+</div>
+
+<h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['detached']; ?></h2>
+
+<?php echo $this->getMessages(); ?>
+
+<div id="output" class="output fullsize"><?= $this->output; ?></div>
+<div class="refresh-indicator-wrapper"><div id="refresh-indicator" class="refresh-indicator"></div></div>
+<p id="uptime" class="uptime"><?= $this->uptime ?></p>
+
+<form action="contao/main.php?do=composer" method="post">
+    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+    <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+            <input id="submit" type="submit" class="tl_submit" name="close" value="<?= $GLOBALS['TL_LANG']['composer_client']['close']; ?>"<?php if ($this->isRunning): ?> disabled<?php endif; ?>>
+            <input id="terminate" type="submit" class="tl_submit" name="terminate" value="<?= $GLOBALS['TL_LANG']['composer_client']['terminate']; ?>"<?php if (!$this->isRunning): ?> disabled<?php endif; ?>>
+        </div>
+    </div>
+</form>
+
+<?php if ($this->isRunning): ?>
+    <script src="system/modules/!composer/assets/js/detached.js"></script>
+<?php endif; ?>

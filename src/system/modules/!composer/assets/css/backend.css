@@ -51,6 +51,9 @@ span.stability-dev {
 	max-height: 20em;
 	overflow: auto;
 }
+.output.fullsize {
+    max-height: none;
+}
 
 /**
  * Migration wizard
@@ -483,4 +486,19 @@ table#sql_table .drop_table {
 #composer_client_editor div {
 	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 	font-size: 13px;
+}
+
+/**
+ * Detached execution
+ */
+.refresh-indicator-wrapper {
+    margin: 12px 18px;
+}
+.refresh-indicator {
+    height: 3px;
+    background-color: #8ab858;
+}
+.uptime {
+    margin: 12px 18px;
+    text-align: center;
 }

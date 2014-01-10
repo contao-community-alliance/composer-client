@@ -11,6 +11,7 @@ $GLOBALS['TL_LANG']['composer_client']['install_headline']          = 'Paket ins
 $GLOBALS['TL_LANG']['composer_client']['solve_headline']            = 'Abhängigkeiten';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']           = 'Expertenmodus';
 $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline'] = 'Abhängigkeitsgraph';
+$GLOBALS['TL_LANG']['composer_client']['detached']                  = 'Paket Aktualisierung';
 
 /**
  * References
@@ -140,3 +141,5 @@ $GLOBALS['TL_LANG']['composer_client']['mark_to_install']      = 'Paket zur Inst
 $GLOBALS['TL_LANG']['composer_client']['mark_and_install']     = 'Paket sofort installieren';
 $GLOBALS['TL_LANG']['composer_client']['update']               = 'Pakete aktualisieren';
 $GLOBALS['TL_LANG']['composer_client']['save']                 = 'Speichern';
+$GLOBALS['TL_LANG']['composer_client']['close']                = 'Schließen';
+$GLOBALS['TL_LANG']['composer_client']['terminate']            = 'Abbrechen';

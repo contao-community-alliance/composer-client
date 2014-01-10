@@ -37,6 +37,13 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 
 
 /**
+ * Default configuration
+ */
+$GLOBALS['TL_CONFIG']['composerExecutionMode'] = 'inline';
+$GLOBALS['TL_CONFIG']['composerPhpPath']       = '/usr/bin/env php -d memory_limit=1G -d max_execution_time=900';
+
+
+/**
  * Add backend module
  */
 $GLOBALS['BE_MOD']['system']['composer'] = array(

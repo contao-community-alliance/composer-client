@@ -27,6 +27,7 @@ use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
 use ContaoCommunityAlliance\Contao\Composer\Controller\ClearComposerCacheController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\DependencyGraphController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\DetachedController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\DetailsController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\ExpertsEditorController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController;
@@ -99,6 +100,12 @@ class ClientBackend extends \Backend
 
 			return $template->parse();
 		}
+
+        if (file_exists(TL_ROOT . '/' . DetachedController::PID_FILE_PATHNAME)) {
+            $controller = new DetachedController();
+            $output = $controller->handle($input);
+            return $output;
+        }
 
 		// update composer.phar if requested
 		if ($input->get('update') == 'composer') {

@@ -11,6 +11,7 @@ $GLOBALS['TL_LANG']['composer_client']['install_headline']          = 'Install p
 $GLOBALS['TL_LANG']['composer_client']['solve_headline']            = 'Dependencies';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']           = 'Experts mode';
 $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline'] = 'Dependency graph';
+$GLOBALS['TL_LANG']['composer_client']['detached']                  = 'Package update';
 
 /**
  * References
@@ -259,3 +260,5 @@ $GLOBALS['TL_LANG']['composer_client']['mark_to_install']      = 'Mark package t
 $GLOBALS['TL_LANG']['composer_client']['mark_and_install']     = 'Install package now';
 $GLOBALS['TL_LANG']['composer_client']['update']               = 'Update packages';
 $GLOBALS['TL_LANG']['composer_client']['save']                 = 'Save';
+$GLOBALS['TL_LANG']['composer_client']['close']                = 'Close';
+$GLOBALS['TL_LANG']['composer_client']['terminate']            = 'Terminate';
