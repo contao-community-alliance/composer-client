@@ -72,6 +72,9 @@ EOF;
     "license": "LGPL-3.0+",
     "version": "$strContaoVersion",
     "type": "metapackage",
+    "require": {
+        "contao-community-alliance/composer-plugin": "*"
+    },
     "config": {
         "preferred-install": "dist",
         "cache-dir": "cache"
