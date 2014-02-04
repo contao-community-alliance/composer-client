@@ -119,6 +119,8 @@ class UpdatePackagesController extends AbstractController
 			$installer->setUpdate(true);
 		}
 
+		$installer->run();
+
 		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 
 		// redirect to database update
