@@ -129,9 +129,13 @@ $lastLevels = array();
 
 					if ($localPackage instanceof \Composer\Package\PackageInterface):
 						?>&nbsp; <a href="contao/main.php?do=composer&amp;install=<?php echo $localPackage->getPrettyName(); ?>">
-							<?php
-							echo $localPackage->getPrettyName();
-							?>
+						<?php
+						echo $localPackage->getPrettyName();?>&nbsp;
+						<?php
+						if ($item->recursion === true):
+							echo $GLOBALS['TL_LANG']['composer_client']['dependency_recursion'];
+						endif;
+						?>
 						</a><?php
 					else:
 						echo '&nbsp; ' . $localPackage;

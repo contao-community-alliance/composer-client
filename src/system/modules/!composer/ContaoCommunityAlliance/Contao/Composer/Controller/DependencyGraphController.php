@@ -102,7 +102,8 @@ class DependencyGraphController extends AbstractController
 		$requiredConstraint,
 		array &$dependencyGraph,
 		$isLast,
-		$parents = 0
+		$parents = 0,
+		$stack = array()
 	) {
 		$current           = (object) array(
 			'package'     => $package,
@@ -113,7 +114,17 @@ class DependencyGraphController extends AbstractController
 				),
 			'lastInLevel' => $isLast ? $parents - 1 : -1
 		);
+
+		if (in_array($package->getName(), $stack)) {
+			$current->recursion = true;
+
+			$dependencyGraph[] = $current;
+			return;
+		}
+
 		$dependencyGraph[] = $current;
+
+		$stack[] = $package->getName();
 
 		$requires      = $package->getRequires();
 		$requiresCount = count($requires);
@@ -130,7 +141,8 @@ class DependencyGraphController extends AbstractController
 					$requireLink->getPrettyConstraint(),
 					$dependencyGraph,
 					++$index == $requiresCount,
-					$parents + 1
+					$parents + 1,
+					$stack
 				);
 			}
 			else {

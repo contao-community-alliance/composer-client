@@ -78,6 +78,7 @@ $GLOBALS['TL_LANG']['composer_client']['installed_in']              = 'installie
 $GLOBALS['TL_LANG']['composer_client']['no_releasedate']            = '-';
 $GLOBALS['TL_LANG']['composer_client']['show_dependencies']         = '%d Abhängigkeiten installiert';
 $GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']     = 'Abhängigkeitsgraph';
+$GLOBALS['TL_LANG']['composer_client']['dependency_recursion']      = '(zirkuläre Abhängigkeit)';
 
 /**
  * Versions
