@@ -169,6 +169,15 @@ span.stability-dev {
 /**
  * Listing view
  */
+table {
+	table-layout: fixed;
+}
+.col_type {
+	width: 16px;
+}
+.col_icon {
+	width: 16px;
+}
 .col_action {
 	text-align: right;
 }
@@ -188,9 +197,14 @@ span.stability-dev {
 .col_collapse {
 	width: 16px;
 }
+.col_group {
+	padding: 4px 0;
+	white-space: nowrap;
+}
 .col_name {
 	padding: 4px 0;
 	white-space: nowrap;
+	width: 99%;
 }
 .col_name .toggler {
 	cursor: pointer;
@@ -220,15 +234,42 @@ span.stability-dev {
 	-o-transform:rotate(90deg);
 	transform:rotate(90deg);
 }
+.col_version {
+	width: 140px;
+}
+.col_pin {
+	width: 16px;
+}
+.col_remove {
+	width: 16px;
+}
+.col_pin form,
 .col_remove form {
 	display: inline;
 }
+.col_pin input[type="image"],
 .col_remove input[type="image"] {
 	vertical-align: -4px;
 }
+.tl_listing td.col_dependants {
+	padding: 0 !important;
+}
+.col_dependants table {
+	table-layout: fixed;
+	width: 100%;
+}
+.col_dependants .tl_file_list {
+	background-color: transparent;
+}
+
+p.dependants {
+	margin: 12px 0 0 0;
+}
+p.dependants,
 p.dependencies {
 	padding: 2px 6px 3px;
 }
+p.dependants input,
 p.dependencies input {
 	vertical-align: middle;
 }

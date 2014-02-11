@@ -192,6 +192,7 @@ $GLOBALS['TL_LANG']['composer_client']['install_via']               = 'by %s: %s
 $GLOBALS['TL_LANG']['composer_client']['dependency_of']             = 'Dependency of %s';
 $GLOBALS['TL_LANG']['composer_client']['installed_in']              = 'installed in version %s';
 $GLOBALS['TL_LANG']['composer_client']['no_releasedate']            = '-';
+$GLOBALS['TL_LANG']['composer_client']['show_dependants']           = 'Show dependent packages';
 $GLOBALS['TL_LANG']['composer_client']['show_dependencies']         = '%d dependencies installed';
 $GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']     = 'Dependency graph';
 $GLOBALS['TL_LANG']['composer_client']['dependency_recursion']      = '(circular dependency)';
