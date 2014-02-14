@@ -433,7 +433,7 @@ EOF;
 		/** @var \Composer\Package\RootPackage $package */
 		$package       = $composer->getPackage();
 		$versionParser = new VersionParser();
-		$version       = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
+		$version       = VERSION . (is_numeric(substr(BUILD, 0, 1)) ? '.' . BUILD : '-' . BUILD);
 		$prettyVersion = $versionParser->normalize($version);
 		if ($package->getVersion() !== $prettyVersion) {
 			$configFile            = new JsonFile(TL_ROOT . '/' . $configPathname);
