@@ -65,8 +65,8 @@ $dependenciesList = $this->dependenciesList;
 				$package = $item->package;
 				?>
 				<tr <?php if (!$item->removeable): ?>class="dependency" style="display: none;"<?php endif; ?>
-					onmouseover="Theme.hoverRow(this,1);<? if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,1);<?php endif; ?>"
-					onmouseout="Theme.hoverRow(this,0);<? if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,0);<?php endif; ?>">
+					onmouseover="Theme.hoverRow(this,1);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,1);<?php endif; ?>"
+					onmouseout="Theme.hoverRow(this,0);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,0);<?php endif; ?>">
 					<td class="tl_file_list col_type"><?php
 						$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $package->getType());
 						if (file_exists(TL_ROOT . '/' . $icon)) {
@@ -189,8 +189,8 @@ $dependenciesList = $this->dependenciesList;
 				</tr><?php // NOTE: do not add a newline or whitespaces here!!!
 				if ($item->dependencyOf):
 				?><tr class="dependant<?php if (!$item->removeable): ?> dependency<?php endif; ?>" style="display: none;"
-					onmouseover="Theme.hoverRow(this,1);<? if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,1);<?php endif; ?>"
-					onmouseout="Theme.hoverRow(this,0);<? if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,0);<?php endif; ?>">
+					onmouseover="Theme.hoverRow(this,1);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,1);<?php endif; ?>"
+					onmouseout="Theme.hoverRow(this,0);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,0);<?php endif; ?>">
 					<td class="tl_file_list col_dependants" colspan="6">
 						<table><?php
 							foreach ($item->dependencyOf as $dependantName => $dependantConstraint):
