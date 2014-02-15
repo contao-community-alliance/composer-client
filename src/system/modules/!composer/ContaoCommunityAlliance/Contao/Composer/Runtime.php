@@ -424,6 +424,44 @@ EOF;
 	}
 
 	/**
+	 * Prepare Contao version numbers so that composer can understand them.
+	 *
+	 * Necessary to support custom patched suffixes.
+	 *
+	 * Stolen from contao-community-alliance/composer-plugin. Remove when plugin is default installer method.
+	 *
+	 * @param string $version The version.
+	 *
+	 * @param string $build   The build number.
+	 *
+	 * @return string
+	 *
+	 * @throws \RuntimeException
+	 */
+	static public function prepareContaoVersion($version, $build)
+	{
+		// Regular stable build
+		if (is_numeric($build))
+		{
+			return $version . '.' . $build;
+		}
+
+		// Standard pre-release
+		if (preg_match('{^(alpha|beta|RC)?(\d+)?$}i', $build))
+		{
+			return $version . '.' . $build;
+		}
+
+		// Must be a custom patched release with - suffix.
+		if (preg_match('{^(\d+)[-]}i', $build, $matches))
+		{
+			return $version . '.' . $matches[1];
+		}
+
+		throw new \RuntimeException('Invalid version: ' . $version . '.' . $build);
+	}
+
+	/**
 	 * Update the contao version in the config file and update if necessary.
 	 *
 	 * @return bool Return true, if the version is updated, false otherwise.
@@ -433,7 +471,7 @@ EOF;
 		/** @var \Composer\Package\RootPackage $package */
 		$package       = $composer->getPackage();
 		$versionParser = new VersionParser();
-		$version       = VERSION . (is_numeric(substr(BUILD, 0, 1)) ? '.' . BUILD : '-' . BUILD);
+		$version       = self::prepareContaoVersion(VERSION , BUILD);
 		$prettyVersion = $versionParser->normalize($version);
 		if ($package->getVersion() !== $prettyVersion) {
 			$configFile            = new JsonFile(TL_ROOT . '/' . $configPathname);
