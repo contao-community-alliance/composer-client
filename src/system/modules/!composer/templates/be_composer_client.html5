@@ -123,7 +123,7 @@ $dependenciesList = $this->dependenciesList;
 								}
 							}
 							else {
-								$reference = $package->getDistReference();
+								$reference = substr($package->getDistReference, 0, 8);
 							}
 
 							printf(
