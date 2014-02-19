@@ -117,13 +117,14 @@ $dependenciesList = $this->dependenciesList;
 						if ($package->getStability() == 'dev') {
 							if ($package->getInstallationSource() == 'source') {
 								$reference = $package->getSourceReference();
-
-								if ($package->getSourceType() == 'git') {
-									$reference = substr($reference, 0, 8);
-								}
 							}
 							else {
-								$reference = substr($package->getDistReference, 0, 8);
+								$reference = $package->getDistReference();
+							}
+
+							// the reference is a hash
+							if (!is_numeric($reference)) {
+								$reference = substr($reference, 0, 8);
 							}
 
 							printf(
