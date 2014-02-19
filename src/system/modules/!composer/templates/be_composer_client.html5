@@ -35,7 +35,7 @@ $dependenciesList = $this->dependenciesList;
 <?php endif; ?>
 
 <div class="tl_listing_container list_view">
-	<table class="tl_listing showColumns">
+	<table class="tl_listing composer_package_list showColumns">
 		<?php
 		$n = 1;
 		/** @var string $group */

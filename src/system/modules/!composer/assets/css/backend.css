@@ -169,7 +169,7 @@ span.stability-dev {
 /**
  * Listing view
  */
-table {
+table.composer_package_list {
 	table-layout: fixed;
 }
 .col_type {
