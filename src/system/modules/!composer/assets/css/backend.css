@@ -235,7 +235,7 @@ table.composer_package_list {
 	transform:rotate(90deg);
 }
 .col_version {
-	width: 140px;
+	width: 170px;
 }
 .col_pin {
 	width: 16px;
@@ -304,6 +304,9 @@ span.dependency-indent.last span.vertical {
 span.dependency-indent.child.last span.vertical {
 	display: inline;
 	height: 14px;
+}
+span.reference {
+	color:#a6a6a6;
 }
 
 /**
