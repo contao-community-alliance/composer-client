@@ -128,7 +128,7 @@ $dependenciesList = $this->dependenciesList;
 							}
 
 							printf(
-								'<br><span class="reference">%s</span>',
+								' <span class="reference">(%s)</span>',
 								$reference
 							);
 						}
