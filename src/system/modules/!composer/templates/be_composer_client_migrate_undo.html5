@@ -9,7 +9,7 @@
 <?php echo $this->getMessages(); ?>
 
 <?php if ($this->output): ?>
-	<div class="output"><?php echo $this->output; ?></div>
+	<pre class="output"><?php echo $this->output; ?></pre>
 <?php endif; ?>
 
 <form action="contao/main.php?do=composer&amp;migrate=undo"

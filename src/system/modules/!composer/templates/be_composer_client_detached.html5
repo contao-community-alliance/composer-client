@@ -6,7 +6,7 @@
 
 <?php echo $this->getMessages(); ?>
 
-<div id="output" class="output fullsize"><?= $this->output; ?></div>
+<pre id="output" class="output fullsize"><?= $this->output; ?></pre>
 <div class="refresh-indicator-wrapper"><div id="refresh-indicator" class="refresh-indicator"></div></div>
 <p id="uptime" class="uptime"><?= $this->uptime ?></p>
 

@@ -14,7 +14,7 @@
 	<input type="hidden" name="config" id="ctrl_config" value="">
 
 	<div id="composer_client_editor_wrapper">
-		<div id="composer_client_editor"><?php echo $this->config; ?></div>
+		<pre id="composer_client_editor"><?php echo $this->config; ?></pre>
 	</div>
 
 	<div class="tl_formbody_submit">

@@ -21,7 +21,7 @@ $installationManager = $composer->getInstallationManager();
 <?php echo $this->getMessages(); ?>
 
 <?php if ($this->output): ?>
-	<div class="output"><?php echo $this->output; ?></div>
+	<pre class="output"><?php echo $this->output; ?></pre>
 <?php endif; ?>
 
 <div class="tl_listing_container list_view" id="tl_composer_search">
