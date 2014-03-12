@@ -127,10 +127,12 @@ $dependenciesList = $this->dependenciesList;
 								$reference = substr($reference, 0, 8);
 							}
 
-							printf(
-								' <span class="reference">(%s)</span>',
-								$reference
-							);
+							if ($reference) {
+								printf(
+									' <span class="reference">(%s)</span>',
+									$reference
+								);
+							}
 						}
 					?></td>
 					<td class="tl_file_list col_pin">
