@@ -72,6 +72,8 @@ EOF;
     "require": {
         "contao-community-alliance/composer-plugin": "*"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "preferred-install": "dist",
         "cache-dir": "cache"
