@@ -63,15 +63,12 @@ EOF;
 
 		// check composer.json exists
 		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.json')) {
-			$strContaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
-
 			$strComposerJsonContent = <<<EOF
 {
-    "name": "contao/core",
-    "description": "Contao Open Source CMS",
-    "license": "LGPL-3.0+",
-    "version": "$strContaoVersion",
-    "type": "metapackage",
+    "name": "local/website",
+    "description": "A local website project",
+    "type": "project",
+    "license": "proprietary",
     "require": {
         "contao-community-alliance/composer-plugin": "*"
     },
