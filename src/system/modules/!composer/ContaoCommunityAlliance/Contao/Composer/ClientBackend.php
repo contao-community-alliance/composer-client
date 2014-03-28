@@ -232,7 +232,6 @@ class ClientBackend extends \Backend
 		$composerDevWarningTime = Runtime::readComposerDevWarningTime();
 		if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
 			$_SESSION['TL_ERROR'][]         = $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired'];
-			$this->Template->composerUpdate = true;
 		}
 
 		// register composer class loader
