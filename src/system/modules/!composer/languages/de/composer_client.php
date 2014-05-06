@@ -17,7 +17,7 @@ $GLOBALS['TL_LANG']['composer_client']['detached']                  = 'Paket Akt
  * References
  */
 $GLOBALS['TL_LANG']['composer_client']['ftp_mode']              = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Richten Sie Contao so ein, dass es ohne SMH lauffähig ist.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel zum SMH im Contao Wiki</a>';
-$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'Für den Einsatz des Composer Client wird <strong>PHP ' . COMPOSER_MIN_PHPVERSION . '</strong> vorausgesetzt. Sie verwenden zurzeit <strong>PHP %s</strong>.<br>Bitte aktualisieren Sie auf eine aktuellere PHP Version.';
+$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'Für den Einsatz des Composer Client wird <strong>PHP %1$s</strong> vorausgesetzt. Sie verwenden zurzeit <strong>PHP %2$s</strong>.<br>Bitte aktualisieren Sie auf eine aktuellere PHP Version.';
 $GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'Zum Herunterladen von Dateien wird cURL benötigt.<br>Bitte installieren Sie das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
 $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'] = 'APC konnte nicht deaktiviert werden.<br>Das Ausführen von APC und Composer kann zu Zufallsfehlern führen. Bitte deaktivieren Sie <a href="http://php.net/apc" target="_blank">APC</a>.';
 $GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']       = 'Suhosin ist aktiviert.<br>Suhosin verhindert die korrekte Ausführung von Phar Dateien. Bitte deaktivieren Sie <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
