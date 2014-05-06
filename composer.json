@@ -31,6 +31,12 @@
 		"contao": {
 			"sources": {
 				"src/system/modules/!composer": "system/modules/!composer"
+			},
+			"transifex": {
+				"project": "composer",
+				"prefix": "client-",
+				"languages_cto": "src/system/modules/!composer/languages",
+				"languages_tx": ".tx"
 			}
 		},
 		"branch-alias": {
