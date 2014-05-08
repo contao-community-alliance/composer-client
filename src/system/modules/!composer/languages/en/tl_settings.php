@@ -4,31 +4,31 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'] = array(
-	'Ausführungsmodus',
-	'Wählen Sie hier, wie composer ausgeführt werden soll.'
+	'Execution mode',
+	'Please selecte how the composer binary shall get executed.'
 );
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'] = array(
-	'PHP Pfad/Befehl',
-	'Pfad oder Befehl zur PHP Executable.'
+	'PHP Path/Command',
+	'Path or command to the php binary.'
 );
 
 /**
  * Reference
  */
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['inline'] = array(
-	'im Request Prozess',
-	'Composer wird innerhalb des Prozessesaufrufs ausgeführt. Dieses vorgehen ist meist langsamer, funktioniert aber auf allen Systemen, unterliegt allerdings den Laufzeitbeschränkungen des PHP Prozesses.'
+	'In the HTTP request.',
+	'Composer will get executed within the web server process. This mode is usually slower but works for all systems but is subject to the maximum runtime limitations of PHP.'
 );
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process'] = array(
-	'als Prozessaufruf innerhalb des Requests',
-	'Composer wird innerhalb des Prozessaufrufs als externes Programm ausgeführt. Ist meist schneller und auf einigen Systemen möglich, unterliegt allerdings den Laufzeitbeschränkungen des PHP Prozesses.'
+	'as sub process of the web server process',
+	'Composer will get executed via sub process call as external program. This is usually faster and possible on some systems but is subject to the maximum runtime limitations of PHP.'
 );
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['detached'] = array(
-	'als eigenständiger Prozess',
-	'Composer wird als eigenständiger Prozess gestartet und vom Request abgelöst (detached). Ist nicht auf allen Systemen möglich oder erlaubt (prüfen Sie ob das Starten selbstständiger Prozesse in den AGB Ihres Hosters erlaubt/verboten ist). Diese Methode unterliegt nahezu keinen Begrenzungen, außer der eigenen Geduld ;-)'
+	'as standalone process',
+	'Composer will get executed as standalone sub process and detached into the background. This is not possible or allowed on some systems (please check with your provider if it is allowed to spawn background processes). This method has nearly no limitations except for the personal patience. ;)'
 );
 
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_settings']['composer_legend'] = 'Composer-Einstellungen';
+$GLOBALS['TL_LANG']['tl_settings']['composer_legend'] = 'Composer settings';
