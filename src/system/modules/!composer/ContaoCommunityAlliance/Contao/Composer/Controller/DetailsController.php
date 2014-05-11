@@ -66,6 +66,7 @@ class DetailsController extends AbstractController
 				$config['require'] = array();
 			}
 			$config['require'][$packageName] = $version;
+			ksort($config['require']);
 			$json->write($config);
 
 			$_SESSION['TL_INFO'][] = sprintf(
