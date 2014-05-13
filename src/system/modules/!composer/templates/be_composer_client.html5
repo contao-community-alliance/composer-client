@@ -68,7 +68,7 @@ $dependenciesList = $this->dependenciesList;
 					onmouseover="Theme.hoverRow(this,1);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,1);<?php endif; ?>"
 					onmouseout="Theme.hoverRow(this,0);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,0);<?php endif; ?>">
 					<td class="tl_file_list col_type"><?php
-						$icon = sprintf('composer/vendor/contao-community-alliance/composer/src/system/modules/!composer/assets/images/type-%s.png', $package->getType());
+						$icon = sprintf('system/modules/!composer/assets/images/type-%s.png', $package->getType());
 						if (file_exists(TL_ROOT . '/' . $icon)) {
 							echo $this->generateImage(
 								$icon,
