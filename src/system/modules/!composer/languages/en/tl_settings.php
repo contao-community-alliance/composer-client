@@ -5,7 +5,7 @@
  */
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'] = array(
 	'Execution mode',
-	'Please selecte how the composer binary shall get executed.'
+	'Please select how the composer binary shall get executed.'
 );
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'] = array(
 	'PHP Path/Command',
