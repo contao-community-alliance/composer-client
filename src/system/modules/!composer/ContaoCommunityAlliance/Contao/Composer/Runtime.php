@@ -34,6 +34,14 @@ class Runtime
 			);
 		}
 
+		$input = \Input::getInstance();
+		if ($input->get('do') == 'repository_manager') {
+			$environment = \Environment::getInstance();
+
+			header('Location: ' . $environment->base . 'contao/main.php?do=composer');
+			exit;
+		}
+
 		// check composer folder exists
 		if (!is_dir(COMPOSER_DIR_ABSOULTE)) {
 			\Files::getInstance()
