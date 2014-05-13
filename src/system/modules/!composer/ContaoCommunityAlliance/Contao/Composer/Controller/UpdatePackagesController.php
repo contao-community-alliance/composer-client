@@ -28,6 +28,7 @@ use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
 use ContaoCommunityAlliance\Composer\Plugin\ConfigUpdateException;
+use ContaoCommunityAlliance\Composer\Plugin\DuplicateContaoException;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\StreamOutput;
 
@@ -54,6 +55,21 @@ class UpdatePackagesController extends AbstractController
 				case 'detached':
 					$this->runDetached();
 					break;
+			}
+		}
+		catch (DuplicateContaoException $e) {
+			if (isset($_SESSION['COMPOSER_DUPLICATE_CONTAO_EXCEPTION']) && $_SESSION['COMPOSER_DUPLICATE_CONTAO_EXCEPTION']) {
+				unset($_SESSION['COMPOSER_DUPLICATE_CONTAO_EXCEPTION']);
+				do {
+					$_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
+					$e                      = $e->getPrevious();
+				}
+				while ($e);
+				$this->redirect('contao/main.php?do=composer');
+			}
+			else {
+				$_SESSION['COMPOSER_DUPLICATE_CONTAO_EXCEPTION'] = true;
+				$this->reload();
 			}
 		}
 		catch (ConfigUpdateException $e) {
