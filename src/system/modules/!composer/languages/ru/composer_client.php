@@ -8,27 +8,38 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-06T13:57:40+02:00
+ * last-updated: 2014-05-12T03:00:28+02:00
  */
 
-
+$GLOBALS['TL_LANG']['composer_client']['added_candidate']               = 'Добавлен пакет %s версии %s. Обновите пакеты для применения изменений.';
 $GLOBALS['TL_LANG']['composer_client']['check']                         = 'Проверить совместимость';
 $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']          = 'Очистить кэш Composer';
 $GLOBALS['TL_LANG']['composer_client']['close']                         = 'Закрыть';
 $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']          = 'Кэш Composer очищен.';
-$GLOBALS['TL_LANG']['composer_client']['composerUpdated']               = 'Composer был обновлен!';
+$GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']        = 'Версия Composer старше 30 дней, пожалуйста, обновите Composer.';
+$GLOBALS['TL_LANG']['composer_client']['composerUpdated']               = 'Composer обновлен!';
 $GLOBALS['TL_LANG']['composer_client']['composer_install_headline']     = 'Установка Composer';
 $GLOBALS['TL_LANG']['composer_client']['composer_missing']              = 'Библиотека Composer установлена не полностью.<br>Нажмите <strong>Установить Composer</strong> для установки Composer и его зависимостей.';
+$GLOBALS['TL_LANG']['composer_client']['configValid']                   = 'Конфигурация допустима.';
+$GLOBALS['TL_LANG']['composer_client']['confirmRemove']                 = 'Вы уверены, что хотите удалить пакет %s?';
+$GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc']         = 'Не удалось отключить APC<br>APC и Composer вместе производят случайные ошибки, отключите <a href="http://php.net/apc" target="_blank">APC</a>.';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']                  = 'cURL необходим для загрузки пакетов.<br>Установите/включите PHP модуль <a href="http://php.net/curl" target="_blank">curl</a>.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']               = 'База данных обновлена, выполнено запросов: %d.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']              = 'База данных обновлена.';
 $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']     = 'Схема зависимостей';
+$GLOBALS['TL_LANG']['composer_client']['dependency_of']                 = 'Зависит от %s';
 $GLOBALS['TL_LANG']['composer_client']['dependency_recursion']          = '(циклическая зависимость)';
+$GLOBALS['TL_LANG']['composer_client']['detached']                      = 'Обновление пакета';
+$GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'Режим эксперта';
+$GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'Системные требования';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'Режим эксперта';
+$GLOBALS['TL_LANG']['composer_client']['ftp_mode']                      = 'Safe Mode Hack не поддерживается.<br>Настройте хостинг и запустите Contao без Safe Mode Hack.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Статья о Safe-Mode-Hack в Contao Wiki (German)</a>';
 $GLOBALS['TL_LANG']['composer_client']['install_auto']                  = 'Автоматически';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']              = 'Установить Composer';
-$GLOBALS['TL_LANG']['composer_client']['install_dist']                  = 'Дистрибутивный архив';
+$GLOBALS['TL_LANG']['composer_client']['install_dist']                  = 'Дистрибутив';
 $GLOBALS['TL_LANG']['composer_client']['install_headline']              = 'Установка пакета';
 $GLOBALS['TL_LANG']['composer_client']['install_source']                = 'Исходники';
+$GLOBALS['TL_LANG']['composer_client']['install_via']                   = '%s: %s';
 $GLOBALS['TL_LANG']['composer_client']['installed_headline']            = 'Установленные пакеты';
 $GLOBALS['TL_LANG']['composer_client']['installed_in']                  = 'Установлена версия %s';
 $GLOBALS['TL_LANG']['composer_client']['mark_and_install']              = 'Установить пакет';
@@ -102,16 +113,43 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_skip']                  = 'Пр�
 $GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm']          = 'Пропуск миграции может быть опасным, пропускайте, только если точно знаете, что делаете. Пропустить миграцию прямо сейчас?';
 $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade']['0']          = 'Обновление пакетов расширений до совместимости с Composer';
 $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade']['1']          = 'Существующие пакеты расширений будут добавлены в менеджер пакетов Composer и переустановлены.<br>';
+$GLOBALS['TL_LANG']['composer_client']['migrationDone']                 = 'Миграция успешно завершена.';
+$GLOBALS['TL_LANG']['composer_client']['migrationSkipped']              = 'Миграция пропущена.';
+$GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates']      = 'Не найдено кандидатов для <em>%s</em>!';
+$GLOBALS['TL_LANG']['composer_client']['noSearchResult']                = 'Не найдено пакетов для <em>%s</em>!';
+$GLOBALS['TL_LANG']['composer_client']['no_conflicts']                  = 'не конфликтует';
+$GLOBALS['TL_LANG']['composer_client']['no_provides']                   = 'не предоставляет';
 $GLOBALS['TL_LANG']['composer_client']['no_releasedate']                = '-';
+$GLOBALS['TL_LANG']['composer_client']['no_replaces']                   = 'не заменяет';
+$GLOBALS['TL_LANG']['composer_client']['no_requires']                   = 'не зависит';
+$GLOBALS['TL_LANG']['composer_client']['no_suggests']                   = 'не предлагает';
+$GLOBALS['TL_LANG']['composer_client']['not_installed']                 = 'Установка требует';
 $GLOBALS['TL_LANG']['composer_client']['package_authors']               = 'Разработчик';
+$GLOBALS['TL_LANG']['composer_client']['package_conflicts']             = 'Конфликты';
 $GLOBALS['TL_LANG']['composer_client']['package_dependend_version']     = 'Зависимая версия';
 $GLOBALS['TL_LANG']['composer_client']['package_homepage']              = 'Домашняя страница';
 $GLOBALS['TL_LANG']['composer_client']['package_installed_version']     = 'Установленная версия';
+$GLOBALS['TL_LANG']['composer_client']['package_keywords']              = 'Ключевые слова';
 $GLOBALS['TL_LANG']['composer_client']['package_name']                  = 'Пакет';
+$GLOBALS['TL_LANG']['composer_client']['package_provides']              = 'Обеспечивает';
+$GLOBALS['TL_LANG']['composer_client']['package_reference']             = 'Ссылка';
+$GLOBALS['TL_LANG']['composer_client']['package_replaces']              = 'Заменяет';
 $GLOBALS['TL_LANG']['composer_client']['package_requested_version']     = 'Запрошенная версия';
 $GLOBALS['TL_LANG']['composer_client']['package_requires']              = 'Зависимости';
-$GLOBALS['TL_LANG']['composer_client']['package_suggests']              = 'Предположения';
+$GLOBALS['TL_LANG']['composer_client']['package_source']                = 'Источник';
+$GLOBALS['TL_LANG']['composer_client']['package_suggests']              = 'Предложения';
+$GLOBALS['TL_LANG']['composer_client']['package_support']               = 'Поддержка';
+$GLOBALS['TL_LANG']['composer_client']['package_support_email']         = 'Email';
+$GLOBALS['TL_LANG']['composer_client']['package_support_irc']           = 'IRC чат';
+$GLOBALS['TL_LANG']['composer_client']['package_support_issues']        = 'Проблемы';
+$GLOBALS['TL_LANG']['composer_client']['package_support_source']        = 'Источник';
+$GLOBALS['TL_LANG']['composer_client']['package_support_wiki']          = 'Wiki';
+$GLOBALS['TL_LANG']['composer_client']['package_type']                  = 'Тип';
 $GLOBALS['TL_LANG']['composer_client']['package_version']               = 'Версия';
+$GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'Необходима PHP версии <strong>PHP %1$s</strong> или новее. Ваша система работает с PHP версии <strong>%1$s</strong>.<br>Пожалуйста, обновите PHP.';
+$GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Закрепление версии';
+$GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Пакет %s удален. Обновите пакеты для применения изменений.';
+$GLOBALS['TL_LANG']['composer_client']['removePackage']                 = 'Удалить пакет';
 $GLOBALS['TL_LANG']['composer_client']['restartOperation']              = 'Конфигурация Composer была изменена, пожалуйста, повторите последнее действие.';
 $GLOBALS['TL_LANG']['composer_client']['save']                          = 'Сохранить';
 $GLOBALS['TL_LANG']['composer_client']['search']                        = 'Найти';
@@ -121,12 +159,15 @@ $GLOBALS['TL_LANG']['composer_client']['settings_dialog']               = 'На�
 $GLOBALS['TL_LANG']['composer_client']['show_dependants']               = 'Показать зависимые пакеты';
 $GLOBALS['TL_LANG']['composer_client']['show_dependencies']             = 'Установленные зависимости: %d';
 $GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']         = 'Схема зависимостей';
+$GLOBALS['TL_LANG']['composer_client']['solve_headline']                = 'Зависимости';
 $GLOBALS['TL_LANG']['composer_client']['stability_alpha']               = 'Альфа-версия';
 $GLOBALS['TL_LANG']['composer_client']['stability_beta']                = 'Бета-версия';
 $GLOBALS['TL_LANG']['composer_client']['stability_dev']                 = 'Релиз разработки';
 $GLOBALS['TL_LANG']['composer_client']['stability_rc']                  = 'Релиз-кандидат';
 $GLOBALS['TL_LANG']['composer_client']['stability_stable']              = 'Стабильный релиз';
+$GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']               = 'Включен Suhosin.<br>Suhosin ломает поддержку Phar, отключите <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
 $GLOBALS['TL_LANG']['composer_client']['terminate']                     = 'Завершить';
+$GLOBALS['TL_LANG']['composer_client']['toBeRemoved']                   = 'быть удаленным';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration']                = 'Вернуть старый клиент';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']           = '
 <p>Уважаемый пользователь, мы сожалеем, что вы решили вернуться к старому клиенту пакетов расширений.</p>
@@ -140,6 +181,9 @@ $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']           = '
 </ul>
 <br>
 ';
+$GLOBALS['TL_LANG']['composer_client']['unknown_license']               = 'Неизвестная лицензия';
+$GLOBALS['TL_LANG']['composer_client']['unpinPackage']                  = 'Закрепление релиза';
+$GLOBALS['TL_LANG']['composer_client']['unpinablePackage']              = 'Релиз разработки закрепить нельзя';
 $GLOBALS['TL_LANG']['composer_client']['update']                        = 'Обновить пакеты';
 $GLOBALS['TL_LANG']['composer_client']['update_composer']               = 'Обновить Composer';
 $GLOBALS['TL_LANG']['composer_client']['update_database']               = 'Обновить базу данных';
@@ -156,6 +200,11 @@ $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']              = '
 </li>
 </ul>
 ';
+$GLOBALS['TL_LANG']['composer_client']['version_bugfix']                = 'Релизы исправления ошибок  %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['version_exact']                 = 'Точная версия %s';
+$GLOBALS['TL_LANG']['composer_client']['version_feature']               = 'Релизы новых функций %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['version_micro']                 = 'Микро-релизы %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['version_upstream']              = 'Upstream-релизы от %s (%s)';
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability']['0'] = 'Минимальная стабильность';
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability']['1'] = 'Минимальная стабильность определяет нижний уровень стабильности расширения для установки.';
 $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']['0']     = 'Предпочитать стабильные';
