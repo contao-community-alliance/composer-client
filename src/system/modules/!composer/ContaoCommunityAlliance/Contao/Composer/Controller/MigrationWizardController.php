@@ -63,7 +63,7 @@ class MigrationWizardController extends AbstractController
 		}
 		else {
 			$oldPackageCount    = 0;
-			$commercialPackages = array();
+			$commercialPackages = '';
 		}
 
 		$smhEnabled            = Runtime::isSafeModeHackEnabled();
