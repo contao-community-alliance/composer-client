@@ -28,13 +28,31 @@ $installationManager = $composer->getInstallationManager();
 	<table class="tl_listing showColumns">
 		<thead>
 		<tr>
-			<th class="tl_folder_tlist col_name"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
+			<th class="tl_folder_tlist col_name" colspan="2"><?php echo $GLOBALS['TL_LANG']['composer_client']['package_name']; ?></th>
 			<th class="tl_folder_tlist col_action"></th>
 		</tr>
 		</thead>
 		<tbody>
 		<?php $n = 1; foreach ($this->packages as $package): ?>
-			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+			<tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (!$package['contao-compatible']): ?> incompatible<?php endif; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
+				<td class="tl_file_list col_type"><?php
+					$icon = sprintf('system/modules/!composer/assets/images/type-%s.png', $package['type']);
+					if (file_exists(TL_ROOT . '/' . $icon)) {
+						echo $this->generateImage(
+							$icon,
+							$package['type'],
+							sprintf('title="%s"', $package['type'])
+						);
+					}
+					else {
+						printf(
+							'<span class="label %s" title="%s">%s</span>',
+							strtolower($package['type']),
+							$package['type'],
+							strtoupper($package['type'])
+						);
+					}
+				?></td>
 				<td class="tl_file_list col_name">
 					<div class="name">
 						<a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>"><?php echo $package['name']; ?></a>
@@ -44,6 +62,7 @@ $installationManager = $composer->getInstallationManager();
 					</div>
 				</td>
 				<td class="tl_file_list col_action"><?php
+					if ($package['contao-compatible']):
 						$versions = $localRepository->findPackages($package['name']);
 						if (count($versions)):
 							$title = sprintf(
@@ -66,6 +85,7 @@ $installationManager = $composer->getInstallationManager();
 							</a>
 							<?php
 						endif;
+					endif;
 					?></td>
 			</tr>
 		<?php endforeach; ?>

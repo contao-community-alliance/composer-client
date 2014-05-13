@@ -323,6 +323,10 @@ span.reference {
 	margin-top: 0;
 	margin-bottom: 6px;
 }
+#tl_composer_search .incompatible .col_name .name {
+	color: #ccc;
+	text-decoration: line-through;
+}
 
 /**
  * Details view
