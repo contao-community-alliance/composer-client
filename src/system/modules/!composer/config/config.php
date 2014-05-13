@@ -39,8 +39,9 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 /**
  * Default configuration
  */
-$GLOBALS['TL_CONFIG']['composerExecutionMode'] = 'inline';
-$GLOBALS['TL_CONFIG']['composerPhpPath']       = '/usr/bin/env php -d memory_limit=1G -d max_execution_time=900';
+$GLOBALS['TL_CONFIG']['composerExecutionMode']          = 'inline';
+$GLOBALS['TL_CONFIG']['composerPhpPath']                = '/usr/bin/env php -d memory_limit=1G -d max_execution_time=900';
+$GLOBALS['TL_CONFIG']['composerRemoveRepositoryTables'] = false;
 
 
 /**
@@ -51,3 +52,9 @@ $GLOBALS['BE_MOD']['system']['composer'] = array(
 	'icon'       => 'system/modules/!composer/assets/images/icon.png',
 	'stylesheet' => 'system/modules/!composer/assets/css/backend.css',
 );
+
+
+/**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS']['sqlCompileCommands'][] = array('ContaoCommunityAlliance\Contao\Composer\DatabaseInstaller', 'sqlCompileCommands');

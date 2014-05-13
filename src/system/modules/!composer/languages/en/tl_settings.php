@@ -11,6 +11,10 @@ $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'] = array(
 	'PHP Path/Command',
 	'Path or command to the php binary.'
 );
+$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'] = array(
+	'Remove repository client tables',
+	'The old ER2 repository client tables will not be removed by the composer client database update tool, until you enable this checkbox.'
+);
 
 /**
  * Reference

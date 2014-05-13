@@ -17,7 +17,7 @@ if (!$GLOBALS['TL_CONFIG']['composerAllowRepoClient']) {
  */
 $GLOBALS['TL_DCA']['tl_settings']['palettes']['__selector__'][] = 'composerExecutionMode';
 
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{composer_legend:hide},composerExecutionMode';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{composer_legend:hide},composerExecutionMode,composerRemoveRepositoryTables';
 
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_process']  = 'composerPhpPath';
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached'] = 'composerPhpPath';
@@ -47,5 +47,12 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['composerPhpPath']       = array(
         'allowHtml'      => true,
         'preserveTags'   => true,
         'decodeEntities' => true,
+	),
+);
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerRemoveRepositoryTables'] = array(
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'],
+	'inputType' => 'checkbox',
+	'eval'      => array(
+		'tl_class' => 'clr m12 w50',
 	),
 );
