@@ -130,23 +130,17 @@ class MigrationWizardController extends AbstractController
 								$packageName = strtolower($packageName);
 
 								$oldVersion = $install->version;
-								$build      = $install->build;
 								$stability  = $oldVersion % 10;
 								$oldVersion = (int) ($oldVersion / 10);
-								$release    = $oldVersion % 1000;
 								$oldVersion = (int) ($oldVersion / 1000);
 								$minor      = $oldVersion % 1000;
 								$major      = (int) ($oldVersion / 1000);
 
 								$version = sprintf(
-									'>=%d.%d.%d.%d%s,<%d.%d',
+									'~%d.%d%s',
 									$major,
 									$minor,
-									$release,
-									($stability * 1000 + $build),
-									static::$versionNames[$stability],
-									$major,
-									$minor + 1
+									static::$versionNames[$stability]
 								);
 
 								$config['require'][$packageName] = $version;
