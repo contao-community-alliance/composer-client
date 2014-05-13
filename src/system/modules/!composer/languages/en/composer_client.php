@@ -244,7 +244,6 @@ $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']              = 'to be remo
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Database updated, %d queries executed.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']         = 'Database is up to date.';
 $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer cache cleared.';
-$GLOBALS['TL_LANG']['composer_client']['restartOperation']         = 'The composer configuration has been updated, please redo the last action.';
 
 /**
  * Buttons

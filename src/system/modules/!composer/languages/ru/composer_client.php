@@ -150,7 +150,6 @@ $GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'Не�
 $GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Закрепление версии';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Пакет %s удален. Обновите пакеты для применения изменений.';
 $GLOBALS['TL_LANG']['composer_client']['removePackage']                 = 'Удалить пакет';
-$GLOBALS['TL_LANG']['composer_client']['restartOperation']              = 'Конфигурация Composer была изменена, пожалуйста, повторите последнее действие.';
 $GLOBALS['TL_LANG']['composer_client']['save']                          = 'Сохранить';
 $GLOBALS['TL_LANG']['composer_client']['search']                        = 'Найти';
 $GLOBALS['TL_LANG']['composer_client']['search_headline']               = 'Результаты поиска';

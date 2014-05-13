@@ -73,7 +73,6 @@ $GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'Für 
 $GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'auf Version festpinnen';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Paket %s wurde entfernt. Aktualisieren Sie die Pakete, um die Änderungen anzuwenden.';
 $GLOBALS['TL_LANG']['composer_client']['removePackage']                 = 'Paket entfernen';
-$GLOBALS['TL_LANG']['composer_client']['restartOperation']              = 'Die Composer Einstellungen wurden aktualisiert, bitte wiederholen Sie die letzte Aktion.';
 $GLOBALS['TL_LANG']['composer_client']['save']                          = 'Speichern';
 $GLOBALS['TL_LANG']['composer_client']['search']                        = 'Suchen';
 $GLOBALS['TL_LANG']['composer_client']['search_headline']               = 'Suchergebnisse';

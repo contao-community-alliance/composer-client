@@ -62,8 +62,7 @@ class UpdatePackagesController extends AbstractController
 				$e                        = $e->getPrevious();
 			}
 			while ($e);
-			$_SESSION['TL_INFO'][] = $GLOBALS['TL_LANG']['composer_client']['restartOperation'];
-			$this->redirect('contao/main.php?do=composer');
+			$this->reload();
 		}
 		catch (\RuntimeException $e) {
 			do {
