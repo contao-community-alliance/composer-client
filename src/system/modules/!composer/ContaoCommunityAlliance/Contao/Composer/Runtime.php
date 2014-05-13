@@ -297,7 +297,7 @@ EOF;
 
 		// check for php version
 		if (!static::isPhpVersionSupported()) {
-			$errors[] = sprintf($GLOBALS['TL_LANG']['composer_client']['php_version'], PHP_VERSION);
+			$errors[] = sprintf($GLOBALS['TL_LANG']['composer_client']['php_version'], COMPOSER_MIN_PHPVERSION, PHP_VERSION);
 		}
 
 		// check for curl

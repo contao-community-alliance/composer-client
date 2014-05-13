@@ -12,3 +12,6 @@ nbproject/
 
 # Composer
 vendor/
+
+# Transifex
+/.tx/

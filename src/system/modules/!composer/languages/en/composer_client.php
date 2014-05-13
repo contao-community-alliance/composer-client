@@ -17,7 +17,7 @@ $GLOBALS['TL_LANG']['composer_client']['detached']                  = 'Package u
  * References
  */
 $GLOBALS['TL_LANG']['composer_client']['ftp_mode']              = 'Safe-Mode-Hack is not supported.<br>Configure your hosting and run Contao without Safe-Mode-Hack.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Article about Safe-Mode-Hack in the Contao Wiki (German)</a>';
-$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'PHP version <strong>PHP ' . COMPOSER_MIN_PHPVERSION . '</strong> or newer is required. Your system runs with PHP version <strong>%s</strong>.<br>Please upgrade your PHP.';
+$GLOBALS['TL_LANG']['composer_client']['php_version']           = 'PHP version <strong>PHP %1$s</strong> or newer is required. Your system runs with PHP version <strong>%1$s</strong>.<br>Please upgrade your PHP.';
 $GLOBALS['TL_LANG']['composer_client']['curl_missing']          = 'cURL is required to download packages.<br>Please install/enable the PHP <a href="http://php.net/curl" target="_blank">curl</a> module.';
 $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc'] = 'Could not disable APC.<br>APC and Composer produce random errors, please disable <a href="http://php.net/apc" target="_blank">APC</a>.';
 $GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']       = 'Suhosin is enabled.<br>Suhosin will break the Phar support, please disable <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
