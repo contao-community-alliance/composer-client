@@ -23,15 +23,15 @@ class Runtime
 	 */
 	static public function initialize()
 	{
+		if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '<')) {
+			return;
+		}
+
 		if (TL_MODE == 'BE') {
 			$GLOBALS['TL_HOOKS']['loadLanguageFile']['composer'] = array(
 				'ContaoCommunityAlliance\Contao\Composer\Client',
 				'disableOldClientHook'
 			);
-		}
-
-		if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '<')) {
-			return;
 		}
 
 		// check composer folder exists
