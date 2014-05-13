@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached
  * Fields
  */
 $GLOBALS['TL_DCA']['tl_settings']['fields']['composerExecutionMode'] = array(
-	'label'     => $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'],
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'],
 	'inputType' => 'select',
 	'options'   => array('inline', 'process', 'detached'),
 	'reference' => $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes'],
@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['composerExecutionMode'] = array(
 	),
 );
 $GLOBALS['TL_DCA']['tl_settings']['fields']['composerPhpPath']       = array(
-	'label'     => $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'],
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'],
 	'inputType' => 'text',
 	'eval'      => array(
 		'mandatory'      => true,
