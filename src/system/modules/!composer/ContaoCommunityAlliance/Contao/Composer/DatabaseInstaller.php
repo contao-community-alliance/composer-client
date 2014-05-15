@@ -16,7 +16,7 @@ class DatabaseInstaller
 {
 	public function sqlCompileCommands($return)
 	{
-		if (!$GLOBALS['TL_CONFIG']['composerRemoveRepositoryTables']) {
+		if (!$GLOBALS['TL_CONFIG']['composerRemoveRepositoryTables'] && is_array($return['DROP'])) {
 			$return['DROP'] = array_filter(
 				$return['DROP'],
 				function ($sql) {
