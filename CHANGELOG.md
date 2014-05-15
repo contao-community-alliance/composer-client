@@ -3,10 +3,21 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.9.1
+-------------
+
+* Improvement: The repository client database tables will not be dropped by default, until you enable the option in the system settings.
+* Improvement: The repository client will not be disabled, if the composer client is not supported.
+* Improvement: On config update, the package update operation will not automatically restarted.
+* Improvement: If you install the composer client, you will automatically redirected to the composer client.
+* Improvement: When migrate legacy packages, the constraint is more tollerant. This solve update issues with unresolveable conclusions.
+* Bugfix: Do not use the vendor path for icons. The icons will now be used when composer client is installed from ER2.
+
 Version 0.9.0
 -------------
 
 * Improvement: Switch from the old contao-community-alliance/composer-installer to the contao-community-alliance/composer-plugin.
+
 Version 0.8.8
 -------------
 
