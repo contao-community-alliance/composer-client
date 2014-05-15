@@ -3,6 +3,11 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.9.2
+-------------
+
+* Bugfix: Fix "null is not an array" issue with database update tool when the tl_repository_* tables are removed.
+
 Version 0.9.1
 -------------
 
