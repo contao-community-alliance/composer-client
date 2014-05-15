@@ -3,4 +3,7 @@
 /**
  * Back end modules
  */
-$GLOBALS['TL_LANG']['MOD']['composer'] = array('Paketverwaltung', 'Pakete installieren und verwalten');
+
+$GLOBALS['TL_LANG']['MOD']['composer']['0'] = 'Paketmanagement';
+$GLOBALS['TL_LANG']['MOD']['composer']['1'] = 'Pakete installieren und verwalten';
+
