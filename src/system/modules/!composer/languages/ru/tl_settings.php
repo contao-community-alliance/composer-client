@@ -8,9 +8,8 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-09T03:00:20+02:00
+ * last-updated: 2014-05-13T03:00:28+02:00
  */
-
 
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']['0']              = 'Режим выполнения';
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']['1']              = 'Выберите, как должен выполняться бинарный файл Composer.';
@@ -22,5 +21,7 @@ $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']['0']  = 
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']['1']  = 'Composer будет выполняться через вызов подпроцесса как внешняя программа. Это обычно быстрее и работа возможна в некоторых системах, но подвергается максимальным ограничениям по времени выполнения PHP.';
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath']['0']                    = 'PHP путь/команда';
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath']['1']                    = 'Путь или команда к бинарному файлу php.';
+$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables']['0']     = 'Удалить таблицы клиента хранилища расширений';
+$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables']['1']     = 'Таблицы старого клиента хранилища расширений не будут удалены Composer, до тех пор, пока вы не выберите этот чек-бокс.';
 $GLOBALS['TL_LANG']['tl_settings']['composer_legend']                         = 'Настройки Composer';
 
