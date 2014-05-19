@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-12T03:00:28+02:00
+ * last-updated: 2014-05-16T03:00:29+02:00
  */
 
 $GLOBALS['TL_LANG']['composer_client']['added_candidate']               = 'Добавлен пакет %s версии %s. Обновите пакеты для применения изменений.';
@@ -146,7 +146,7 @@ $GLOBALS['TL_LANG']['composer_client']['package_support_source']        = 'Ис�
 $GLOBALS['TL_LANG']['composer_client']['package_support_wiki']          = 'Wiki';
 $GLOBALS['TL_LANG']['composer_client']['package_type']                  = 'Тип';
 $GLOBALS['TL_LANG']['composer_client']['package_version']               = 'Версия';
-$GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'Необходима PHP версии <strong>PHP %1$s</strong> или новее. Ваша система работает с PHP версии <strong>%1$s</strong>.<br>Пожалуйста, обновите PHP.';
+$GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'Необходима PHP версии <strong>PHP %1$s</strong> или новее. Ваша система работает с PHP версии <strong>%2$s</strong>.<br>Пожалуйста, обновите PHP.';
 $GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Закрепление версии';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Пакет %s удален. Обновите пакеты для применения изменений.';
 $GLOBALS['TL_LANG']['composer_client']['removePackage']                 = 'Удалить пакет';
