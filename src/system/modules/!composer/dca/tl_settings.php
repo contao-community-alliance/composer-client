@@ -17,7 +17,7 @@ if (!$GLOBALS['TL_CONFIG']['composerAllowRepoClient']) {
  */
 $GLOBALS['TL_DCA']['tl_settings']['palettes']['__selector__'][] = 'composerExecutionMode';
 
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{composer_legend:hide},composerExecutionMode,composerRemoveRepositoryTables';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{composer_legend:hide},composerExecutionMode,composerVerbosity,composerRemoveRepositoryTables';
 
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_process']  = 'composerPhpPath';
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached'] = 'composerPhpPath';
@@ -54,5 +54,15 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['composerRemoveRepositoryTables'] = 
 	'inputType' => 'checkbox',
 	'eval'      => array(
 		'tl_class' => 'clr m12 w50',
+	),
+);
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerVerbosity'] = array(
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerVerbosity'],
+	'inputType' => 'select',
+	'options'   => array('VERBOSITY_QUIET', 'VERBOSITY_NORMAL', 'VERBOSITY_VERBOSE', 'VERBOSITY_VERY_VERBOSE', 'VERBOSITY_DEBUG'),
+	'reference' => $GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels'],
+	'eval'      => array(
+		'tl_class' => 'w50',
+		'helpwizard'     => true,
 	),
 );
