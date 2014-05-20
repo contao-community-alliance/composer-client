@@ -99,6 +99,7 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_preconditions']         = '
 $GLOBALS['TL_LANG']['composer_client']['migrate_production']['0']       = 'Für den produktiven Einsatz';
 $GLOBALS['TL_LANG']['composer_client']['migrate_production']['1']       = 'Pakete werden als Archive heruntergeladen (nur zip Support ist Vorausgesetzt). Dateien werden als Kopie installiert.';
 $GLOBALS['TL_LANG']['composer_client']['migrate_setup']['0']            = 'Konfigurationseinstellungen';
+$GLOBALS['TL_LANG']['composer_client']['migrate_setup']['1']            = 'Bitte wählen Sie aus, welches Setup Sie für Ihre Installation benutzen wollen.';
 $GLOBALS['TL_LANG']['composer_client']['migrate_setup_pre']             = '
 <h2>Migrationsassistent</h2>
 <p>Bevor wir mit der Migration starten, haben wir noch ein paar Fragen an dich.</p>';
