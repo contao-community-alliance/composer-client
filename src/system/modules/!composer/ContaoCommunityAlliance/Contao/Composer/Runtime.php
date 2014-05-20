@@ -272,6 +272,20 @@ EOF;
 	}
 
 	/**
+	 * Determinate if downloading is possible.
+	 *
+	 * @return bool
+	 */
+	static public function isDownloadImpossible()
+	{
+		if (class_exists('ZipArchive') || static::testProcess('unzip')) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Try to disable APC.
 	 *
 	 * @return bool Return true on success, false if not.
@@ -322,6 +336,10 @@ EOF;
 		// check for suhosin
 		if (static::isSuhosinEnabled()) {
 			$errors[] = $GLOBALS['TL_LANG']['composer_client']['suhosin_enabled'];
+		}
+
+		if (static::isDownloadImpossible()) {
+			$errors[] = $GLOBALS['TL_LANG']['composer_client']['download_impossible'];
 		}
 
 		if (count($errors)) {
@@ -429,6 +447,11 @@ EOF;
 	 */
 	static public function testProcess($cmd)
 	{
+		if (in_array('proc_open', array_map('trim', explode(',', ini_get('disable_functions')))))
+		{
+			return false;
+		}
+
 		$proc = proc_open(
 			$cmd,
 			array(

@@ -24,6 +24,7 @@ $GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']       = 'Suhosin is en
 $GLOBALS['TL_LANG']['composer_client']['composer_missing']      = 'Composer library is not completely installed.<br>Click <strong>Install Composer</strong> to install Composer and its dependencies.';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']      = 'Install Composer';
 $GLOBALS['TL_LANG']['composer_client']['search_placeholder']    = 'Package name or keyword';
+$GLOBALS['TL_LANG']['composer_client']['download_impossible']   = 'Downloading is impossible, please either enable the PHP zip extension or ensure proc_open() may run unzip.';
 
 /**
  * Migration wizard
