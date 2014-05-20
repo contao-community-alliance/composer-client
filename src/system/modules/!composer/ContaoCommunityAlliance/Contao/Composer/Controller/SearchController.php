@@ -44,7 +44,7 @@ class SearchController extends AbstractController
 		$searchName = count($tokens) == 1 && strpos($tokens[0], '/') !== false;
 
 		if (empty($tokens)) {
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 			$this->redirect('contao/main.php?do=composer');
 		}
 
@@ -59,7 +59,7 @@ class SearchController extends AbstractController
 				$keyword
 			);
 
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 			$this->redirect('contao/main.php?do=composer');
 		}
 

@@ -16,6 +16,12 @@ $GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'] = array(
 	'The old ER2 repository client tables will not be removed by the composer client database update tool, until you enable this checkbox.'
 );
 
+$GLOBALS['TL_LANG']['tl_settings']['composerVerbosity'] = array(
+	'Verbosity in logging',
+	'The console has 5 levels of verbosity, usually you will want to leave this to the default verbosity unless you experience problems.'
+);
+
+
 /**
  * Reference
  */
@@ -30,6 +36,31 @@ $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process'] = array(
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['detached'] = array(
 	'as standalone process',
 	'Composer will get executed as standalone sub process and detached into the background. This is not possible or allowed on some systems (please check with your provider if it is allowed to spawn background processes). This method has nearly no limitations.'
+);
+
+$GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels']['VERBOSITY_QUIET'] = array(
+	'Be quiet!',
+	'Do not output any messages.'
+);
+
+$GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels']['VERBOSITY_NORMAL'] = array(
+	'Default verbosity',
+	'The default verbosity level - use this when you are not experiencing any problems.'
+);
+
+$GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels']['VERBOSITY_VERBOSE'] = array(
+	'Be verbose',
+	'Increased verbosity of messages.'
+);
+
+$GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels']['VERBOSITY_VERY_VERBOSE'] = array(
+	'Be very verbose',
+	'Informative non essential messages.'
+);
+
+$GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels']['VERBOSITY_DEBUG'] = array(
+	'Debug messages',
+	'This will show all messages, including debug messages that most likely will be of no use to the average user.'
 );
 
 /**

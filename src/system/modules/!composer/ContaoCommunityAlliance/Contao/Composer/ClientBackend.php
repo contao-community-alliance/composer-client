@@ -223,6 +223,31 @@ class ClientBackend extends \Backend
 		}
 	}
 
+	protected function getDebugLevel()
+	{
+		switch ($GLOBALS['TL_CONFIG']['composerVerbosity'])
+		{
+			case 'VERBOSITY_QUIET':
+				$level = 0;
+				break;
+			case 'VERBOSITY_VERBOSE':
+				$level = 2;
+				break;
+			case 'VERBOSITY_VERY_VERBOSE':
+				$level = 3;
+				break;
+			case 'VERBOSITY_DEBUG':
+				$level = 4;
+				break;
+			case 'VERBOSITY_NORMAL':
+			default:
+				$level = 1;
+				break;
+		}
+
+		return $level;
+	}
+
 	/**
 	 * Load composer and the composer class loader.
 	 */
@@ -241,8 +266,8 @@ class ClientBackend extends \Backend
 		// define pathname to config file
 		$this->configPathname = COMPOSER_DIR_RELATIVE . '/' . Factory::getComposerFile();
 
-		// create io interace
-		$this->io = new BufferIO('', null, new HtmlOutputFormatter());
+		// create io interface
+		$this->io = new BufferIO('', $this->getDebugLevel(), new HtmlOutputFormatter());
 
 		// create composer
 		$this->composer = Runtime::createComposer($this->io);

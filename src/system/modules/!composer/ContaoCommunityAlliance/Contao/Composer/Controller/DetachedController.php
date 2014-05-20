@@ -65,7 +65,7 @@ class DetachedController extends AbstractController
         if (!$isRunning && \Input::getInstance()->post('close')) {
             $outFile->delete();
             $pidFile->delete();
-            $this->redirect('contao/main.php?do=composer');
+            $this->redirect('contao/main.php?do=composer&amp;update=database');
         }
         else if ($isRunning && \Input::getInstance()->post('terminate')) {
             shell_exec(sprintf('kill %d', $pid));
