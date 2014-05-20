@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-16T03:00:29+02:00
+ * last-updated: 2014-05-20T13:45:47+02:00
  */
 
 $GLOBALS['TL_LANG']['composer_client']['added_candidate']               = 'Добавлен пакет %s версии %s. Обновите пакеты для применения изменений.';
@@ -43,7 +43,7 @@ $GLOBALS['TL_LANG']['composer_client']['install_via']                   = '%s: %
 $GLOBALS['TL_LANG']['composer_client']['installed_headline']            = 'Установленные пакеты';
 $GLOBALS['TL_LANG']['composer_client']['installed_in']                  = 'Установлена версия %s';
 $GLOBALS['TL_LANG']['composer_client']['mark_and_install']              = 'Установить пакет';
-$GLOBALS['TL_LANG']['composer_client']['mark_to_install']               = 'Отметить пакет для установки';
+$GLOBALS['TL_LANG']['composer_client']['mark_to_install']               = 'Выбрать пакет для установки';
 $GLOBALS['TL_LANG']['composer_client']['migrate']                       = 'Миграция';
 $GLOBALS['TL_LANG']['composer_client']['migrate_clean']['0']            = 'Удалить пакеты расширений';
 $GLOBALS['TL_LANG']['composer_client']['migrate_clean']['1']            = 'Удалить ранее установленные пакеты расширений и начать с чистой установки.';
@@ -131,9 +131,9 @@ $GLOBALS['TL_LANG']['composer_client']['package_homepage']              = 'До�
 $GLOBALS['TL_LANG']['composer_client']['package_installed_version']     = 'Установленная версия';
 $GLOBALS['TL_LANG']['composer_client']['package_keywords']              = 'Ключевые слова';
 $GLOBALS['TL_LANG']['composer_client']['package_name']                  = 'Пакет';
-$GLOBALS['TL_LANG']['composer_client']['package_provides']              = 'Обеспечивает';
+$GLOBALS['TL_LANG']['composer_client']['package_provides']              = 'Обеспечение';
 $GLOBALS['TL_LANG']['composer_client']['package_reference']             = 'Ссылка';
-$GLOBALS['TL_LANG']['composer_client']['package_replaces']              = 'Заменяет';
+$GLOBALS['TL_LANG']['composer_client']['package_replaces']              = 'Замены';
 $GLOBALS['TL_LANG']['composer_client']['package_requested_version']     = 'Запрошенная версия';
 $GLOBALS['TL_LANG']['composer_client']['package_requires']              = 'Зависимости';
 $GLOBALS['TL_LANG']['composer_client']['package_source']                = 'Источник';
@@ -147,7 +147,7 @@ $GLOBALS['TL_LANG']['composer_client']['package_support_wiki']          = 'Wiki'
 $GLOBALS['TL_LANG']['composer_client']['package_type']                  = 'Тип';
 $GLOBALS['TL_LANG']['composer_client']['package_version']               = 'Версия';
 $GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'Необходима PHP версии <strong>PHP %1$s</strong> или новее. Ваша система работает с PHP версии <strong>%2$s</strong>.<br>Пожалуйста, обновите PHP.';
-$GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Закрепление версии';
+$GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Закрепить версию';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Пакет %s удален. Обновите пакеты для применения изменений.';
 $GLOBALS['TL_LANG']['composer_client']['removePackage']                 = 'Удалить пакет';
 $GLOBALS['TL_LANG']['composer_client']['save']                          = 'Сохранить';
@@ -181,7 +181,7 @@ $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']           = '
 <br>
 ';
 $GLOBALS['TL_LANG']['composer_client']['unknown_license']               = 'Неизвестная лицензия';
-$GLOBALS['TL_LANG']['composer_client']['unpinPackage']                  = 'Закрепление релиза';
+$GLOBALS['TL_LANG']['composer_client']['unpinPackage']                  = 'Снять закрепление версии';
 $GLOBALS['TL_LANG']['composer_client']['unpinablePackage']              = 'Релиз разработки закрепить нельзя';
 $GLOBALS['TL_LANG']['composer_client']['update']                        = 'Обновить пакеты';
 $GLOBALS['TL_LANG']['composer_client']['update_composer']               = 'Обновить Composer';
