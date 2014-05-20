@@ -88,7 +88,7 @@ class DetailsController extends AbstractController
 				$packageName
 			);
 
-			$_SESSION['COMPOSER_OUTPUT'] = $this->io->getOutput();
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 			$this->redirect('contao/main.php?do=composer');
 		}
 
