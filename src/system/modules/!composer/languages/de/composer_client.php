@@ -24,6 +24,7 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']     = 'Abhä
 $GLOBALS['TL_LANG']['composer_client']['dependency_of']                 = 'Abhängigkeit von %s';
 $GLOBALS['TL_LANG']['composer_client']['dependency_recursion']          = '(zirkulierende Abhängigkeit)';
 $GLOBALS['TL_LANG']['composer_client']['detached']                      = 'Paket Update';
+$GLOBALS['TL_LANG']['composer_client']['download_impossible']           = 'Herunterladen ist nicht möglich. Entweder müssen Sie die PHP ZIP-Extension aktivieren oder Sie müssen sicherstellen das proc_open() unkomprimiert läuft.';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'Expertenmodus';
 $GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'Systemanforderungen';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'Expertenmodus';

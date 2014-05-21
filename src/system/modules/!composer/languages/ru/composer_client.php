@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-20T13:45:47+02:00
+ * last-updated: 2014-05-20T13:45:57+02:00
  */
 
 $GLOBALS['TL_LANG']['composer_client']['added_candidate']               = 'Добавлен пакет %s версии %s. Обновите пакеты для применения изменений.';
@@ -30,6 +30,7 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']     = 'Сх�
 $GLOBALS['TL_LANG']['composer_client']['dependency_of']                 = 'Зависит от %s';
 $GLOBALS['TL_LANG']['composer_client']['dependency_recursion']          = '(циклическая зависимость)';
 $GLOBALS['TL_LANG']['composer_client']['detached']                      = 'Обновление пакета';
+$GLOBALS['TL_LANG']['composer_client']['download_impossible']           = 'Загрузка невозможна, включите расширение PHP zip или обеспечьте proc_open() возможность запуска unzip.';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'Режим эксперта';
 $GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'Системные требования';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'Режим эксперта';
