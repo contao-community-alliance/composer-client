@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-20T13:56:32+02:00
+ * last-updated: 2014-05-23T03:00:28+02:00
  */
 
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']['0']                             = 'Ausführungsmodus';
@@ -18,7 +18,7 @@ $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['detached']['1']   
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['inline']['0']                  = 'während der aktuellen http-Anfrage';
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['inline']['1']                  = 'Composer wird innerhalb des Webserverprozesses ausgeführt. Dieser Modus ist in der Regel langsamer, aber funktioniert für alle Systeme. Er wird lediglich von den PHP-Laufzeitlimitierungen begrenzt.';
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']['0']                 = 'als Unterprozess des aktuellen Webserverprozesses';
-$GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']['1']                 = 'Composer wird als Unterprozessaufruf als externes Programm ausgeführt. Dieser Modus ist in der Regel schneller und auf Systemen lauffähig, die proc_open unterstützen. Er wird zusätzlich von den PHP-Laufzeitlimitierungen begrenzt.';
+$GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']['1']                 = 'Composer wird als Unterprozessaufruf als externes Programm ausgeführt. Dieser Modus ist in der Regel schneller, aber nur auf Systemen lauffähig, die proc_open() unterstützen. Er wird zusätzlich von den PHP-Laufzeitlimitierungen begrenzt.';
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath']['0']                                   = 'PHP-Pfad/Befehl';
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath']['1']                                   = 'Der Pfad oder Befehl zum PHP-Binary.';
 $GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables']['0']                    = 'Extension Repository Tabellen löschen';
