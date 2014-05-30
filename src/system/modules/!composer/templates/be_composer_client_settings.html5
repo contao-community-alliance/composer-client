@@ -68,6 +68,13 @@
 					<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth'][1]; ?></p>
 				<?php endif; ?>
 			</div>
+			<div class="w50">
+				<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_discard_changes'][0]; ?></h3>
+				<?php echo $this->discardChanges->generate(); ?>
+				<?php if (!$this->discardChanges->hasErrors()): ?>
+					<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_discard_changes'][1]; ?></p>
+				<?php endif; ?>
+			</div>
 		</fieldset>
 	</div>
 

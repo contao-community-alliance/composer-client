@@ -107,6 +107,22 @@ class SettingsController extends AbstractController
 			)
 		);
 
+		$discardChanges = new \SelectMenu(
+			array(
+				'id'          => 'discard-changes',
+				'name'        => 'discard-changes',
+				'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_discard_changes'][0],
+				'description' => $GLOBALS['TL_LANG']['composer_client']['widget_discard_changes'][1],
+				'options'     => array(
+					array('value' => '', 'label' => $GLOBALS['TL_LANG']['composer_client']['discard_changes_no']),
+					array('value' => '1', 'label' => $GLOBALS['TL_LANG']['composer_client']['discard_changes_yes']),
+					array('value' => 'stash', 'label' => $GLOBALS['TL_LANG']['composer_client']['discard_changes_stash']),
+				),
+				'value'       => (string) $config->get('discard-changes'),
+				'class'       => 'github-oauth'
+			)
+		);
+
 		if ($input->post('FORM_SUBMIT') == 'tl_composer_settings') {
 			$doSave = false;
 			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
@@ -116,6 +132,7 @@ class SettingsController extends AbstractController
 			$preferStable->validate();
 			$preferredInstall->validate();
 			$githubOauth->validate();
+			$discardChanges->validate();
 
 			if (!$minimumStability->hasErrors()) {
 				$config['minimum-stability'] = $minimumStability->value;
@@ -146,6 +163,18 @@ class SettingsController extends AbstractController
 				$doSave = true;
 			}
 
+			if (!$discardChanges->hasErrors()) {
+				if ($discardChanges->value) {
+					$config['config']['discard-changes'] = $discardChanges->value == 'stash'
+						? 'stash'
+						: (bool) $discardChanges->value;
+				}
+				else {
+					unset($config['config']['discard-changes']);
+				}
+				$doSave                              = true;
+			}
+
 			if ($doSave) {
 				// make a backup
 				copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
@@ -163,6 +192,7 @@ class SettingsController extends AbstractController
 		$template->preferStable     = $preferStable;
 		$template->preferredInstall = $preferredInstall;
 		$template->githubOauth      = $githubOauth;
+		$template->discardChanges   = $discardChanges;
 		return $template->parse();
 	}
 }

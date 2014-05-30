@@ -161,6 +161,10 @@ $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth']      = array(
 	'github oauth Token',
 	'If you have "api limit reached" problems with github, put a github oauth token here.'
 );
+$GLOBALS['TL_LANG']['composer_client']['widget_discard_changes']   = array(
+	'Discard changes',
+	'Choose how changes should be handled.'
+);
 
 /**
  * Package listing
@@ -228,6 +232,12 @@ $GLOBALS['TL_LANG']['composer_client']['install_dist']   = 'Dist archive';
 $GLOBALS['TL_LANG']['composer_client']['install_auto']   = 'Auto';
 
 /**
+ * Discard changes
+ */
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_yes']   = 'Discard';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_no']    = 'Keep (stop update)';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_stash'] = 'Stash and reapply';
+
 /**
  * Message
  */
