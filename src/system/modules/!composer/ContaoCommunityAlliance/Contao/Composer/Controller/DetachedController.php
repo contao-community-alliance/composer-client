@@ -63,7 +63,7 @@ class DetachedController extends AbstractController
 		$uptime = $uptime->format('%h h %I m %S s');
 
 		if (!$isRunning && \Input::getInstance()->post('close')) {
-			$outFile->delete();
+			$outFile->renameTo(UpdatePackagesController::OUTPUT_FILE_PATHNAME);
 			$pidFile->delete();
 			$this->redirect('contao/main.php?do=composer&amp;update=database');
 		}

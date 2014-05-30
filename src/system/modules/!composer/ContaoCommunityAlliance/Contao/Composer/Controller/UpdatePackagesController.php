@@ -37,6 +37,8 @@ use Symfony\Component\Console\Output\StreamOutput;
  */
 class UpdatePackagesController extends AbstractController
 {
+	const OUTPUT_FILE_PATHNAME = 'composer/composer.out';
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -137,6 +139,7 @@ class UpdatePackagesController extends AbstractController
 		$installer->run();
 
 		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+		file_put_contents(TL_ROOT . '/' . self::OUTPUT_FILE_PATHNAME, $_SESSION['COMPOSER_OUTPUT']);
 
 		// redirect to database update
 		$this->redirect('contao/main.php?do=composer&update=database');
@@ -175,6 +178,7 @@ class UpdatePackagesController extends AbstractController
 
 		fseek($outputStream, 0);
 		$_SESSION['COMPOSER_OUTPUT'] .= stream_get_contents($outputStream);
+		file_put_contents(TL_ROOT . '/' . self::OUTPUT_FILE_PATHNAME, $_SESSION['COMPOSER_OUTPUT']);
 
 		fclose($inputStream);
 		fclose($outputStream);
