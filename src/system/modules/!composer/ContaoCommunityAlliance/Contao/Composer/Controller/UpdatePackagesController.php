@@ -155,8 +155,8 @@ class UpdatePackagesController extends AbstractController
 			$GLOBALS['TL_CONFIG']['composerPhpPath']
 		);
 
-		$inputStream = fopen('php://memory', 'r');
-		$outputStream = fopen('php://memory', 'rw');
+		$inputStream  = fopen('php://temp', 'r');
+		$outputStream = fopen('php://temp', 'rw');
 		$pipes = array();
 
 		$proc = proc_open(
