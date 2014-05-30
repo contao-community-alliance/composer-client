@@ -94,6 +94,19 @@ class SettingsController extends AbstractController
 			)
 		);
 
+		$configGithubOauth = $config->get('github-oauth');
+
+		$githubOauth = new \TextField(
+			array(
+				'id'          => 'github-oauth',
+				'name'        => 'github-oauth',
+				'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth'][0],
+				'description' => $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth'][1],
+				'value'       => $configGithubOauth['github.com'],
+				'class'       => 'github-oauth'
+			)
+		);
+
 		if ($input->post('FORM_SUBMIT') == 'tl_composer_settings') {
 			$doSave = false;
 			$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
@@ -102,6 +115,7 @@ class SettingsController extends AbstractController
 			$minimumStability->validate();
 			$preferStable->validate();
 			$preferredInstall->validate();
+			$githubOauth->validate();
 
 			if (!$minimumStability->hasErrors()) {
 				$config['minimum-stability'] = $minimumStability->value;
@@ -116,6 +130,20 @@ class SettingsController extends AbstractController
 			if (!$preferredInstall->hasErrors()) {
 				$config['config']['preferred-install'] = $preferredInstall->value;
 				$doSave                                = true;
+			}
+
+			if (!$githubOauth->hasErrors()) {
+				if ($githubOauth->value) {
+					$config['config']['github-oauth']['github.com'] = $githubOauth->value;
+				}
+				else {
+					unset($config['config']['github-oauth']['github.com']);
+
+					if (empty($config['config']['github-oauth'])) {
+						unset($config['config']['github-oauth']);
+					}
+				}
+				$doSave = true;
 			}
 
 			if ($doSave) {
@@ -134,6 +162,7 @@ class SettingsController extends AbstractController
 		$template->minimumStability = $minimumStability;
 		$template->preferStable     = $preferStable;
 		$template->preferredInstall = $preferredInstall;
+		$template->githubOauth      = $githubOauth;
 		return $template->parse();
 	}
 }

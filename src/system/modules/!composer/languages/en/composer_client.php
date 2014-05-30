@@ -157,6 +157,10 @@ $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'] = array(
 	'Preferred install',
 	'Choose if you prefer source packages (require git, mercurial or svn) or dist archives (works every time).'
 );
+$GLOBALS['TL_LANG']['composer_client']['widget_github_oauth']      = array(
+	'github oauth Token',
+	'If you have "api limit reached" problems with github, put a github oauth token here.'
+);
 
 /**
  * Package listing
@@ -223,6 +227,7 @@ $GLOBALS['TL_LANG']['composer_client']['install_source'] = 'Sources';
 $GLOBALS['TL_LANG']['composer_client']['install_dist']   = 'Dist archive';
 $GLOBALS['TL_LANG']['composer_client']['install_auto']   = 'Auto';
 
+/**
 /**
  * Message
  */

@@ -61,6 +61,13 @@
 					<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'][1]; ?></p>
 				<?php endif; ?>
 			</div>
+			<div class="w50">
+				<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth'][0]; ?></h3>
+				<?php echo $this->githubOauth->generate(); ?>
+				<?php if (!$this->githubOauth->hasErrors()): ?>
+					<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth'][1]; ?></p>
+				<?php endif; ?>
+			</div>
 		</fieldset>
 	</div>
 
