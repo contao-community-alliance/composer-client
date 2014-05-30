@@ -31,6 +31,7 @@ use ContaoCommunityAlliance\Contao\Composer\Runtime;
  */
 class MigrationWizardController extends AbstractController
 {
+
 	static protected $versionNames = array
 	(
 		0 => '-alpha',

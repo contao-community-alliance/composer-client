@@ -134,7 +134,7 @@ class InstalledController extends AbstractController
 	) {
 		$groupedPackages = array();
 
-		$extra = $rootPackage->getExtra();
+		$extra        = $rootPackage->getExtra();
 		$versionLocks = isset($extra['contao']['version-locks']) ? (array) $extra['contao']['version-locks'] : array();
 
 		/** @var \Composer\Package\PackageInterface $package */

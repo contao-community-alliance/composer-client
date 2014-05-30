@@ -40,9 +40,10 @@ class PinController extends AbstractController
 	{
 		$packageName = $input->post('pin');
 
-		$json   = new JsonFile(TL_ROOT . '/' . $this->configPathname);
-		$config = $json->read();
-		$versionLocks = isset($config['extra']['contao']['version-locks']) ? (array) $config['extra']['contao']['version-locks'] : array();
+		$json         = new JsonFile(TL_ROOT . '/' . $this->configPathname);
+		$config       = $json->read();
+		$versionLocks = isset($config['extra']['contao']['version-locks'])
+			? (array) $config['extra']['contao']['version-locks'] : array();
 
 		if (array_key_exists($packageName, $versionLocks)) {
 			if ($versionLocks[$packageName] === null) {

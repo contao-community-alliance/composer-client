@@ -37,7 +37,7 @@ class DependencyGraphController extends AbstractController
 	{
 		$repositoryManager = $this->getRepositoryManager();
 		/** @var RepositoryInterface $localRepository */
-		$localRepository   = $repositoryManager->getLocalRepository();
+		$localRepository = $repositoryManager->getLocalRepository();
 
 		$dependencyMap = $this->calculateDependencyMap($localRepository);
 
@@ -50,7 +50,7 @@ class DependencyGraphController extends AbstractController
 			function (PackageInterface $localPackage) use ($dependencyMap) {
 				$name = $localPackage->getName();
 				return !isset($dependencyMap[$name]) &&
-					!($localPackage instanceof \Composer\Package\AliasPackage);
+				!($localPackage instanceof \Composer\Package\AliasPackage);
 			}
 		);
 
@@ -105,13 +105,13 @@ class DependencyGraphController extends AbstractController
 		$parents = 0,
 		$stack = array()
 	) {
-		$current           = (object) array(
+		$current = (object) array(
 			'package'     => $package,
 			'required'    => (object) array(
-					'from'       => $requiredFrom,
-					'constraint' => $requiredConstraint,
-					'parents'    => $parents,
-				),
+				'from'       => $requiredFrom,
+				'constraint' => $requiredConstraint,
+				'parents'    => $parents,
+			),
 			'lastInLevel' => $isLast ? $parents - 1 : -1
 		);
 
@@ -149,10 +149,10 @@ class DependencyGraphController extends AbstractController
 				$dependencyGraph[] = (object) array(
 					'package'     => $requireName,
 					'required'    => (object) array(
-							'from'       => $package,
-							'constraint' => $requireLink->getPrettyConstraint(),
-							'parents'    => $parents + 1,
-						),
+						'from'       => $package,
+						'constraint' => $requireLink->getPrettyConstraint(),
+						'parents'    => $parents + 1,
+					),
 					'lastInLevel' => ++$index == $requiresCount ? $parents : -1
 				);
 			}

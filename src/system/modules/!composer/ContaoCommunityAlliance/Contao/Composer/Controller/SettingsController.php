@@ -40,7 +40,7 @@ class SettingsController extends AbstractController
 		/** @var RootPackage $rootPackage */
 		$rootPackage = $this->composer->getPackage();
 		/** @var Config $config */
-		$config      = $this->composer->getConfig();
+		$config = $this->composer->getConfig();
 
 		$minimumStability = new \SelectMenu(
 			array(
@@ -57,7 +57,7 @@ class SettingsController extends AbstractController
 				),
 				'value'       => $rootPackage->getMinimumStability(),
 				'class'       => 'minimum-stability',
-				'required'    => true
+				'required'    => true,
 			)
 		);
 		$preferStable     = new \CheckBox(
@@ -74,7 +74,7 @@ class SettingsController extends AbstractController
 				),
 				'value'       => $rootPackage->getPreferStable(),
 				'class'       => 'prefer-stable',
-				'required'    => true
+				'required'    => true,
 			)
 		);
 		$preferredInstall = new \SelectMenu(
@@ -90,7 +90,36 @@ class SettingsController extends AbstractController
 				),
 				'value'       => $config->get('preferred-install'),
 				'class'       => 'preferred-install',
-				'required'    => true
+				'required'    => true,
+			)
+		);
+
+		$configGithubOauth = $config->get('github-oauth');
+
+		$githubOauth = new \TextField(
+			array(
+				'id'          => 'github-oauth',
+				'name'        => 'github-oauth',
+				'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth'][0],
+				'description' => $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth'][1],
+				'value'       => $configGithubOauth['github.com'],
+				'class'       => 'github-oauth'
+			)
+		);
+
+		$discardChanges = new \SelectMenu(
+			array(
+				'id'          => 'discard-changes',
+				'name'        => 'discard-changes',
+				'label'       => $GLOBALS['TL_LANG']['composer_client']['widget_discard_changes'][0],
+				'description' => $GLOBALS['TL_LANG']['composer_client']['widget_discard_changes'][1],
+				'options'     => array(
+					array('value' => '', 'label' => $GLOBALS['TL_LANG']['composer_client']['discard_changes_no']),
+					array('value' => '1', 'label' => $GLOBALS['TL_LANG']['composer_client']['discard_changes_yes']),
+					array('value' => 'stash', 'label' => $GLOBALS['TL_LANG']['composer_client']['discard_changes_stash']),
+				),
+				'value'       => (string) $config->get('discard-changes'),
+				'class'       => 'github-oauth'
 			)
 		);
 
@@ -102,6 +131,8 @@ class SettingsController extends AbstractController
 			$minimumStability->validate();
 			$preferStable->validate();
 			$preferredInstall->validate();
+			$githubOauth->validate();
+			$discardChanges->validate();
 
 			if (!$minimumStability->hasErrors()) {
 				$config['minimum-stability'] = $minimumStability->value;
@@ -116,6 +147,32 @@ class SettingsController extends AbstractController
 			if (!$preferredInstall->hasErrors()) {
 				$config['config']['preferred-install'] = $preferredInstall->value;
 				$doSave                                = true;
+			}
+
+			if (!$githubOauth->hasErrors()) {
+				if ($githubOauth->value) {
+					$config['config']['github-oauth']['github.com'] = $githubOauth->value;
+				}
+				else {
+					unset($config['config']['github-oauth']['github.com']);
+
+					if (empty($config['config']['github-oauth'])) {
+						unset($config['config']['github-oauth']);
+					}
+				}
+				$doSave = true;
+			}
+
+			if (!$discardChanges->hasErrors()) {
+				if ($discardChanges->value) {
+					$config['config']['discard-changes'] = $discardChanges->value == 'stash'
+						? 'stash'
+						: (bool) $discardChanges->value;
+				}
+				else {
+					unset($config['config']['discard-changes']);
+				}
+				$doSave = true;
 			}
 
 			if ($doSave) {
@@ -134,6 +191,8 @@ class SettingsController extends AbstractController
 		$template->minimumStability = $minimumStability;
 		$template->preferStable     = $preferStable;
 		$template->preferredInstall = $preferredInstall;
+		$template->githubOauth      = $githubOauth;
+		$template->discardChanges   = $discardChanges;
 		return $template->parse();
 	}
 }

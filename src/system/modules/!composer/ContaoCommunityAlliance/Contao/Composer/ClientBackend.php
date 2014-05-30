@@ -48,6 +48,7 @@ use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
  */
 class ClientBackend extends \Backend
 {
+
 	/**
 	 * The pathname to the composer config file.
 	 *
@@ -101,11 +102,11 @@ class ClientBackend extends \Backend
 			return $template->parse();
 		}
 
-        if (file_exists(TL_ROOT . '/' . DetachedController::PID_FILE_PATHNAME)) {
-            $controller = new DetachedController();
-            $output = $controller->handle($input);
-            return $output;
-        }
+		if (file_exists(TL_ROOT . '/' . DetachedController::PID_FILE_PATHNAME)) {
+			$controller = new DetachedController();
+			$output     = $controller->handle($input);
+			return $output;
+		}
 
 		// update composer.phar if requested
 		if ($input->get('update') == 'composer') {
@@ -118,7 +119,7 @@ class ClientBackend extends \Backend
 
 		/** @var RootPackage $rootPackage */
 		$rootPackage = $this->composer->getPackage();
-		$extra = $rootPackage->getExtra();
+		$extra       = $rootPackage->getExtra();
 
 		$controller = null;
 
@@ -217,7 +218,11 @@ class ClientBackend extends \Backend
 			return true;
 		}
 		catch (\Exception $e) {
-			$this->log($e->getMessage() . "\n" . $e->getTraceAsString(), 'ContaoCommunityAlliance\Contao\Composer\ClientBackend updateComposer', 'TL_ERROR');
+			$this->log(
+				$e->getMessage() . "\n" . $e->getTraceAsString(),
+				'ContaoCommunityAlliance\Contao\Composer\ClientBackend updateComposer',
+				'TL_ERROR'
+			);
 			$_SESSION['TL_ERROR'][] = $e->getMessage();
 			return false;
 		}
@@ -225,8 +230,7 @@ class ClientBackend extends \Backend
 
 	protected function getDebugLevel()
 	{
-		switch ($GLOBALS['TL_CONFIG']['composerVerbosity'])
-		{
+		switch ($GLOBALS['TL_CONFIG']['composerVerbosity']) {
 			case 'VERBOSITY_QUIET':
 				$level = 0;
 				break;

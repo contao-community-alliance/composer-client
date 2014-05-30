@@ -37,23 +37,28 @@ use Symfony\Component\Console\Output\StreamOutput;
  */
 class UpdatePackagesController extends AbstractController
 {
+	const OUTPUT_FILE_PATHNAME = 'composer/composer.out';
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function handle(\Input $input)
 	{
 		try {
+			$packages = explode(',', $input->post('packages') ? : $input->get('packages'));
+			$dryRun   = $input->get('dry-run') || $input->post('dry-run');
+
 			switch ($GLOBALS['TL_CONFIG']['composerExecutionMode']) {
 				case 'inline':
-					$this->runInline();
+					$this->runInline($packages, $dryRun);
 					break;
 
 				case 'process':
-					$this->runProcess();
+					$this->runProcess($packages, $dryRun);
 					break;
 
 				case 'detached':
-					$this->runDetached();
+					$this->runDetached($packages, $dryRun);
 					break;
 			}
 		}
@@ -90,7 +95,7 @@ class UpdatePackagesController extends AbstractController
 		}
 	}
 
-	protected function runInline()
+	protected function runInline($packages, $dryRun)
 	{
 		// disable all hooks
 		$GLOBALS['TL_HOOKS'] = array();
@@ -105,8 +110,16 @@ class UpdatePackagesController extends AbstractController
 		$downloadManager = $this->composer->getDownloadManager();
 		$downloadManager->setOutputProgress(false);
 
+		$argv = array(false, 'update');
+		if ($dryRun) {
+			$argv[] = '--dry-run';
+		}
+		if ($packages) {
+			$argv = array_merge($argv, $packages);
+		}
+
 		$outputStream = fopen('php://memory', 'rw');
-		$argvInput    = new ArgvInput(array(false, 'update'));
+		$argvInput    = new ArgvInput($argv);
 		$streamOutput = new StreamOutput($outputStream);
 
 		$commandEvent = new CommandEvent(PluginEvents::COMMAND, 'update', $argvInput, $streamOutput);
@@ -115,6 +128,9 @@ class UpdatePackagesController extends AbstractController
 			->dispatch($commandEvent->getName(), $commandEvent);
 
 		$installer = Installer::create($this->io, $this->composer);
+		$installer->setDryRun($dryRun);
+		$installer->setUpdateWhitelist($packages);
+		$installer->setWhitelistDependencies(true);
 
 		switch ($this->composer->getConfig()
 			->get('preferred-install')) {
@@ -137,12 +153,13 @@ class UpdatePackagesController extends AbstractController
 		$installer->run();
 
 		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+		file_put_contents(TL_ROOT . '/' . self::OUTPUT_FILE_PATHNAME, $_SESSION['COMPOSER_OUTPUT']);
 
 		// redirect to database update
 		$this->redirect('contao/main.php?do=composer&update=database');
 	}
 
-	protected function runProcess()
+	protected function runProcess($packages, $dryRun)
 	{
 		// disable all hooks
 		$GLOBALS['TL_HOOKS'] = array();
@@ -152,9 +169,17 @@ class UpdatePackagesController extends AbstractController
 			$GLOBALS['TL_CONFIG']['composerPhpPath']
 		);
 
-		$inputStream = fopen('php://memory', 'r');
-		$outputStream = fopen('php://memory', 'rw');
-		$pipes = array();
+		if ($dryRun) {
+			$cmd .= ' --dry-run';
+		}
+
+		if ($packages) {
+			$cmd .= ' --with-dependencies ' . implode(' ', $packages);
+		}
+
+		$inputStream  = fopen('php://temp', 'r');
+		$outputStream = fopen('php://temp', 'rw');
+		$pipes        = array();
 
 		$proc = proc_open(
 			$cmd,
@@ -175,6 +200,7 @@ class UpdatePackagesController extends AbstractController
 
 		fseek($outputStream, 0);
 		$_SESSION['COMPOSER_OUTPUT'] .= stream_get_contents($outputStream);
+		file_put_contents(TL_ROOT . '/' . self::OUTPUT_FILE_PATHNAME, $_SESSION['COMPOSER_OUTPUT']);
 
 		fclose($inputStream);
 		fclose($outputStream);
@@ -183,21 +209,35 @@ class UpdatePackagesController extends AbstractController
 		$this->redirect('contao/main.php?do=composer&update=database');
 	}
 
-	protected function runDetached()
+	protected function runDetached($packages, $dryRun)
 	{
-        $cmd = sprintf(
-            '%s composer.phar update --no-ansi --no-interaction > %s 2>&1 & echo $!',
-            $GLOBALS['TL_CONFIG']['composerPhpPath'],
-            escapeshellarg(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME)
-        );
+		$cmd = sprintf(
+			'%s composer.phar update --no-ansi --no-interaction',
+			$GLOBALS['TL_CONFIG']['composerPhpPath']
+		);
 
-        $processId = shell_exec($cmd);
+		if ($dryRun) {
+			$cmd .= ' --dry-run';
+		}
 
-        $pidFile = new \File(DetachedController::PID_FILE_PATHNAME);
-        $pidFile->write(trim($processId));
-        $pidFile->close();
+		if ($packages) {
+			$cmd .= ' --with-dependencies ' . implode(' ', $packages);
+		}
 
-        // redirect to database update
-        $this->redirect('contao/main.php?do=composer');
+		file_put_contents(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME, '$ ' . $cmd . PHP_EOL);
+
+		$cmd .= sprintf(
+			' >> %s 2>&1 & echo $!',
+			escapeshellarg(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME)
+		);
+
+		$processId = shell_exec($cmd);
+
+		$pidFile = new \File(DetachedController::PID_FILE_PATHNAME);
+		$pidFile->write(trim($processId));
+		$pidFile->close();
+
+		// redirect to database update
+		$this->redirect('contao/main.php?do=composer');
 	}
 }

@@ -96,7 +96,7 @@ if (version_compare(VERSION, '3', '<')) {
 		{
 			$value = $this->cache->__get($strKey);
 
-			return  $value
+			return $value
 				? $value
 				: $this->classExists($strKey);
 		}

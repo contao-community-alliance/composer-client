@@ -9,6 +9,7 @@ namespace ContaoCommunityAlliance\Contao\Composer;
  */
 class Client extends \System
 {
+
 	/**
 	 * @var Client
 	 */

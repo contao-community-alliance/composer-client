@@ -31,6 +31,7 @@ use Composer\Repository\InstalledArrayRepository;
  */
 abstract class AbstractController extends \Backend implements ControllerInterface
 {
+
 	/**
 	 * The pathname to the composer config file.
 	 *
