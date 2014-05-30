@@ -31,7 +31,7 @@ $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['inline']   = array
 );
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']  = array(
 	'as sub process of the web server process',
-	'Composer will get executed via sub process call as external program. This is usually faster but only possible on systems supporting proc_open and is subject to the maximum runtime limitations of PHP.'
+	'Composer will get executed via sub process call as external program. This is usually faster but only possible on systems supporting proc_open() and is subject to the maximum runtime limitations of PHP.'
 );
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['detached'] = array(
 	'as standalone process',
