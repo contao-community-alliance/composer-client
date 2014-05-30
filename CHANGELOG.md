@@ -3,6 +3,12 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.10
+------------
+
+* Feature: It is now possible to run the update in dry-run mode.
+* Feature: It is now possible to update only a selected set of packages.
+
 Version 0.9.2
 -------------
 
