@@ -45,7 +45,9 @@ class UpdatePackagesController extends AbstractController
 	public function handle(\Input $input)
 	{
 		try {
-			$packages = explode(',', $input->post('packages') ? : $input->get('packages'));
+			$packages = $input->post('packages') ? : $input->get('packages');
+			$packages = explode(',', $packages);
+			$packages = array_filter($packages);
 			$dryRun   = $input->get('dry-run') || $input->post('dry-run');
 
 			switch ($GLOBALS['TL_CONFIG']['composerExecutionMode']) {
