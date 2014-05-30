@@ -45,17 +45,20 @@ class UpdatePackagesController extends AbstractController
 	public function handle(\Input $input)
 	{
 		try {
+			$packages = explode(',', $input->post('packages') ? : $input->get('packages'));
+			$dryRun   = $input->get('dry-run') || $input->post('dry-run');
+
 			switch ($GLOBALS['TL_CONFIG']['composerExecutionMode']) {
 				case 'inline':
-					$this->runInline($input->get('dry-run') || $input->post('dry-run'));
+					$this->runInline($packages, $dryRun);
 					break;
 
 				case 'process':
-					$this->runProcess($input->get('dry-run') || $input->post('dry-run'));
+					$this->runProcess($packages, $dryRun);
 					break;
 
 				case 'detached':
-					$this->runDetached($input->get('dry-run') || $input->post('dry-run'));
+					$this->runDetached($packages, $dryRun);
 					break;
 			}
 		}
@@ -92,7 +95,7 @@ class UpdatePackagesController extends AbstractController
 		}
 	}
 
-	protected function runInline($dryRun)
+	protected function runInline($packages, $dryRun)
 	{
 		// disable all hooks
 		$GLOBALS['TL_HOOKS'] = array();
@@ -111,6 +114,9 @@ class UpdatePackagesController extends AbstractController
 		if ($dryRun) {
 			$argv[] = '--dry-run';
 		}
+		if ($packages) {
+			$argv = array_merge($argv, $packages);
+		}
 
 		$outputStream = fopen('php://memory', 'rw');
 		$argvInput    = new ArgvInput($argv);
@@ -123,6 +129,8 @@ class UpdatePackagesController extends AbstractController
 
 		$installer = Installer::create($this->io, $this->composer);
 		$installer->setDryRun($dryRun);
+		$installer->setUpdateWhitelist($packages);
+		$installer->setWhitelistDependencies(true);
 
 		switch ($this->composer->getConfig()
 			->get('preferred-install')) {
@@ -151,7 +159,7 @@ class UpdatePackagesController extends AbstractController
 		$this->redirect('contao/main.php?do=composer&update=database');
 	}
 
-	protected function runProcess($dryRun)
+	protected function runProcess($packages, $dryRun)
 	{
 		// disable all hooks
 		$GLOBALS['TL_HOOKS'] = array();
@@ -163,6 +171,10 @@ class UpdatePackagesController extends AbstractController
 
 		if ($dryRun) {
 			$cmd .= ' --dry-run';
+		}
+
+		if ($packages) {
+			$cmd .= ' --with-dependencies ' . implode(' ', $packages);
 		}
 
 		$inputStream  = fopen('php://temp', 'r');
@@ -197,7 +209,7 @@ class UpdatePackagesController extends AbstractController
 		$this->redirect('contao/main.php?do=composer&update=database');
 	}
 
-	protected function runDetached($dryRun)
+	protected function runDetached($packages, $dryRun)
 	{
 		$cmd = sprintf(
 			'%s composer.phar update --no-ansi --no-interaction',
@@ -206,6 +218,10 @@ class UpdatePackagesController extends AbstractController
 
 		if ($dryRun) {
 			$cmd .= ' --dry-run';
+		}
+
+		if ($packages) {
+			$cmd .= ' --with-dependencies ' . implode(' ', $packages);
 		}
 
 		file_put_contents(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME, '$ ' . $cmd . PHP_EOL);

@@ -172,6 +172,9 @@ span.stability-dev {
 table.composer_package_list {
 	table-layout: fixed;
 }
+.col_select {
+	width: 16px;
+}
 .col_type {
 	width: 16px;
 }
