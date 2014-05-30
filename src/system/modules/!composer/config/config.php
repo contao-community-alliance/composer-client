@@ -58,4 +58,7 @@ $GLOBALS['BE_MOD']['system']['composer'] = array(
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['sqlCompileCommands'][] = array('ContaoCommunityAlliance\Contao\Composer\DatabaseInstaller', 'sqlCompileCommands');
+$GLOBALS['TL_HOOKS']['sqlCompileCommands'][] = array(
+	'ContaoCommunityAlliance\Contao\Composer\DatabaseInstaller',
+	'sqlCompileCommands'
+);

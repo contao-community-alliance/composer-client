@@ -185,19 +185,19 @@ class UpdatePackagesController extends AbstractController
 
 	protected function runDetached()
 	{
-        $cmd = sprintf(
-            '%s composer.phar update --no-ansi --no-interaction > %s 2>&1 & echo $!',
-            $GLOBALS['TL_CONFIG']['composerPhpPath'],
-            escapeshellarg(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME)
-        );
+		$cmd = sprintf(
+			'%s composer.phar update --no-ansi --no-interaction > %s 2>&1 & echo $!',
+			$GLOBALS['TL_CONFIG']['composerPhpPath'],
+			escapeshellarg(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME)
+		);
 
-        $processId = shell_exec($cmd);
+		$processId = shell_exec($cmd);
 
-        $pidFile = new \File(DetachedController::PID_FILE_PATHNAME);
-        $pidFile->write(trim($processId));
-        $pidFile->close();
+		$pidFile = new \File(DetachedController::PID_FILE_PATHNAME);
+		$pidFile->write(trim($processId));
+		$pidFile->close();
 
-        // redirect to database update
-        $this->redirect('contao/main.php?do=composer');
+		// redirect to database update
+		$this->redirect('contao/main.php?do=composer');
 	}
 }

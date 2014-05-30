@@ -177,9 +177,11 @@ EOF;
 		$buffer         = '';
 		do {
 			$buffer .= fread($configPathname->handle, 1024);
-		} while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches) && !feof(
-				$configPathname->handle
-			));
+		}
+		while (
+			!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches) &&
+			!feof($configPathname->handle)
+		);
 		if ($matches[1]) {
 			return (int) $matches[1];
 		}
@@ -244,11 +246,11 @@ EOF;
 	 */
 	static public function isApcEnabled()
 	{
-		if(extension_loaded('apcu')) {
+		if (extension_loaded('apcu')) {
 			return false;
 		}
 
-		if(!function_exists('apc_clear_cache')) {
+		if (!function_exists('apc_clear_cache')) {
 			return false;
 		}
 
@@ -262,10 +264,10 @@ EOF;
 	 */
 	static public function isSuhosinEnabled()
 	{
-		if(!extension_loaded('suhosin')) {
+		if (!extension_loaded('suhosin')) {
 			return false;
 		}
-		if(strpos(ini_get('suhosin.executor.include.whitelist'), 'phar') > -1) {
+		if (strpos(ini_get('suhosin.executor.include.whitelist'), 'phar') > -1) {
 			return false;
 		}
 		return true;
@@ -319,7 +321,11 @@ EOF;
 
 		// check for php version
 		if (!static::isPhpVersionSupported()) {
-			$errors[] = sprintf($GLOBALS['TL_LANG']['composer_client']['php_version'], COMPOSER_MIN_PHPVERSION, PHP_VERSION);
+			$errors[] = sprintf(
+				$GLOBALS['TL_LANG']['composer_client']['php_version'],
+				COMPOSER_MIN_PHPVERSION,
+				PHP_VERSION
+			);
 		}
 
 		// check for curl
@@ -447,17 +453,16 @@ EOF;
 	 */
 	static public function testProcess($cmd)
 	{
-		if (in_array('proc_open', array_map('trim', explode(',', ini_get('disable_functions')))))
-		{
+		if (in_array('proc_open', array_map('trim', explode(',', ini_get('disable_functions'))))) {
 			return false;
 		}
 
 		$proc = proc_open(
 			$cmd,
 			array(
-				 array('pipe', 'r'),
-				 array('pipe', 'w'),
-				 array('pipe', 'w')
+				array('pipe', 'r'),
+				array('pipe', 'w'),
+				array('pipe', 'w')
 			),
 			$pipes
 		);

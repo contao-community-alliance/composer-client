@@ -29,7 +29,7 @@ $GLOBALS['TL_LANG']['composer_client']['download_impossible']   = 'Downloading i
 /**
  * Migration wizard
  */
-$GLOBALS['TL_LANG']['composer_client']['migrate_intro']                = '
+$GLOBALS['TL_LANG']['composer_client']['migrate_intro'] = '
 <p>Dear user, this is the new Contao package manager, based on the PHP dependency manager <a href="http://getcomposer.org/" target="_blank">Composer</a>.</p>
 <p>This is a public beta phase. We need your help to test this client until it will be the default Contao extension manager.</p>';
 
@@ -84,23 +84,23 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_setup_pre'] = '
 <h2>Migration setup</h2>
 <p>Before you start with the new client, we have to ask you some questions.</p>';
 
-$GLOBALS['TL_LANG']['composer_client']['migrate_mode']                = array(
+$GLOBALS['TL_LANG']['composer_client']['migrate_mode']         = array(
 	'Migration mode',
 	'We detected that you have installed %d extensions with the old package manager. Now we want to ask you, what should we do with the old packages?'
 );
-$GLOBALS['TL_LANG']['composer_client']['migrate_upgrade']             = array(
+$GLOBALS['TL_LANG']['composer_client']['migrate_upgrade']      = array(
 	'Upgrade packages to Composer',
 	'Existing packages will be added to Composer package manager and reinstalled.<br>'
 );
-$GLOBALS['TL_LANG']['composer_client']['migrate_clean']               = array(
+$GLOBALS['TL_LANG']['composer_client']['migrate_clean']        = array(
 	'Remove packages',
 	'Remove previously installed packages and start with a clean setup.'
 );
-$GLOBALS['TL_LANG']['composer_client']['migrate_none']                = array(
+$GLOBALS['TL_LANG']['composer_client']['migrate_none']         = array(
 	'Do nothing (only for experts!)',
 	'Do nothing, keep everything where it is. This can make problems, only choose this if you know what you do!'
 );
-$GLOBALS['TL_LANG']['composer_client']['migrate_setup']               = array(
+$GLOBALS['TL_LANG']['composer_client']['migrate_setup']        = array(
 	'Configuration setup',
 	'Please choose for which setup this installation is used.'
 );
@@ -108,11 +108,11 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_production']   = array(
 	'For production use',
 	'Packages will be fetched as archives (only zip support is required). Files will be installed as copies.'
 );
-$GLOBALS['TL_LANG']['composer_client']['migrate_development']         = array(
+$GLOBALS['TL_LANG']['composer_client']['migrate_development']  = array(
 	'For development use',
 	'Packages will be fetched as sources with git, mercurial or svn. Files will be installed as symlinks.'
 );
-$GLOBALS['TL_LANG']['composer_client']['vcs_requirements']            = '
+$GLOBALS['TL_LANG']['composer_client']['vcs_requirements']     = '
 <ul class="preconditions">
 <li class="{if gitAvailable==true}pass{else}fail{endif}">
 	git is {if gitAvailable==true}available{else}missing, most packages may fail to install!{endif}
@@ -125,10 +125,10 @@ $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']            = '
 </li>
 </ul>
 ';
-$GLOBALS['TL_LANG']['composer_client']['migrate_do']                  = 'do migration';
-$GLOBALS['TL_LANG']['composer_client']['migrate_skip']                = 'skip migration (only if you know what you do)';
-$GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm']        = 'Skipping the migration may be dangerous, skip migration only if you know what you do. Skip migration now?';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration_text']         = '
+$GLOBALS['TL_LANG']['composer_client']['migrate_do']           = 'do migration';
+$GLOBALS['TL_LANG']['composer_client']['migrate_skip']         = 'skip migration (only if you know what you do)';
+$GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm'] = 'Skipping the migration may be dangerous, skip migration only if you know what you do. Skip migration now?';
+$GLOBALS['TL_LANG']['composer_client']['undo_migration_text']  = '
 <p>Dear user, we are sorry that you decide to switch back to the old packages client.</p>
 <p>Some words about how the switch works:</p>
 <ul>
@@ -140,7 +140,7 @@ $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']         = '
 </ul>
 <br>
 ';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration']              = 'switch back to old client now';
+$GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'switch back to old client now';
 
 /**
  * Settings dialog

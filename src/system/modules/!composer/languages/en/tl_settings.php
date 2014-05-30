@@ -3,11 +3,11 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'] = array(
+$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']          = array(
 	'Execution mode',
 	'Please select how the composer binary shall get executed.'
 );
-$GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'] = array(
+$GLOBALS['TL_LANG']['tl_settings']['composerPhpPath']                = array(
 	'PHP Path/Command',
 	'Path or command to the php binary.'
 );
@@ -25,11 +25,11 @@ $GLOBALS['TL_LANG']['tl_settings']['composerVerbosity'] = array(
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['inline'] = array(
+$GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['inline']   = array(
 	'In the HTTP request.',
 	'Composer will get executed within the web server process. This mode is usually slower but works for all systems but is subject to the maximum runtime limitations of PHP.'
 );
-$GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process'] = array(
+$GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']  = array(
 	'as sub process of the web server process',
 	'Composer will get executed via sub process call as external program. This is usually faster but only possible on systems supporting proc_open and is subject to the maximum runtime limitations of PHP.'
 );

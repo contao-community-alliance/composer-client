@@ -40,7 +40,7 @@ class SettingsController extends AbstractController
 		/** @var RootPackage $rootPackage */
 		$rootPackage = $this->composer->getPackage();
 		/** @var Config $config */
-		$config      = $this->composer->getConfig();
+		$config = $this->composer->getConfig();
 
 		$minimumStability = new \SelectMenu(
 			array(
@@ -57,7 +57,7 @@ class SettingsController extends AbstractController
 				),
 				'value'       => $rootPackage->getMinimumStability(),
 				'class'       => 'minimum-stability',
-				'required'    => true
+				'required'    => true,
 			)
 		);
 		$preferStable     = new \CheckBox(
@@ -74,7 +74,7 @@ class SettingsController extends AbstractController
 				),
 				'value'       => $rootPackage->getPreferStable(),
 				'class'       => 'prefer-stable',
-				'required'    => true
+				'required'    => true,
 			)
 		);
 		$preferredInstall = new \SelectMenu(
@@ -90,7 +90,7 @@ class SettingsController extends AbstractController
 				),
 				'value'       => $config->get('preferred-install'),
 				'class'       => 'preferred-install',
-				'required'    => true
+				'required'    => true,
 			)
 		);
 
@@ -172,7 +172,7 @@ class SettingsController extends AbstractController
 				else {
 					unset($config['config']['discard-changes']);
 				}
-				$doSave                              = true;
+				$doSave = true;
 			}
 
 			if ($doSave) {
