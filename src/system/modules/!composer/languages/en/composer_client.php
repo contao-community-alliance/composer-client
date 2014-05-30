@@ -275,6 +275,7 @@ $GLOBALS['TL_LANG']['composer_client']['search']               = 'Search';
 $GLOBALS['TL_LANG']['composer_client']['check']                = 'Check compatibility';
 $GLOBALS['TL_LANG']['composer_client']['mark_to_install']      = 'Mark package to install';
 $GLOBALS['TL_LANG']['composer_client']['mark_and_install']     = 'Install package now';
+$GLOBALS['TL_LANG']['composer_client']['dry-run']              = 'Dry run';
 $GLOBALS['TL_LANG']['composer_client']['update']               = 'Update packages';
 $GLOBALS['TL_LANG']['composer_client']['save']                 = 'Save';
 $GLOBALS['TL_LANG']['composer_client']['close']                = 'Close';

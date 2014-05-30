@@ -15,6 +15,8 @@
 			  onsubmit="var elements = this.elements; setTimeout(function() { Array.each(elements, function(element) { element.disabled = true; }); }, 1);">
 			<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
 			<input type="hidden" name="update" value="packages">
+			<input type="submit" name="dry-run" id="dry-run" class="tl_submit" accesskey="d"
+				   value="<?php echo $GLOBALS['TL_LANG']['composer_client']['dry-run']; ?>">
 			<input type="submit" name="submit" id="update" class="tl_submit" accesskey="u"
 				   value="<?php echo $GLOBALS['TL_LANG']['composer_client']['update']; ?>">
 		</form>
