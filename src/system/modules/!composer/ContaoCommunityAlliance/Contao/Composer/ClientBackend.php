@@ -77,6 +77,8 @@ class ClientBackend extends \Backend
 	 */
 	public function generate()
 	{
+		Runtime::setUp();
+
 		$this->loadLanguageFile('composer_client');
 
 		$input = \Input::getInstance();

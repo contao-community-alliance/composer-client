@@ -31,7 +31,7 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 
 
 /**
- * Create initial composer.json
+ * Initialize the composer runtime.
  */
 \ContaoCommunityAlliance\Contao\Composer\Runtime::initialize();
 

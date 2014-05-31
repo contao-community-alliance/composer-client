@@ -18,6 +18,40 @@ class Runtime
 {
 	const APC_MIN_VERSION_RUNTIME_CACHE_BY_DEFAULT = '3.0.13';
 
+	const HTACCESS = <<<EOF
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
+</IfModule>
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+EOF;
+
+	const COMPOSER_JSON = <<<EOF
+{
+    "name": "local/website",
+    "description": "A local website project",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "contao-community-alliance/composer": "~0.12"
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "config": {
+        "preferred-install": "dist",
+        "cache-dir": "cache"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://legacy-packages-via.contao-community-alliance.org/"
+        }
+    ]
+}
+EOF;
+
 	/**
 	 * Initialize the composer environment.
 	 */
@@ -32,14 +66,26 @@ class Runtime
 				'ContaoCommunityAlliance\Contao\Composer\Client',
 				'disableOldClientHook'
 			);
+
+			$input = \Input::getInstance();
+			if ($input->get('do') == 'repository_manager') {
+				$environment = \Environment::getInstance();
+
+				header('Location: ' . $environment->base . 'contao/main.php?do=composer');
+				exit;
+			}
 		}
 
-		$input = \Input::getInstance();
-		if ($input->get('do') == 'repository_manager') {
-			$environment = \Environment::getInstance();
+		static::registerVendorClassLoader();
+	}
 
-			header('Location: ' . $environment->base . 'contao/main.php?do=composer');
-			exit;
+	/**
+	 * Initialize the composer environment.
+	 */
+	static public function setUp()
+	{
+		if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '<')) {
+			return;
 		}
 
 		// check composer folder exists
@@ -54,48 +100,14 @@ class Runtime
 				->mkdir(COMPOSER_DIR_RELATIVE . '/packages');
 		}
 
-		// check .htaccess exists
+		// check .htaccess exists and is up to date
 		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess')) {
-			$strHtaccessContent = <<<EOF
-<IfModule !mod_authz_core.c>
-  Order deny,allow
-  Deny from all
-</IfModule>
-<IfModule mod_authz_core.c>
-  Require all denied
-</IfModule>
-EOF;
-
-			file_put_contents(COMPOSER_DIR_ABSOULTE . '/.htaccess', $strHtaccessContent);
+			file_put_contents(COMPOSER_DIR_ABSOULTE . '/.htaccess', static::HTACCESS);
 		}
 
 		// check composer.json exists
 		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/composer.json')) {
-			$strComposerJsonContent = <<<EOF
-{
-    "name": "local/website",
-    "description": "A local website project",
-    "type": "project",
-    "license": "proprietary",
-    "require": {
-        "contao-community-alliance/composer-plugin": "*"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "preferred-install": "dist",
-        "cache-dir": "cache"
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://legacy-packages-via.contao-community-alliance.org/"
-        }
-    ]
-}
-EOF;
-
-			file_put_contents(COMPOSER_DIR_ABSOULTE . '/composer.json', $strComposerJsonContent);
+			file_put_contents(COMPOSER_DIR_ABSOULTE . '/composer.json', static::COMPOSER_JSON);
 		}
 
 		if (!getenv('COMPOSER_HOME')) {
@@ -111,8 +123,6 @@ EOF;
 				putenv('PATH=/opt/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin');
 			}
 		}
-
-		static::registerVendorClassLoader();
 	}
 
 	/**
