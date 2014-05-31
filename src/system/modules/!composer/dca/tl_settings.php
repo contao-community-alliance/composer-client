@@ -17,7 +17,7 @@ if (!$GLOBALS['TL_CONFIG']['composerAllowRepoClient']) {
  */
 $GLOBALS['TL_DCA']['tl_settings']['palettes']['__selector__'][] = 'composerExecutionMode';
 
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{composer_legend:hide},composerExecutionMode,composerVerbosity,composerRemoveRepositoryTables';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{composer_legend:hide},composerAutoUpdateLibrary,composerExecutionMode,composerVerbosity,composerRemoveRepositoryTables';
 
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_process']  = 'composerPhpPath';
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached'] = 'composerPhpPath';
@@ -26,6 +26,10 @@ $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached
 /**
  * Fields
  */
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerAutoUpdateLibrary'] = array(
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary'],
+	'inputType' => 'checkbox',
+);
 $GLOBALS['TL_DCA']['tl_settings']['fields']['composerExecutionMode'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'],
 	'inputType' => 'select',

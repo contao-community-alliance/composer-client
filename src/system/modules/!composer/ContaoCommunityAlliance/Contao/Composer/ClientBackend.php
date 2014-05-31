@@ -273,7 +273,7 @@ class ClientBackend extends \Backend
 	{
 		// search for composer build version
 		$composerDevWarningTime = Runtime::readComposerDevWarningTime();
-		if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
+		if (!$composerDevWarningTime || $GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary'] && time() > $composerDevWarningTime) {
 			Runtime::updateComposer();
 			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
 		}
