@@ -22,6 +22,26 @@ class Runtime
 <IfModule !mod_authz_core.c>
   Order deny,allow
   Deny from all
+
+  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|svg|svgz)$">
+    Order allow,deny
+    Allow from all
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_authz_core.c>
+  Require all denied
+
+  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|svg|svgz)$">
+    Require all granted
+  </FilesMatch>
+</IfModule>
+EOF;
+
+	const HTACCESS_OLD = <<<EOF
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
 </IfModule>
 <IfModule mod_authz_core.c>
   Require all denied
@@ -101,7 +121,11 @@ EOF;
 		}
 
 		// check .htaccess exists and is up to date
-		if (!file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess')) {
+		if (
+			!file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess')
+			|| str_replace(array("\r", "\n", "\t", ' '), '', file_get_contents(COMPOSER_DIR_ABSOULTE . '/.htaccess'))
+			== str_replace(array("\r", "\n", "\t", ' '), '', static::HTACCESS_OLD)
+		) {
 			file_put_contents(COMPOSER_DIR_ABSOULTE . '/.htaccess', static::HTACCESS);
 		}
 
