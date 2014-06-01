@@ -103,12 +103,19 @@ $dependenciesList = $this->dependenciesList;
 						endif;
 					?></td>
 					<td class="tl_file_list col_name">
-						<a href="contao/main.php?do=composer&amp;install=<?php echo $package->getPrettyName(); ?>">
-							<?php
-							echo $package->getPrettyName()
-							?>
-						</a>
 						<?php
+						if (in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNMODIFIABLE_PACKAGES)):
+							echo $package->getPrettyName();
+						else:
+							?>
+							<a href="contao/main.php?do=composer&amp;install=<?php echo $package->getPrettyName(); ?>">
+								<?php
+								echo $package->getPrettyName()
+								?>
+							</a>
+							<?php
+						endif;
+
 						if (isset($replaceThat[$package->getName()]) && isset($requires[$replaceThat[$package->getName()]])) {
 							printf(
 								'<span class="replace">%s</span>',
