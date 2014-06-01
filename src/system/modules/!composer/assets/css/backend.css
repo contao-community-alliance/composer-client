@@ -265,6 +265,20 @@ table.composer_package_list {
 	background-color: transparent;
 }
 
+div.actions {
+	padding: 6px 12px;
+}
+div.actions button {
+	margin: 0 .75em;
+	padding: 0;
+	border: none;
+	background: none transparent;
+	cursor: pointer;
+}
+div.actions button img {
+	vertical-align: -3px;
+}
+
 p.dependants {
 	margin: 12px 0 0 0;
 }

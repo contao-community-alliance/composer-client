@@ -35,7 +35,20 @@ class RemovePackageController extends AbstractController
 	 */
 	public function handle(\Input $input)
 	{
-		$removeName = $input->post('remove');
+		$removeNames = $input->post('packages') ? explode(',' , $input->post('packages')) : array($input->post('remove'));
+
+		// filter undeletable packages
+		$removeNames = array_filter(
+			$removeNames,
+			function ($removeName) {
+				return !in_array($removeName, InstalledController::$UNDELETABLE_PACKAGES);
+			}
+		);
+
+		// skip empty
+		if (empty($removeNames)) {
+			$this->redirect('contao/main.php?do=composer');
+		}
 
 		// make a backup
 		copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
@@ -46,12 +59,14 @@ class RemovePackageController extends AbstractController
 		if (!array_key_exists('require', $config)) {
 			$config['require'] = array();
 		}
-		unset($config['require'][$removeName]);
+		foreach ($removeNames as $removeName) {
+			unset($config['require'][$removeName]);
+		}
 		$json->write($config);
 
 		$_SESSION['TL_INFO'][] = sprintf(
 			$GLOBALS['TL_LANG']['composer_client']['removeCandidate'],
-			$removeName
+			implode(', ', $removeNames)
 		);
 
 		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();

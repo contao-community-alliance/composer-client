@@ -8,6 +8,13 @@ $(window).addEvent('domready', function() {
 				names.push(input.value);
 			}
 		});
-		$('package_names').value = names.join(',');
+		$$('.package_names').setProperty('value', names.join(','));
+
+		if (names.length) {
+			$$('#tl_composer_actions > button').removeProperty('disabled');
+		}
+		else {
+			$$('#tl_composer_actions > button').setProperty('disabled', true);
+		}
 	});
 });
