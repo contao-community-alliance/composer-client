@@ -34,9 +34,11 @@ use ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\MigrationWizardController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\PinController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\RemovePackageController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\ResyncController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\SearchController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\SettingsController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\SolveController;
+use ContaoCommunityAlliance\Contao\Composer\Controller\ToolsController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UndoMigrationController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdateDatabaseController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
@@ -144,6 +146,16 @@ class ClientBackend extends \Backend
 		// do clear composer cache
 		if ($input->get('clear') == 'composer-cache') {
 			$controller = new ClearComposerCacheController();
+		}
+
+		// show tools dialog
+		if ($input->get('tools') == 'dialog') {
+			$controller = new ToolsController();
+		}
+
+		// show resync tool
+		if ($input->get('tools') == 'resync') {
+			$controller = new ResyncController();
 		}
 
 		// show settings dialog

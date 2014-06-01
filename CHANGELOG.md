@@ -3,6 +3,11 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.11
+------------
+
+* Improvement: Add tool to resync all shadow copies and symlinks.
+
 Version 0.10.2
 --------------
 

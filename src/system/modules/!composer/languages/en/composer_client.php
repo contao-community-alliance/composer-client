@@ -143,6 +143,15 @@ $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']  = '
 $GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'switch back to old client now';
 
 /**
+ * Tools dialog
+ */
+$GLOBALS['TL_LANG']['composer_client']['tools_resync'] = array(
+	'Resync',
+	'Resync all shadow copies and symlinks.',
+	'Resync now'
+);
+
+/**
  * Settings dialog
  */
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'] = array(
@@ -262,12 +271,17 @@ $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']              = 'to be remo
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']          = 'Database updated, %d queries executed.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']         = 'Database is up to date.';
 $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']     = 'Composer cache cleared.';
+$GLOBALS['TL_LANG']['composer_client']['pluginNotFound']           = 'Contao Composer Plugin not found!';
+$GLOBALS['TL_LANG']['composer_client']['resyncPackage']            = 'Resynching package %s';
+$GLOBALS['TL_LANG']['composer_client']['resyncedPackage']          = 'Package %s resynced successfully';
+$GLOBALS['TL_LANG']['composer_client']['resyncFailed']             = 'Resyncing package %s failed with message: %s';
 
 /**
  * Buttons
  */
 $GLOBALS['TL_LANG']['composer_client']['migrate']              = 'Migrate';
 $GLOBALS['TL_LANG']['composer_client']['update_database']      = 'Update database';
+$GLOBALS['TL_LANG']['composer_client']['tools_dialog']         = 'Tools';
 $GLOBALS['TL_LANG']['composer_client']['settings_dialog']      = 'Settings';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'Switch back to old client';
 $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache'] = 'Clear Composer cache';

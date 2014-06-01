@@ -32,6 +32,7 @@ TemplateLoader::addFiles(
 		'be_composer_client_settings'         => 'system/modules/!composer/templates',
 		'be_composer_client_migrate'          => 'system/modules/!composer/templates',
 		'be_composer_client_solve'            => 'system/modules/!composer/templates',
+		'be_composer_client_tools'            => 'system/modules/!composer/templates',
 		'be_composer_client'                  => 'system/modules/!composer/templates',
 		'be_composer_client_errors'           => 'system/modules/!composer/templates',
 		'be_composer_client_search'           => 'system/modules/!composer/templates',

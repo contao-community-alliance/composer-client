@@ -5,6 +5,12 @@
 			$GLOBALS['TL_LANG']['composer_client']['update_database']
 		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['update_database']; ?>
 	</a>
+	<a href="contao/main.php?do=composer&amp;tools=dialog" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['tools_dialog']; ?>">
+		<?php echo $this->generateImage(
+			'system/modules/!composer/assets/images/tools_dialog.png',
+			$GLOBALS['TL_LANG']['composer_client']['tools_dialog']
+		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['tools_dialog']; ?>
+	</a>
 	<a href="contao/main.php?do=composer&amp;settings=dialog" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?>">
 		<?php echo $this->generateImage(
 			'system/modules/!composer/assets/images/settings_dialog.png',
