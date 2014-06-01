@@ -3,6 +3,18 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.10.2
+--------------
+
+* Improvement: It's now possible to remove multiple packages at once.
+* Bugfix: It's not possible to remove undeletable packages (e.g. contao/core) anymore.
+* Bugfix: It's not possible to change the version of unmodifiable packages (e.g. contao/core) anymore.
+
+Version 0.10.1
+--------------
+
+* Bugfix: Fix the >> package "" listed for update is not installed << message.
+
 Version 0.10
 ------------
 
