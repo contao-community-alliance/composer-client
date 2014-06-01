@@ -525,6 +525,14 @@ table#sql_table .drop_table {
 }
 
 /**
+ * Tools dialog
+ */
+.composer_tools a.tl_submit {
+	float: right;
+	margin-top: -2.5em;
+}
+
+/**
  * Experts mode
  */
 #composer_client_editor_wrapper {
