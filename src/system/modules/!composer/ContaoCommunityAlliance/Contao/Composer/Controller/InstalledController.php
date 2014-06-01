@@ -33,6 +33,10 @@ use Composer\Repository\InstalledArrayRepository;
  */
 class InstalledController extends AbstractController
 {
+	static public $UNMODIFIABLE_PACKAGES = array('contao/core');
+
+	static public $UNDELETABLE_PACKAGES = array('contao/core', 'contao-community-alliance/composer');
+
 	/**
 	 * {@inheritdoc}
 	 */
