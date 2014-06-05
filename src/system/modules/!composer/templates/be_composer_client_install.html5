@@ -27,8 +27,8 @@ $preferedCandidate = $candidates[0];
 $selectedCandidate = -1;
 
 $contaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
-$constraint = new \Composer\Package\LinkConstraint\VersionConstraint('=', $contaoVersion);
-$constraint->setPrettyString($contaoVersion);
+$contaoConstraint = new \Composer\Package\LinkConstraint\VersionConstraint('=', $contaoVersion);
+$contaoConstraint->setPrettyString($contaoVersion);
 
 $type = $preferedCandidate->getType();
 $support = $preferedCandidate->getSupport();
@@ -246,7 +246,7 @@ $source = $preferedCandidate->getSourceUrl();
 					/** @var \Composer\Package\Link $link */
 					$link = $requires['contao/core'];
 
-					if (!$link->getConstraint()->matches($constraint)) {
+					if (!$link->getConstraint()->matches($contaoConstraint)) {
 						$compatible = false;
 					}
 				}
