@@ -77,6 +77,8 @@ class ClientBackend extends \Backend
 	 */
 	public function generate()
 	{
+		Runtime::setUp();
+
 		$this->loadLanguageFile('composer_client');
 
 		$input = \Input::getInstance();
@@ -271,9 +273,23 @@ class ClientBackend extends \Backend
 	{
 		// search for composer build version
 		$composerDevWarningTime = Runtime::readComposerDevWarningTime();
-		if (!$composerDevWarningTime || time() > $composerDevWarningTime) {
+		$incompatibleVersion    = mktime(11, 0, 0, 6, 5, 2014) > ($composerDevWarningTime - 30*86400);
+
+		if (
+			!$composerDevWarningTime ||
+			$GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary'] &&
+			($incompatibleVersion || time() > $composerDevWarningTime)
+		) {
 			Runtime::updateComposer();
-			$_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
+			$_SESSION['TL_CONFIRM']['composerUpdated'] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
+		}
+
+		if (
+			$composerDevWarningTime &&
+			!$GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary'] &&
+			$incompatibleVersion
+		) {
+			$_SESSION['TL_ERROR']['composerUpdateNecessary'] = $GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary'];
 		}
 
 		// register composer class loader

@@ -31,7 +31,7 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 
 
 /**
- * Create initial composer.json
+ * Initialize the composer runtime.
  */
 \ContaoCommunityAlliance\Contao\Composer\Runtime::initialize();
 
@@ -39,6 +39,7 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 /**
  * Default configuration
  */
+$GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary']      = true;
 $GLOBALS['TL_CONFIG']['composerExecutionMode']          = 'inline';
 $GLOBALS['TL_CONFIG']['composerPhpPath']                = '/usr/bin/env php -d memory_limit=1G -d max_execution_time=900';
 $GLOBALS['TL_CONFIG']['composerRemoveRepositoryTables'] = false;

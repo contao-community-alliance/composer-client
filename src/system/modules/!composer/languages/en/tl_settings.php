@@ -3,7 +3,11 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']          = array(
+$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary'] = array(
+	'Update composer library automatically',
+	'The composer library (also known as <code>composer.phar</code>) will be updated after 30 days automatically.'
+);
+$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']     = array(
 	'Execution mode',
 	'Please select how the composer binary shall get executed.'
 );

@@ -9,6 +9,7 @@ use Composer\Console\HtmlOutputFormatter;
 use Composer\IO\BufferIO;
 use Composer\Json\JsonFile;
 use Composer\Package\BasePackage;
+use Composer\Package\Link;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Package\CompletePackageInterface;
@@ -117,10 +118,51 @@ class SearchController extends AbstractController
 
 		$results = $repositories->search(implode(' ', $tokens), $searchIn);
 
+		$contaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
+		$constraint = new VersionConstraint('=', $contaoVersion);
+		$constraint->setPrettyString($contaoVersion);
+
 		$packages = array();
 		foreach ($results as $result) {
 			if (!isset($packages[$result['name']])) {
+				/** @var PackageInterface[] $versions */
+				$versions = $repositories->findPackages($result['name']);
+
 				$packages[$result['name']] = $result;
+
+				$packages[$result['name']]['type']        = $versions[0]->getType();
+				$packages[$result['name']]['description'] = $versions[0] instanceof CompletePackageInterface
+					? $versions[0]->getDescription()
+					: '';
+				$packages[$result['name']]['contao-compatible'] = false;
+
+				/** @var PackageInterface|CompletePackageInterface $latestVersion */
+				$latestVersion = false;
+
+				foreach ($versions as $version) {
+					$requires = $version->getRequires();
+
+					if (isset($requires['contao/core']) && $requires['contao/core'] instanceof Link) {
+						/** @var Link $link */
+						$link = $requires['contao/core'];
+
+						if ($link->getConstraint()->matches($constraint)) {
+							$packages[$result['name']]['contao-compatible'] = true;
+
+							if (!$latestVersion || $version->getReleaseDate() > $latestVersion->getReleaseDate()) {
+								$latestVersion = $version;
+							}
+						}
+					}
+				}
+
+				if ($latestVersion) {
+					$packages[$result['name']]['type'] = $latestVersion->getType();
+
+					if ($latestVersion instanceof CompletePackageInterface) {
+						$packages[$result['name']]['description'] = $latestVersion->getDescription();
+					}
+				}
 			}
 		}
 
