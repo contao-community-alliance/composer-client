@@ -134,7 +134,7 @@ class SearchController extends AbstractController
 				$packages[$result['name']]['description'] = $versions[0] instanceof CompletePackageInterface
 					? $versions[0]->getDescription()
 					: '';
-				$packages[$result['name']]['contao-compatible'] = false;
+				$packages[$result['name']]['contao-compatible'] = null;
 
 				/** @var PackageInterface|CompletePackageInterface $latestVersion */
 				$latestVersion = false;
@@ -154,6 +154,10 @@ class SearchController extends AbstractController
 							}
 						}
 					}
+				}
+
+				if ($packages[$result['name']]['contao-compatible'] === null) {
+					$packages[$result['name']]['contao-compatible'] = true;
 				}
 
 				if ($latestVersion) {
