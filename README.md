@@ -96,3 +96,12 @@ Attribution
 * Module Icon (src/system/modules/!composer/assets/images/type-library.png) licensed under Public Domain by Icojam (http://www.iconarchive.com/show/blue-bits-icons-by-icojam/module-puzzle-icon.html)
 * Composer Icon (src/system/modules/!composer/assets/images/type-library.png) from (https://github.com/composer/getcomposer.org)
 * Component Icon (src/system/modules/!composer/assets/images/type-component.png) licensed unter CC Attribution 3.0 by Farm Fresh Icons (http://www.fatcow.com/free-icons)
+
+# For developers
+
+## Compile SCSS
+
+```bash
+$ cd 'src/system/modules/!composer/assets/css'
+$ scss --no-cache --update --style compressed backend.scss
+```
