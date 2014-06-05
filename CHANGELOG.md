@@ -3,6 +3,16 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.12
+------------
+
+* Improvement: Some little performance optimisations.
+* Improvement: Its possible to disable the "auto update composer.phar" feature.
+* Improvement: Show type and description in the search result.
+* Improvement: Show a warning on incompatible packages in the search result.
+* Improvement: Show a warning on incompatible package versions in the details view.
+* Bugfix: Do not show the multi-remove checkbox on dependencies.
+
 Version 0.11
 ------------
 
