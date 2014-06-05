@@ -3,6 +3,12 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.12.1
+--------------
+
+* Bugfix: Access to assets in the composer/vendor/ directory is now granted.
+* Bugfix: non-Composer packages will not be marked as incompatible anymore.
+
 Version 0.12
 ------------
 
