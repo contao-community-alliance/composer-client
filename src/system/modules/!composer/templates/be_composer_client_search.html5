@@ -56,6 +56,13 @@ $installationManager = $composer->getInstallationManager();
 				<td class="tl_file_list col_name">
 					<div class="name">
 						<a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>"><?php echo $package['name']; ?></a>
+						<?php
+						if (!$package['contao-compatible']):
+						?>
+							<span class="incompatible"><?php echo $GLOBALS['TL_LANG']['composer_client']['incompatiblePackage']; ?></span>
+						<?php
+						endif;
+						?>
 					</div>
 					<div class="description">
 						<p><?php echo nl2br($package['description']); ?></p>

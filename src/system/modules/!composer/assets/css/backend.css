@@ -341,8 +341,14 @@ span.reference {
 	margin-bottom: 6px;
 }
 #tl_composer_search .incompatible .col_name .name {
-	color: #ccc;
+	color: #aaa;
+}
+#tl_composer_search .incompatible .col_name .name a {
+	color: #aaa;
 	text-decoration: line-through;
+}
+#tl_composer_search .incompatible .col_name .name span.incompatible {
+	font-size: 11px;
 }
 
 /**
@@ -466,6 +472,17 @@ span.reference {
 }
 #ctrl_composer_versions .release.stability-dev .version {
 	color: rgb(200,200,200);
+}
+#ctrl_composer_versions .release.incompatible .toggler {
+	color: #aaa;
+}
+#ctrl_composer_versions .release.incompatible .version {
+	color: #aaa;
+	text-decoration: line-through;
+}
+#ctrl_composer_versions .release.incompatible p.incompatible {
+	color: #f00;
+	font-weight: bold;
 }
 #ctrl_composer_versions .release .toggler {
 	overflow: hidden;

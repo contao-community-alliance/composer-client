@@ -11,7 +11,7 @@ $localRepository = $repositoryManager->getLocalRepository();
 /** @var \Composer\Installer\InstallationManager $installationManager */
 $installationManager = $composer->getInstallationManager();
 /** @var \Composer\Package\CompletePackage[] $candidates */
-$candidates = $this->candidates;
+$candidates = array_values($this->candidates);
 /** @var array $keywords */
 $keywords = array();
 foreach ($candidates as $candidate) {
@@ -25,6 +25,10 @@ sort($keywords);
 $preferedCandidate = $candidates[0];
 /** @var int $selectedCandidate */
 $selectedCandidate = -1;
+
+$contaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
+$constraint = new \Composer\Package\LinkConstraint\VersionConstraint('=', $contaoVersion);
+$constraint->setPrettyString($contaoVersion);
 
 $type = $preferedCandidate->getType();
 $support = $preferedCandidate->getSupport();
@@ -233,18 +237,32 @@ $source = $preferedCandidate->getSourceUrl();
 			</table>
 		</div>
 		<div id="ctrl_composer_versions">
-			<?php foreach (array_values($candidates) as $index => $candidate): ?>
-				<?php
-				if ($selectedCandidate == -1 &&
+			<?php
+			foreach ($candidates as $index => $candidate):
+				$requires = $candidate->getRequires();
+
+				$compatible = true;
+				if (isset($requires['contao/core']) && $requires['contao/core'] instanceof \Composer\Package\Link) {
+					/** @var \Composer\Package\Link $link */
+					$link = $requires['contao/core'];
+
+					if (!$link->getConstraint()->matches($constraint)) {
+						$compatible = false;
+					}
+				}
+
+				if (
+					$compatible &&
+					$selectedCandidate == -1 &&
 					!$input->get('prefer') &&
 					$candidate->getStability() == 'stable'
 				) {
 					$selectedCandidate = $index;
 				}
 				?>
-				<div class="release stability-<?php echo strtolower($candidate->getStability()); ?>">
+				<div class="release stability-<?php echo strtolower($candidate->getStability()); if (!$compatible): ?> incompatible<?php endif; ?>">
 					<div class="toggler">
-						<span class="version"><?php echo $candidate->getPrettyVersion(); ?> <?php echo $candidate->getInstallationSource(); ?></span>
+						<span class="version"><?php echo $candidate->getPrettyVersion(); ?></span>
 						<span class="reference"><?php
 								echo $GLOBALS['TL_LANG']['composer_client']['package_reference'] . ': ';
 								$reference = $candidate->getDistReference();
@@ -357,6 +375,13 @@ $source = $preferedCandidate->getSourceUrl();
 							</tr>
 							<tr>
 								<td colspan="3">
+									<?php
+									if (!$compatible):
+									?>
+										<p class="incompatible"><?php echo $GLOBALS['TL_LANG']['composer_client']['incompatiblePackageLong'] ?></p>
+									<?php
+									endif;
+									?>
 									<form action="contao/main.php?do=composer&amp;install=<?php echo specialchars($this->packageName); ?>"
 										  class="tl_form" method="post" enctype="application/x-www-form-urlencoded">
 										<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
