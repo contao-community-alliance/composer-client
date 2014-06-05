@@ -253,6 +253,7 @@ $GLOBALS['TL_LANG']['composer_client']['discard_changes_stash'] = 'Stash and rea
 $GLOBALS['TL_LANG']['composer_client']['migrationSkipped']         = 'Migration was skipped.';
 $GLOBALS['TL_LANG']['composer_client']['migrationDone']            = 'Migration successfully finished.';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']   = 'Composer version is older than 30 days, please update Composer.';
+$GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary']  = 'You use an incompatible version of the Composer library. It is necessary to update the Composer library or the Composer client may not work as expected.';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdated']          = 'Composer was updated!';
 $GLOBALS['TL_LANG']['composer_client']['noSearchResult']           = 'No packages found for <em>%s</em>!';
 $GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'] = 'No candidate found for <em>%s</em>!';
