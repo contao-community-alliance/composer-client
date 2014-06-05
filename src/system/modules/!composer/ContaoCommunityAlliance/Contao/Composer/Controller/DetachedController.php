@@ -28,6 +28,7 @@ use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
 use ContaoCommunityAlliance\Composer\Plugin\ConfigUpdateException;
+use ContaoCommunityAlliance\Contao\Composer\Utils;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\StreamOutput;
 
@@ -71,6 +72,8 @@ class DetachedController extends AbstractController
 			shell_exec(sprintf('kill %d', $pid));
 			$this->reload();
 		}
+
+		$output = Utils::evaluateTerminalSequences($output);
 
 		if (\Environment::getInstance()->isAjaxRequest) {
 			header('Content-Type: application/json; charset=utf-8');
