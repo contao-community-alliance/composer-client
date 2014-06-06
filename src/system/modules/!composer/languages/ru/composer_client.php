@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-20T13:45:57+02:00
+ * last-updated: 2014-06-06T03:00:45+02:00
  */
 
 $GLOBALS['TL_LANG']['composer_client']['added_candidate']               = 'Добавлен пакет %s версии %s. Обновите пакеты для применения изменений.';
@@ -22,6 +22,7 @@ $GLOBALS['TL_LANG']['composer_client']['composer_install_headline']     = 'Ус�
 $GLOBALS['TL_LANG']['composer_client']['composer_missing']              = 'Библиотека Composer установлена не полностью.<br>Нажмите <strong>Установить Composer</strong> для установки Composer и его зависимостей.';
 $GLOBALS['TL_LANG']['composer_client']['configValid']                   = 'Конфигурация допустима.';
 $GLOBALS['TL_LANG']['composer_client']['confirmRemove']                 = 'Вы уверены, что хотите удалить пакет %s?';
+$GLOBALS['TL_LANG']['composer_client']['confirmRemovePackages']         = 'Вы уверены, что хотите удалить пакеты: %s?';
 $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc']         = 'Не удалось отключить APC<br>APC и Composer вместе производят случайные ошибки, отключите <a href="http://php.net/apc" target="_blank">APC</a>.';
 $GLOBALS['TL_LANG']['composer_client']['curl_missing']                  = 'cURL необходим для загрузки пакетов.<br>Установите/включите PHP модуль <a href="http://php.net/curl" target="_blank">curl</a>.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']               = 'База данных обновлена, выполнено запросов: %d.';
@@ -30,7 +31,11 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']     = 'Сх�
 $GLOBALS['TL_LANG']['composer_client']['dependency_of']                 = 'Зависит от %s';
 $GLOBALS['TL_LANG']['composer_client']['dependency_recursion']          = '(циклическая зависимость)';
 $GLOBALS['TL_LANG']['composer_client']['detached']                      = 'Обновление пакета';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_no']            = 'Хранить (остановить обновление)';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_stash']         = 'Скрыть и повторить';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_yes']           = 'Отменить';
 $GLOBALS['TL_LANG']['composer_client']['download_impossible']           = 'Загрузка невозможна, включите расширение PHP zip или обеспечьте proc_open() возможность запуска unzip.';
+$GLOBALS['TL_LANG']['composer_client']['dry-run']                       = 'Пробный прогон';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'Режим эксперта';
 $GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'Системные требования';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'Режим эксперта';
@@ -103,7 +108,7 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_preconditions']         = '
 {if commercialPackages!==false}<li class="fail">У вас установлено несколько коммерческих расширений: ##commercialPackages##.<br>Вы можете потерять их в ходе миграции.<br>Пожалуйста, обратитесь к издателю расширения, если он поддерживает Composer, можно продолжить без проблем.</li>{endif}
 <li class="{if apcOpcodeCacheEnabled==true}warn{else}pass{endif}">Кэш кода операций APC {if apcOpcodeCacheEnabled==true}включен, это может привести к неожиданным исключениям. Если у вас есть неожиданные ошибки "не удается переопределить класс", попробуйте отключить кэш кода операций APC{elseif apcDisabledByUs==true}временно отключен клиентом Composer{else}отключен{endif}.</li>
 </ul>';
-$GLOBALS['TL_LANG']['composer_client']['migrate_production']['0']       = 'Для производственного использования';
+$GLOBALS['TL_LANG']['composer_client']['migrate_production']['0']       = 'Для использования в рабочей среде';
 $GLOBALS['TL_LANG']['composer_client']['migrate_production']['1']       = 'Пакеты будут получены в виде архивов (требуется поддержка zip). Файлы будут установлены в виде копий.';
 $GLOBALS['TL_LANG']['composer_client']['migrate_setup']['0']            = 'Настройка конфигурации';
 $GLOBALS['TL_LANG']['composer_client']['migrate_setup']['1']            = 'Выберите, для чего будет использована эта установка.';
@@ -149,8 +154,13 @@ $GLOBALS['TL_LANG']['composer_client']['package_type']                  = 'Ти�
 $GLOBALS['TL_LANG']['composer_client']['package_version']               = 'Версия';
 $GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'Необходима PHP версии <strong>PHP %1$s</strong> или новее. Ваша система работает с PHP версии <strong>%2$s</strong>.<br>Пожалуйста, обновите PHP.';
 $GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Закрепить версию';
+$GLOBALS['TL_LANG']['composer_client']['pluginNotFound']                = 'Плагин Contao Composer не найден!';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Пакет %s удален. Обновите пакеты для применения изменений.';
 $GLOBALS['TL_LANG']['composer_client']['removePackage']                 = 'Удалить пакет';
+$GLOBALS['TL_LANG']['composer_client']['removePackages']                = 'Удалить';
+$GLOBALS['TL_LANG']['composer_client']['resyncFailed']                  = 'Повторная синхронизация пакета %s завершена с ошибкой: %s';
+$GLOBALS['TL_LANG']['composer_client']['resyncPackage']                 = 'Повторная синхронизация пакета %s';
+$GLOBALS['TL_LANG']['composer_client']['resyncedPackage']               = 'Пакет %s успешно синхронизирован';
 $GLOBALS['TL_LANG']['composer_client']['save']                          = 'Сохранить';
 $GLOBALS['TL_LANG']['composer_client']['search']                        = 'Найти';
 $GLOBALS['TL_LANG']['composer_client']['search_headline']               = 'Результаты поиска';
@@ -168,6 +178,10 @@ $GLOBALS['TL_LANG']['composer_client']['stability_stable']              = 'Ст�
 $GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']               = 'Включен Suhosin.<br>Suhosin ломает поддержку Phar, отключите <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
 $GLOBALS['TL_LANG']['composer_client']['terminate']                     = 'Завершить';
 $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']                   = 'быть удаленным';
+$GLOBALS['TL_LANG']['composer_client']['tools_dialog']                  = 'Инструменты';
+$GLOBALS['TL_LANG']['composer_client']['tools_resync']['0']             = 'Повторная синхронизация';
+$GLOBALS['TL_LANG']['composer_client']['tools_resync']['1']             = 'Синхронизация всех теневых копий и символических ссылок.';
+$GLOBALS['TL_LANG']['composer_client']['tools_resync']['2']             = 'Синхронизировать';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration']                = 'Вернуть старый клиент';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']           = '
 <p>Уважаемый пользователь, мы сожалеем, что вы решили вернуться к старому клиенту пакетов расширений.</p>
@@ -205,6 +219,10 @@ $GLOBALS['TL_LANG']['composer_client']['version_exact']                 = 'То�
 $GLOBALS['TL_LANG']['composer_client']['version_feature']               = 'Релизы новых функций %s (%s)';
 $GLOBALS['TL_LANG']['composer_client']['version_micro']                 = 'Микро-релизы %s (%s)';
 $GLOBALS['TL_LANG']['composer_client']['version_upstream']              = 'Upstream-релизы от %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['widget_discard_changes']['0']   = 'Отмена изменений';
+$GLOBALS['TL_LANG']['composer_client']['widget_discard_changes']['1']   = 'Выберите, как следует обрабатывать изменения.';
+$GLOBALS['TL_LANG']['composer_client']['widget_github_oauth']['0']      = 'Токен Github OAuth';
+$GLOBALS['TL_LANG']['composer_client']['widget_github_oauth']['1']      = 'Если возникает ошибка "api limit reached", укажите здесь Github OAuth токен.';
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability']['0'] = 'Минимальная стабильность';
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability']['1'] = 'Минимальная стабильность определяет нижний уровень стабильности расширения для установки.';
 $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']['0']     = 'Предпочитать стабильные';
