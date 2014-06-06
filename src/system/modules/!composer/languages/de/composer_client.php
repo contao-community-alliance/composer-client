@@ -15,6 +15,8 @@ $GLOBALS['TL_LANG']['composer_client']['composer_install_headline']     = 'Compo
 $GLOBALS['TL_LANG']['composer_client']['composer_missing']              = 'Die Composer Bibliothek ist nicht komplett installiert. <br>Klicke <strong>Composer installieren</strong> um Composer und alle Abhängigkeiten zu installieren';
 $GLOBALS['TL_LANG']['composer_client']['configValid']                   = 'Die Konfiguration ist gültig.';
 $GLOBALS['TL_LANG']['composer_client']['confirmRemove']                 = 'Möchten Sie das Paket %s wirklich löschen?';
+$GLOBALS['TL_LANG']['composer_client']['confirmRemovePackages']         = 'Sind Sie sicher, dass Sie die folgenden Pakete entfernen wollen?
+%s';
 $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc']         = 'APC konnte nicht deaktiviert werden.<br>
 APC und Composer produzieren zusammen immer wieder Fehler, bitte deaktiviere <a href="http://php.net/apc" target="_blank">APC</a>.';
 $GLOBALS['TL_LANG']['composer_client']['curl_missing']                  = 'cURL ist notwendig um Pakete herunterzuladen.<br>Bitte installiere oder aktiviere das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
@@ -24,7 +26,11 @@ $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']     = 'Abhä
 $GLOBALS['TL_LANG']['composer_client']['dependency_of']                 = 'Abhängigkeit von %s';
 $GLOBALS['TL_LANG']['composer_client']['dependency_recursion']          = '(zirkulierende Abhängigkeit)';
 $GLOBALS['TL_LANG']['composer_client']['detached']                      = 'Paket Update';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_no']            = 'lokale Änderungen behalten (Update anhalten)';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_stash']         = 'Update durchführen & lokale Änderung übernehmen';
+$GLOBALS['TL_LANG']['composer_client']['discard_changes_yes']           = 'lokale Änderungen verwerfen';
 $GLOBALS['TL_LANG']['composer_client']['download_impossible']           = 'Herunterladen ist nicht möglich. Entweder müssen Sie die PHP ZIP-Extension aktivieren oder Sie müssen sicherstellen das proc_open() unkomprimiert läuft.';
+$GLOBALS['TL_LANG']['composer_client']['dry-run']                       = 'Testlauf';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'Expertenmodus';
 $GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'Systemanforderungen';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'Expertenmodus';
@@ -143,8 +149,13 @@ $GLOBALS['TL_LANG']['composer_client']['package_type']                  = 'Typ';
 $GLOBALS['TL_LANG']['composer_client']['package_version']               = 'Version';
 $GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'PHP Version <strong>PHP %1$s</strong> oder neuer wird vorrausgesetzt. Deine Installation läuft mit PHP Version <strong>%2$s</strong>.<br>Bitte aktualisiere deine PHP Version.';
 $GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Auf Version verankern';
+$GLOBALS['TL_LANG']['composer_client']['pluginNotFound']                = 'Contao Composer Plugin wurde nicht gefunden!';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Paket %s wurde gelöscht. Bitte aktualisieren Sie die Pakete um die Änderung zu übernehmen.';
 $GLOBALS['TL_LANG']['composer_client']['removePackage']                 = 'Paket entfernen';
+$GLOBALS['TL_LANG']['composer_client']['removePackages']                = 'ausgewählte Pakete entfernen';
+$GLOBALS['TL_LANG']['composer_client']['resyncFailed']                  = 'Die erneute Synchronisierung des Paketes %s wurde mit der folgenden Meldung abgebrochen: %s';
+$GLOBALS['TL_LANG']['composer_client']['resyncPackage']                 = 'Folgendes Paket wird erneut synchronisiert: %s';
+$GLOBALS['TL_LANG']['composer_client']['resyncedPackage']               = 'Das Packet %s wurde erfolgreich erneut synchronisiert.';
 $GLOBALS['TL_LANG']['composer_client']['save']                          = 'Speichern';
 $GLOBALS['TL_LANG']['composer_client']['search']                        = 'Suchen';
 $GLOBALS['TL_LANG']['composer_client']['search_headline']               = 'Suchergebnisse';
@@ -162,6 +173,10 @@ $GLOBALS['TL_LANG']['composer_client']['stability_stable']              = 'Stabi
 $GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']               = 'Suhosin ist aktiviert.<br> Suhosin verhindert den Einsatz von Phar, bitte deaktiviere <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
 $GLOBALS['TL_LANG']['composer_client']['terminate']                     = 'Beenden';
 $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']                   = 'wird entfernt';
+$GLOBALS['TL_LANG']['composer_client']['tools_dialog']                  = 'Werkzeuge';
+$GLOBALS['TL_LANG']['composer_client']['tools_resync']['0']             = 'erneute Synchronisierung';
+$GLOBALS['TL_LANG']['composer_client']['tools_resync']['1']             = 'Alle durch Composer erstellten Ordnerkopien oder Symlinks werden erneut angelegt.';
+$GLOBALS['TL_LANG']['composer_client']['tools_resync']['2']             = 'erneute Synchronisierung jetzt durchführen';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration']                = 'Zum alten Erweiterungskatalog zurückwechseln';
 $GLOBALS['TL_LANG']['composer_client']['undo_migration_text']           = '
 <p>Lieber Nutzer, schade das Du dich entschieden hast wieder zur alten Erweiterungsverwaltung zurückzukehren.</p>
@@ -198,6 +213,10 @@ $GLOBALS['TL_LANG']['composer_client']['version_exact']                 = 'exakt
 $GLOBALS['TL_LANG']['composer_client']['version_feature']               = 'Feature Release %s (%s)';
 $GLOBALS['TL_LANG']['composer_client']['version_micro']                 = 'Mini-Version %s (%s)';
 $GLOBALS['TL_LANG']['composer_client']['version_upstream']              = 'Upstream Release von %s (%s)';
+$GLOBALS['TL_LANG']['composer_client']['widget_discard_changes']['0']   = 'Änderungen verwerfen';
+$GLOBALS['TL_LANG']['composer_client']['widget_discard_changes']['1']   = 'Wählen Sie, wie Composer mit lokalen Änderungen umgehen soll (nur bei Installationsart "Quellen" relevant).';
+$GLOBALS['TL_LANG']['composer_client']['widget_github_oauth']['0']      = 'Github oAuth Token';
+$GLOBALS['TL_LANG']['composer_client']['widget_github_oauth']['1']      = 'Wenn Sie Probleme mit "api limit reached" in Verbindung mit Github, dann tragen Sie hier Ihr Github oAuth Token ein.';
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability']['0'] = 'Minimale Stabilität';
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability']['1'] = 'Die kleinste Stabilität setzt die minimal erlaubte Version zur Installation.';
 $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']['0']     = 'Stabil bevorzugen';
