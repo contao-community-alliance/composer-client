@@ -3,6 +3,16 @@ CHANGELOG
 
 This changelog references the relevant changes (bug and security fixes and new features and improvements) done.
 
+Version 0.12.3
+--------------
+
+* Bugfix: Fix issue with empty database update in the install tool.
+
+Version 0.12.2
+--------------
+
+* Bugfix: Fix issue with invalid argument type "string" in the details view.
+
 Version 0.12.1
 --------------
 
