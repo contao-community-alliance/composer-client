@@ -23,6 +23,10 @@ class DatabaseInstaller
 					return strpos($sql, 'DROP TABLE `tl_repository_') === false;
 				}
 			);
+
+			if (empty($return['DROP'])) {
+				unset($return['DROP']);
+			}
 		}
 
 		return $return;
