@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-06-06T03:00:45+02:00
+ * last-updated: 2014-06-06T03:01:06+02:00
  */
 
 $GLOBALS['TL_LANG']['composer_client']['added_candidate']               = 'Добавлен пакет %s версии %s. Обновите пакеты для применения изменений.';
@@ -16,6 +16,7 @@ $GLOBALS['TL_LANG']['composer_client']['check']                         = 'Пр�
 $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']          = 'Очистить кэш Composer';
 $GLOBALS['TL_LANG']['composer_client']['close']                         = 'Закрыть';
 $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']          = 'Кэш Composer очищен.';
+$GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary']       = 'Используется несовместимая версия библиотеки Composer. Необходимо обновить библиотеку или Composer не cможет работать как положено.';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']        = 'Версия Composer старше 30 дней, пожалуйста, обновите Composer.';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdated']               = 'Composer обновлен!';
 $GLOBALS['TL_LANG']['composer_client']['composer_install_headline']     = 'Установка Composer';
@@ -40,6 +41,8 @@ $GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'Ре�
 $GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'Системные требования';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'Режим эксперта';
 $GLOBALS['TL_LANG']['composer_client']['ftp_mode']                      = 'Safe Mode Hack не поддерживается.<br>Настройте хостинг и запустите Contao без Safe Mode Hack.<br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Статья о Safe-Mode-Hack в Contao Wiki (German)</a>';
+$GLOBALS['TL_LANG']['composer_client']['incompatiblePackage']           = '(не совместимо с этой версией Contao)';
+$GLOBALS['TL_LANG']['composer_client']['incompatiblePackageLong']       = 'Эта версия пакета не совместима с этой версией Contao!';
 $GLOBALS['TL_LANG']['composer_client']['install_auto']                  = 'Автоматически';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']              = 'Установить Composer';
 $GLOBALS['TL_LANG']['composer_client']['install_dist']                  = 'Дистрибутив';
