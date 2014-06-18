@@ -214,7 +214,7 @@ class UpdatePackagesController extends AbstractController
 	protected function runDetached($packages, $dryRun)
 	{
 		$cmd = sprintf(
-			'%s composer.phar update --no-ansi --no-interaction',
+			'%s composer.phar update --ansi --no-interaction',
 			$GLOBALS['TL_CONFIG']['composerPhpPath']
 		);
 

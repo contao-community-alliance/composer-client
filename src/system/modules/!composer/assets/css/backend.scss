@@ -47,14 +47,15 @@ span.stability-dev {
 	font-family: monospace;
 	margin: 24px 18px;
 	padding: 6px 8px;
-	white-space: pre-line;
+	white-space: pre-wrap;
 	background-color: #111;
 	color: #fff;
 	max-height: 20em;
 	overflow: auto;
-}
-.output.fullsize {
-    max-height: none;
+
+	&.fullsize {
+		max-height: none;
+	}
 }
 
 /**

@@ -61,7 +61,8 @@ EOF;
     "minimum-stability": "dev",
     "config": {
         "preferred-install": "dist",
-        "cache-dir": "cache"
+        "cache-dir": "cache",
+        "component-dir": "../assets/components"
     },
     "repositories": [
         {
