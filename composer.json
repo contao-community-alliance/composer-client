@@ -25,7 +25,7 @@
 	"require": {
 		"php": ">=5.3.4",
 		"contao/core": ">=2.11",
-		"contao-community-alliance/composer-plugin": "~2.1"
+		"contao-community-alliance/composer-plugin": "~2.2"
 	},
 	"extra": {
 		"contao": {
