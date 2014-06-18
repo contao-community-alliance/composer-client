@@ -8,9 +8,11 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-21T23:36:57+02:00
+ * last-updated: 2014-05-23T03:00:44+02:00
  */
 
+$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary']['0']                         = 'Автоматическое обновление библиотеки Composer';
+$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary']['1']                         = 'Библиотека Composer (<code>composer.phar</code>) будет обновлена автоматически ​​каждые 30 дней.';
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']['0']                             = 'Режим выполнения';
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']['1']                             = 'Выберите, как должен выполняться бинарный файл Composer.';
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['detached']['0']                = 'как автономный процесс';
