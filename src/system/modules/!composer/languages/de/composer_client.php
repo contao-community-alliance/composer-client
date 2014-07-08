@@ -9,17 +9,18 @@ $GLOBALS['TL_LANG']['composer_client']['check']                         = 'Kompa
 $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache']          = 'Composer Cache leeren';
 $GLOBALS['TL_LANG']['composer_client']['close']                         = 'Schließen';
 $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']          = 'Der Composer Cache wurde geleert.';
+$GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary']       = 'Dies ist eine inkompatible Version der Composer Bibliothek. Es ist erforderlich, die Composer Bibliothek zu aktualisieren, ansonsten wird der Composer Client nicht wie erwartet funktionieren. ';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']        = 'Die Composer Version ist älter als 30 Tage, bitte aktualisieren Sie Composer.';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdated']               = 'Composer wurde aktualisiert!';
 $GLOBALS['TL_LANG']['composer_client']['composer_install_headline']     = 'Composer Installation';
-$GLOBALS['TL_LANG']['composer_client']['composer_missing']              = 'Die Composer Bibliothek ist nicht komplett installiert. <br>Klicke <strong>Composer installieren</strong> um Composer und alle Abhängigkeiten zu installieren';
+$GLOBALS['TL_LANG']['composer_client']['composer_missing']              = 'Die Composer Bibliothek ist nicht komplett installiert. <br><strong>Composer installieren</strong> klicken, um Composer und alle Abhängigkeiten zu installieren.';
 $GLOBALS['TL_LANG']['composer_client']['configValid']                   = 'Die Konfiguration ist gültig.';
 $GLOBALS['TL_LANG']['composer_client']['confirmRemove']                 = 'Möchten Sie das Paket %s wirklich löschen?';
 $GLOBALS['TL_LANG']['composer_client']['confirmRemovePackages']         = 'Sind Sie sicher, dass Sie die folgenden Pakete entfernen wollen?
 %s';
 $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc']         = 'APC konnte nicht deaktiviert werden.<br>
-APC und Composer produzieren zusammen immer wieder Fehler, bitte deaktiviere <a href="http://php.net/apc" target="_blank">APC</a>.';
-$GLOBALS['TL_LANG']['composer_client']['curl_missing']                  = 'cURL ist notwendig um Pakete herunterzuladen.<br>Bitte installiere oder aktiviere das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a>.';
+APC und Composer produzieren zusammen immer wieder Fehler, bitte <a href="http://php.net/apc" target="_blank">APC</a> deaktivieren.';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']                  = 'cURL ist notwendig um Pakete herunterzuladen.<br>Bitte das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a> installieren oder aktivieren. ';
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']               = 'Datenbank aktualisiert. Es wurden %d Anfragen ausgeführt.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']              = 'Die Datenbank ist aktuell.';
 $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']     = 'Abhängigkeitsgraph';
@@ -34,7 +35,9 @@ $GLOBALS['TL_LANG']['composer_client']['dry-run']                       = 'Testl
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'Expertenmodus';
 $GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'Systemanforderungen';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'Expertenmodus';
-$GLOBALS['TL_LANG']['composer_client']['ftp_mode']                      = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Dein Hosting-Paket muss so konfiguriert sein, das ein Einsatz von Contao ohne Safe-Mode-Hack möglich ist. Weitere Infos findest Du im <br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel über den Safe-Mode-Hack im Contao Wiki</a>';
+$GLOBALS['TL_LANG']['composer_client']['ftp_mode']                      = 'Der Safe-Mode-Hack wird nicht unterstützt.<br>Das Hosting-Paket muss so konfiguriert sein, dass ein Einsatz von Contao ohne Safe-Mode-Hack möglich ist. Weitere Infos findest Du im <br>&rarr; <a href="http://de.contaowiki.org/Safemode_Hack" target="_blank">Artikel über den Safe-Mode-Hack im Contao Wiki</a>';
+$GLOBALS['TL_LANG']['composer_client']['incompatiblePackage']           = '(nicht kompatibel mit dieser Contao-Version)';
+$GLOBALS['TL_LANG']['composer_client']['incompatiblePackageLong']       = 'Diese Paket-Version ist mit dieser Contao-Version nicht kompatibel!';
 $GLOBALS['TL_LANG']['composer_client']['install_auto']                  = 'Auto';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']              = 'Composer installieren';
 $GLOBALS['TL_LANG']['composer_client']['install_dist']                  = 'Distributionsarchiv';
@@ -170,7 +173,7 @@ $GLOBALS['TL_LANG']['composer_client']['stability_beta']                = 'Betav
 $GLOBALS['TL_LANG']['composer_client']['stability_dev']                 = 'Entwicklerversion';
 $GLOBALS['TL_LANG']['composer_client']['stability_rc']                  = 'Release-Kandidat';
 $GLOBALS['TL_LANG']['composer_client']['stability_stable']              = 'Stabil';
-$GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']               = 'Suhosin ist aktiviert.<br> Suhosin verhindert den Einsatz von Phar, bitte deaktiviere <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a>.';
+$GLOBALS['TL_LANG']['composer_client']['suhosin_enabled']               = 'Suhosin ist aktiviert.<br> Suhosin verhindert den Einsatz von Phar, bitte <a href="http://www.hardened-php.net/suhosin/" target="_blank">Suhosin</a> deaktivieren.';
 $GLOBALS['TL_LANG']['composer_client']['terminate']                     = 'Beenden';
 $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']                   = 'wird entfernt';
 $GLOBALS['TL_LANG']['composer_client']['tools_dialog']                  = 'Werkzeuge';
