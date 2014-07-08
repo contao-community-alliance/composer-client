@@ -138,6 +138,7 @@ class InstalledController extends AbstractController
 	) {
 		$groupedPackages = array();
 
+		$requires     = $rootPackage->getRequires();
 		$extra        = $rootPackage->getExtra();
 		$versionLocks = isset($extra['contao']['version-locks']) ? (array) $extra['contao']['version-locks'] : array();
 
@@ -165,15 +166,17 @@ class InstalledController extends AbstractController
 			}
 
 			$item = (object) array(
-				'group'        => $group,
-				'name'         => $package->getPrettyName(),
-				'package'      => $package,
-				'dependencyOf' => $dependencyOf,
-				'installing'   => false,
-				'removeable'   => in_array($name, $requiresList),
-				'removing'     => !in_array($name, $requiresList) && !isset($dependencyMap[$name]),
-				'pinable'      => $package->getStability() != 'dev',
-				'pinned'       => array_key_exists($name, $versionLocks),
+				'group'             => $group,
+				'name'              => $package->getPrettyName(),
+				'package'           => $package,
+				'dependencyOf'      => $dependencyOf,
+				'installing'        => false,
+				'removeable'        => in_array($name, $requiresList),
+				'removing'          => !in_array($name, $requiresList) && !isset($dependencyMap[$name]),
+				'pinable'           => $package->getStability() != 'dev',
+				'pinned'            => array_key_exists($name, $versionLocks),
+				'versionConstraint' => new VersionConstraint('=', $package->getVersion()),
+				'requireConstraint' => isset($requires[$package->getName()]) ? $requires[$package->getName()]->getConstraint() : false,
 			);
 
 			if (isset($groupedPackages[$group])) {
@@ -183,8 +186,6 @@ class InstalledController extends AbstractController
 				$groupedPackages[$group] = array($item);
 			}
 		}
-
-		$versionParser = new VersionParser();
 
 		/** @var Link $notInstalledPackageConstraint */
 		foreach ($notInstalledList as $notInstalledPackageName => $notInstalledPackageConstraint) {
@@ -197,16 +198,18 @@ class InstalledController extends AbstractController
 			);
 
 			$item = (object) array(
-				'group'        => $group,
-				'name'         => $notInstalledPackageName,
-				'version'      => $notInstalledPackageConstraint->getPrettyConstraint(),
-				'package'      => $package,
-				'dependencyOf' => false,
-				'installing'   => true,
-				'removeable'   => true,
-				'removing'     => false,
-				'pinable'      => false,
-				'pinned'       => false,
+				'group'             => $group,
+				'name'              => $notInstalledPackageName,
+				'version'           => $notInstalledPackageConstraint->getPrettyConstraint(),
+				'package'           => $package,
+				'dependencyOf'      => false,
+				'installing'        => true,
+				'removeable'        => true,
+				'removing'          => false,
+				'pinable'           => false,
+				'pinned'            => false,
+				'versionConstraint' => new VersionConstraint('=', $package->getVersion()),
+				'requireConstraint' => false,
 			);
 
 			if (isset($groupedPackages[$group])) {

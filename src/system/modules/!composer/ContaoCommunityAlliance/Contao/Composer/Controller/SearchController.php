@@ -128,29 +128,31 @@ class SearchController extends AbstractController
 				/** @var PackageInterface[] $versions */
 				$versions = $repositories->findPackages($result['name']);
 
-				$packages[$result['name']] = $result;
-
-				$packages[$result['name']]['type']        = $versions[0]->getType();
-				$packages[$result['name']]['description'] = $versions[0] instanceof CompletePackageInterface
-					? $versions[0]->getDescription()
-					: '';
-				$packages[$result['name']]['contao-compatible'] = null;
-
 				/** @var PackageInterface|CompletePackageInterface $latestVersion */
 				$latestVersion = false;
 
-				foreach ($versions as $version) {
-					$requires = $version->getRequires();
+				$packages[$result['name']] = $result;
 
-					if (isset($requires['contao/core']) && $requires['contao/core'] instanceof Link) {
-						/** @var Link $link */
-						$link = $requires['contao/core'];
+				if (count($versions)) {
+					$packages[$result['name']]['type']              = $versions[0]->getType();
+					$packages[$result['name']]['description']       = $versions[0] instanceof CompletePackageInterface
+						? $versions[0]->getDescription()
+						: '';
+					$packages[$result['name']]['contao-compatible'] = null;
 
-						if ($link->getConstraint()->matches($constraint)) {
-							$packages[$result['name']]['contao-compatible'] = true;
+					foreach ($versions as $version) {
+						$requires = $version->getRequires();
 
-							if (!$latestVersion || $version->getReleaseDate() > $latestVersion->getReleaseDate()) {
-								$latestVersion = $version;
+						if (isset($requires['contao/core']) && $requires['contao/core'] instanceof Link) {
+							/** @var Link $link */
+							$link = $requires['contao/core'];
+
+							if ($link->getConstraint()->matches($constraint)) {
+								$packages[$result['name']]['contao-compatible'] = true;
+
+								if (!$latestVersion || $version->getReleaseDate() > $latestVersion->getReleaseDate()) {
+									$latestVersion = $version;
+								}
 							}
 						}
 					}

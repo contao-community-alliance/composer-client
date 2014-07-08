@@ -157,6 +157,13 @@ $dependenciesList = $this->dependenciesList;
 								);
 							}
 						}
+
+						if ($item->requireConstraint && !$item->requireConstraint->matches($item->versionConstraint)) {
+							printf(
+								' <span class="target">&rarr; %s</span>',
+								$item->requireConstraint->getPrettyString()
+							);
+						}
 					?></td>
 					<td class="tl_file_list col_pin">
 						<?php
