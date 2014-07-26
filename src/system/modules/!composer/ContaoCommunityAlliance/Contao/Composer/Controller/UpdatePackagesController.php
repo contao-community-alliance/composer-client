@@ -152,7 +152,13 @@ class UpdatePackagesController extends AbstractController
 			$installer->setUpdate(true);
 		}
 
-		$installer->run();
+		try {
+			$installer->run();
+		}
+		catch (\Exception $e) {
+			$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
+			throw $e;
+		}
 
 		$_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
 		file_put_contents(TL_ROOT . '/' . self::OUTPUT_FILE_PATHNAME, $_SESSION['COMPOSER_OUTPUT']);
