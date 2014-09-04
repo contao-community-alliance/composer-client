@@ -108,6 +108,11 @@ class ConsoleColorConverter
 		return false;
 	}
 
+	protected function getColor($index, $highIntensity = false) {
+		$color = $highIntensity ? self::$ANSICOLORS[$index+8] : self::$ANSICOLORS[$index];
+		return sprintf('rgba(%s,%s,%s,%s)', $color[0], $color[1], $color[2], $color[3]/255);
+	}
+
 	/**
 	 * Decode the parameter and update the style array with the new information.
 	 *
@@ -213,11 +218,7 @@ class ConsoleColorConverter
 			case 37:
 				// Set text color (foreground).
 				// 30 + x, where x is from the color table.
-				$color = self::$ANSICOLORS[$parameter-30];
-				return $this->setFlag(
-					'color',
-					sprintf('rgb(%s,%s,%s,%s)', $color[0], $color[1], $color[2], $color[3])
-				);
+				return $this->setFlag('color', $this->getColor($parameter - 30));
 			case 38:
 				// Reserved for extended set foreground color
 				// typical supported next arguments are 5;x where x is color index (0..255) or
@@ -230,11 +231,8 @@ class ConsoleColorConverter
 			case 40:
 				// Set background color
 				// 40 + x, where x is from the color table.
-				$color = self::$ANSICOLORS[$parameter-30];
 				return $this->setFlag(
-					'background-color',
-					sprintf('rgb(%s,%s,%s,%s)', $color[0], $color[1], $color[2], $color[3])
-				);
+					'background-color',$this->getColor($parameter - 40));
 			case 48:
 				// Reserved for extended set background color
 				// typical supported next arguments are 5;x where x is color index (0..255) or
@@ -299,11 +297,7 @@ class ConsoleColorConverter
 			case 96:
 			case 97:
 				// Set foreground text color, high intensity (aixterm (not in standard)).
-				$color = self::$ANSICOLORS[$parameter-82];
-				return $this->setFlag(
-					'color',
-					sprintf('rgb(%s,%s,%s,%s)', $color[0], $color[1], $color[2], $color[3])
-				);
+				return $this->setFlag('color', $this->getColor($parameter-90, true));
 			case 100:
 			case 101:
 			case 102:
@@ -313,11 +307,7 @@ class ConsoleColorConverter
 			case 106:
 			case 107:
 				// Set background color, high intensity (aixterm (not in standard)).
-				$color = self::$ANSICOLORS[$parameter-92];
-				return $this->setFlag(
-					'background-color',
-					sprintf('rgb(%s,%s,%s,%s)', $color[0], $color[1], $color[2], $color[3])
-				);
+				return $this->setFlag('background-color', $this->getColor($parameter-100, true));
 		}
 		return false;
 	}
