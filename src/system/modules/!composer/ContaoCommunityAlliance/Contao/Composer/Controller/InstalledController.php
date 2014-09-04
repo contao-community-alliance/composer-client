@@ -27,6 +27,7 @@ use Composer\DependencyResolver\SolverProblemsException;
 use Composer\DependencyResolver\DefaultPolicy;
 use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Repository\InstalledArrayRepository;
+use ContaoCommunityAlliance\Contao\Composer\ConsoleColorConverter;
 
 /**
  * Class InstalledController
@@ -88,7 +89,8 @@ class InstalledController extends AbstractController
 		$template->groupedPackages  = $groupedPackages;
 		$template->requiresList     = $requiresList;
 		$template->dependenciesList = $dependenciesList;
-		$template->output           = $_SESSION['COMPOSER_OUTPUT'];
+		$converter                  = new ConsoleColorConverter();
+		$template->output           = $converter->parse($_SESSION['COMPOSER_OUTPUT']);
 
 		unset($_SESSION['COMPOSER_OUTPUT']);
 
