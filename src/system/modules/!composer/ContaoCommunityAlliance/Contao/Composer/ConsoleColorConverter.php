@@ -337,11 +337,39 @@ class ConsoleColorConverter
 		return $result;
 	}
 
+	/**
+	 * Parse all backspace sequences and interpret them as character deletion.
+	 *
+	 * @param string $buffer The buffer to parse.
+	 *
+	 * @return string
+	 */
+	protected function parseBackspace($buffer) {
+		preg_match_all('/([\x08]+)/im', $buffer, $matches, PREG_OFFSET_CAPTURE);
+		$pos    = 0;
+		$output = '';
+		foreach (array_keys($matches[0]) as $i) {
+			$match     = $matches[0][$i][0];
+			$offset    = $matches[0][$i][1];
+			$rollBack  = strlen($match);
+			$portion   = substr($buffer, $pos, $offset - $pos);
+			$pos       = $offset + $rollBack;
+			$output   .= $portion;
+			$output    = substr($output, 0, - $rollBack);
+		}
+		$portion = substr($buffer, $pos);
+		$output .= $portion;
+
+		return $output;
+	}
+
 	public function parse ($buffer) {
 		// DOS treats Ctrl-Z (SUB) as EOF. Some ANSI artists hid their alias in a file by placing it after the EOF.
 		// Therefore we cut it away.
 		$buffer = explode(chr(0x1a), $buffer, 2);
-		$buffer = htmlspecialchars($buffer[0]);
+		$buffer = $this->parseBackspace($buffer[0]);
+		$buffer = htmlspecialchars($buffer);
+		$buffer = str_replace(array("\r", "\n"), array('', '<br />'), $buffer);
 
 		preg_match_all('/(\x1b\[)([0-9;]*?)m/im', $buffer, $matches, PREG_OFFSET_CAPTURE);
 
