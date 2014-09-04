@@ -52,5 +52,7 @@
 			"dev-master": "0.13.x-dev",
 			"dev-develop": "0.14.x-dev"
 		}
-	}
+	},
+	"prefer-stable": true,
+	"minimum-stability": "dev"
 }
