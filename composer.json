@@ -22,10 +22,19 @@
 			"role":"Developer"
 		}
 	],
+	"autoload-dev": {
+		"psr-0": {
+			"ContaoCommunityAlliance\\Contao\\Composer" : "src/system/modules/!composer/",
+			"ContaoCommunityAlliance\\Contao\\Composer\\Test" : "tests/"
+		}
+	},
 	"require": {
 		"php": ">=5.3.4",
 		"contao/core": ">=2.11",
 		"contao-community-alliance/composer-plugin": "~2.2"
+	},
+	"require-dev": {
+		"phpunit/phpunit": ">=3.7.10,<4-dev"
 	},
 	"extra": {
 		"contao": {

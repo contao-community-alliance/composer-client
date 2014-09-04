@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<project name="composer client" default="test">
+	<target name="phpunit">
+		<exec dir="${basedir}" executable="vendor/bin/phpunit" failonerror="false" />
+	</target>
+	<target name="test" depends="phpunit"/>
+</project>
