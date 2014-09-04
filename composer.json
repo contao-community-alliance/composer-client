@@ -34,7 +34,8 @@
 		"contao-community-alliance/composer-plugin": "~2.2"
 	},
 	"require-dev": {
-		"phpunit/phpunit": ">=3.7.10,<4-dev"
+		"phpunit/phpunit": ">=3.7.10,<4-dev",
+		"contao-community-alliance/build-system-tool-branch-alias-validation": "~1.0"
 	},
 	"extra": {
 		"contao": {

@@ -3,5 +3,8 @@
 	<target name="phpunit">
 		<exec dir="${basedir}" executable="vendor/bin/phpunit" failonerror="false" />
 	</target>
-	<target name="test" depends="phpunit"/>
+	<target name="branch-alias">
+		<exec dir="${basedir}" executable="vendor/bin/validate-branch-alias.php" failonerror="true" />
+	</target>
+	<target name="test" depends="phpunit,branch-alias"/>
 </project>
