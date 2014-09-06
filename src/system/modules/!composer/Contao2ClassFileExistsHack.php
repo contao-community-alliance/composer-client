@@ -17,113 +17,112 @@
  * @author Christian Schiffler <c.schiffler@cyberspectrum.de>
  */
 if (version_compare(VERSION, '3', '<')) {
-	class Contao2ClassFileExistsHack extends FileCache
-	{
-		static public function register()
-		{
-			$cache = FileCache::getInstance('classes');
+    class Contao2ClassFileExistsHack extends FileCache
+    {
+        public static function register()
+        {
+            $cache = FileCache::getInstance('classes');
 
-			if (!$cache instanceof Contao2ClassFileExistsHack) {
-				FileCache::$arrInstances['classes'] = new Contao2ClassFileExistsHack($cache);
-			}
-		}
+            if (!$cache instanceof Contao2ClassFileExistsHack) {
+                FileCache::$arrInstances['classes'] = new Contao2ClassFileExistsHack($cache);
+            }
+        }
 
-		/**
-		 * The internal cache.
-		 *
-		 * @var FileCache
-		 */
-		protected $cache;
+        /**
+         * The internal cache.
+         *
+         * @var FileCache
+         */
+        protected $cache;
 
-		/**
-		 * @param FileCache $cache
-		 */
-		public function __construct(FileCache $cache)
-		{
-			$this->cache = $cache;
-		}
+        /**
+         * @param FileCache $cache
+         */
+        public function __construct(FileCache $cache)
+        {
+            $this->cache = $cache;
+        }
 
-		/**
-		 * {@inheritdoc}
-		 */
-		public function __destruct()
-		{
-			// no op
-		}
+        /**
+         * {@inheritdoc}
+         */
+        public function __destruct()
+        {
+            // no op
+        }
 
-		/**
-		 * Trigger all class loaders and try to load the class through them.
-		 *
-		 * @param string $strKey
-		 *
-		 * @return bool
-		 */
-		protected function classExists($strKey)
-		{
-			$exists = class_exists($strKey, false);
-			if (!$exists) {
-				$functions = spl_autoload_functions();
-				while (!$exists && count($functions)) {
-					$function = array_shift($functions);
+        /**
+         * Trigger all class loaders and try to load the class through them.
+         *
+         * @param string $strKey
+         *
+         * @return bool
+         */
+        protected function classExists($strKey)
+        {
+            $exists = class_exists($strKey, false);
+            if (!$exists) {
+                $functions = spl_autoload_functions();
+                while (!$exists && count($functions)) {
+                    $function = array_shift($functions);
 
-					if ($function == '__autoload') {
-						continue;
-					}
+                    if ($function == '__autoload') {
+                        continue;
+                    }
 
-					call_user_func($function, $strKey);
-					$exists = class_exists($strKey, false);
-				}
-			}
-			return $exists;
-		}
+                    call_user_func($function, $strKey);
+                    $exists = class_exists($strKey, false);
+                }
+            }
+            return $exists;
+        }
 
-		/**
-		 * {@inheritdoc}
-		 */
-		public function __isset($strKey)
-		{
-			$isset = $this->cache->__isset($strKey);
+        /**
+         * {@inheritdoc}
+         */
+        public function __isset($strKey)
+        {
+            $isset = $this->cache->__isset($strKey);
 
-			return $isset
-				? $isset
-				: $this->classExists($strKey);
-		}
+            return $isset
+                ? $isset
+                : $this->classExists($strKey);
+        }
 
-		/**
-		 * {@inheritdoc}
-		 */
-		public function __get($strKey)
-		{
-			$value = $this->cache->__get($strKey);
+        /**
+         * {@inheritdoc}
+         */
+        public function __get($strKey)
+        {
+            $value = $this->cache->__get($strKey);
 
-			return $value
-				? $value
-				: $this->classExists($strKey);
-		}
+            return $value
+                ? $value
+                : $this->classExists($strKey);
+        }
 
-		/**
-		 * {@inheritdoc}
-		 */
-		public function __set($strKey, $varValue)
-		{
-			$this->cache->__set($strKey, $varValue);
-		}
+        /**
+         * {@inheritdoc}
+         */
+        public function __set($strKey, $varValue)
+        {
+            $this->cache->__set($strKey, $varValue);
+        }
 
-		/**
-		 * {@inheritdoc}
-		 */
-		public function __unset($strKey)
-		{
-			$this->cache->__unset($strKey);
-		}
-	}
-}
-else {
-	class Contao2ClassFileExistsHack
-	{
-		static public function register()
-		{
-			// no op
-		}
-	}
+        /**
+         * {@inheritdoc}
+         */
+        public function __unset($strKey)
+        {
+            $this->cache->__unset($strKey);
+        }
+    }
+} else {
+    class Contao2ClassFileExistsHack
+    {
+        public static function register()
+        {
+            // no op
+        }
+    }
 }

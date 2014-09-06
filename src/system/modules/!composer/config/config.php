@@ -14,15 +14,15 @@
  */
 
 if (version_compare(PHP_VERSION, '5.3', '<')) {
-	trigger_error('Composer client requires PHP 5.3, even with Contao 2.11', E_USER_ERROR);
-	return;
+    trigger_error('Composer client requires PHP 5.3, even with Contao 2.11', E_USER_ERROR);
+    return;
 }
 
 if (version_compare(VERSION, '3', '<')) {
-	include(TL_ROOT . '/system/modules/!composer/ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
-	\ContaoCommunityAlliance\Contao\Composer\ClassLoader::register();
-	spl_autoload_register('__autoload');
-	\Contao2ClassFileExistsHack::register();
+    include(TL_ROOT . '/system/modules/!composer/ContaoCommunityAlliance/Contao/Composer/ClassLoader.php');
+    \ContaoCommunityAlliance\Contao\Composer\ClassLoader::register();
+    spl_autoload_register('__autoload');
+    \Contao2ClassFileExistsHack::register();
 }
 
 define('COMPOSER_MIN_PHPVERSION', '5.3.4');
@@ -41,7 +41,8 @@ define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
  */
 $GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary']      = true;
 $GLOBALS['TL_CONFIG']['composerExecutionMode']          = 'inline';
-$GLOBALS['TL_CONFIG']['composerPhpPath']                = '/usr/bin/env php -d memory_limit=1G -d max_execution_time=900';
+$GLOBALS['TL_CONFIG']['composerPhpPath']                =
+    '/usr/bin/env php -d memory_limit=1G -d max_execution_time=900';
 $GLOBALS['TL_CONFIG']['composerRemoveRepositoryTables'] = false;
 $GLOBALS['TL_CONFIG']['composerVerbosity']              = 'VERBOSITY_NORMAL';
 
@@ -50,9 +51,9 @@ $GLOBALS['TL_CONFIG']['composerVerbosity']              = 'VERBOSITY_NORMAL';
  * Add backend module
  */
 $GLOBALS['BE_MOD']['system']['composer'] = array(
-	'callback'   => 'ContaoCommunityAlliance\Contao\Composer\ClientBackend',
-	'icon'       => 'system/modules/!composer/assets/images/icon.png',
-	'stylesheet' => 'system/modules/!composer/assets/css/backend.css',
+    'callback'   => 'ContaoCommunityAlliance\Contao\Composer\ClientBackend',
+    'icon'       => 'system/modules/!composer/assets/images/icon.png',
+    'stylesheet' => 'system/modules/!composer/assets/css/backend.css',
 );
 
 
@@ -60,6 +61,6 @@ $GLOBALS['BE_MOD']['system']['composer'] = array(
  * Hooks
  */
 $GLOBALS['TL_HOOKS']['sqlCompileCommands'][] = array(
-	'ContaoCommunityAlliance\Contao\Composer\DatabaseInstaller',
-	'sqlCompileCommands'
+    'ContaoCommunityAlliance\Contao\Composer\DatabaseInstaller',
+    'sqlCompileCommands'
 );

@@ -1,10 +1,18 @@
 <?xml version="1.0"?>
 <project name="composer client" default="test">
-	<target name="phpunit">
-		<exec dir="${basedir}" executable="vendor/bin/phpunit" failonerror="false" />
-	</target>
-	<target name="branch-alias">
-		<exec dir="${basedir}" executable="vendor/bin/validate-branch-alias.php" failonerror="true" />
-	</target>
-	<target name="test" depends="phpunit,branch-alias"/>
+    <target name="phpunit">
+        <exec dir="${basedir}" executable="vendor/bin/phpunit" failonerror="false"/>
+    </target>
+
+    <target name="phpcs">
+        <exec dir="${basedir}" executable="vendor/bin/phpcs" failonerror="true">
+            <arg line="--standard=PSR1,PSR2 ${basedir}/src"/>
+        </exec>
+    </target>
+
+    <target name="branch-alias">
+        <exec dir="${basedir}" executable="vendor/bin/validate-branch-alias.php" failonerror="true"/>
+    </target>
+
+    <target name="test" depends="phpunit,phpcs,branch-alias"/>
 </project>

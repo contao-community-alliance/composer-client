@@ -1,59 +1,64 @@
 {
-	"name": "contao-community-alliance/composer",
-	"type": "contao-module",
-	"description": "composer integration into the contao cms",
-	"keywords": ["contao", "composer", "client"],
-	"license": "LGPLv3",
-	"authors": [
-		{
-			"name": "Dominik Zogg",
-			"email": "dominik.zogg@gmail.com"
-		},
-		{
-			"name":"Tristan Lins",
-			"email":"tristan.lins@bit3.de",
-			"homepage":"http://bit3.de",
-			"role":"Developer"
-		},
-		{
-			"name":"Christian Schiffler",
-			"email":"c.schiffler@cyberspectrum.de",
-			"homepage":"http://www.cyberspectrum.de",
-			"role":"Developer"
-		}
-	],
-	"autoload-dev": {
-		"psr-0": {
-			"ContaoCommunityAlliance\\Contao\\Composer" : "src/system/modules/!composer/",
-			"ContaoCommunityAlliance\\Contao\\Composer\\Test" : "tests/"
-		}
-	},
-	"require": {
-		"php": ">=5.3.4",
-		"contao/core": ">=2.11",
-		"contao-community-alliance/composer-plugin": "~2.2"
-	},
-	"require-dev": {
-		"phpunit/phpunit": ">=3.7.10,<4-dev",
-		"contao-community-alliance/build-system-tool-branch-alias-validation": "~1.0"
-	},
-	"extra": {
-		"contao": {
-			"sources": {
-				"src/system/modules/!composer": "system/modules/!composer"
-			},
-			"transifex": {
-				"project": "composer",
-				"prefix": "client-",
-				"languages_cto": "src/system/modules/!composer/languages",
-				"languages_tx": ".tx"
-			}
-		},
-		"branch-alias": {
-			"dev-master": "0.13.x-dev",
-			"dev-develop": "0.14.x-dev"
-		}
-	},
-	"prefer-stable": true,
-	"minimum-stability": "dev"
+    "name": "contao-community-alliance/composer",
+    "type": "contao-module",
+    "description": "composer integration into the contao cms",
+    "keywords": [
+        "contao",
+        "composer",
+        "client"
+    ],
+    "license": "LGPLv3",
+    "authors": [
+        {
+            "name": "Dominik Zogg",
+            "email": "dominik.zogg@gmail.com"
+        },
+        {
+            "name": "Tristan Lins",
+            "email": "tristan.lins@bit3.de",
+            "homepage": "http://bit3.de",
+            "role": "Developer"
+        },
+        {
+            "name": "Christian Schiffler",
+            "email": "c.schiffler@cyberspectrum.de",
+            "homepage": "http://www.cyberspectrum.de",
+            "role": "Developer"
+        }
+    ],
+    "autoload-dev": {
+        "psr-0": {
+            "ContaoCommunityAlliance\\Contao\\Composer": "src/system/modules/!composer/",
+            "ContaoCommunityAlliance\\Contao\\Composer\\Test": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.4",
+        "contao/core": ">=2.11",
+        "contao-community-alliance/composer-plugin": "~2.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=3.7.10,<4-dev",
+        "squizlabs/php_codesniffer": "~1.0",
+        "contao-community-alliance/build-system-tool-branch-alias-validation": "~1.0"
+    },
+    "extra": {
+        "contao": {
+            "sources": {
+                "src/system/modules/!composer": "system/modules/!composer"
+            },
+            "transifex": {
+                "project": "composer",
+                "prefix": "client-",
+                "languages_cto": "src/system/modules/!composer/languages",
+                "languages_tx": ".tx"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "0.13.x-dev",
+            "dev-develop": "0.14.x-dev"
+        }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
 }

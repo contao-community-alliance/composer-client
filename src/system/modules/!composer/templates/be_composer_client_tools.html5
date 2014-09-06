@@ -1,7 +1,7 @@
 <div id="tl_buttons">
-	<a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
-		<?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
-	</a>
+    <a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+        <?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
+    </a>
 </div>
 
 <h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['tools_dialog']; ?></h2>
@@ -9,11 +9,11 @@
 <?php echo $this->getMessages(); ?>
 
 <div class="composer_tools tl_formbody_edit">
-	<fieldset class="tl_tbox">
-		<div class="long clr">
-			<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['tools_resync'][0]; ?></h3>
-			<p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['tools_resync'][1]; ?></p>
-			<a href="contao/main.php?do=composer&tools=resync" class="tl_submit"><?php echo $GLOBALS['TL_LANG']['composer_client']['tools_resync'][2]; ?></a>
-		</div>
-	</fieldset>
+    <fieldset class="tl_tbox">
+        <div class="long clr">
+            <h3><?php echo $GLOBALS['TL_LANG']['composer_client']['tools_resync'][0]; ?></h3>
+            <p class="tl_help tl_tip"><?php echo $GLOBALS['TL_LANG']['composer_client']['tools_resync'][1]; ?></p>
+            <a href="contao/main.php?do=composer&tools=resync" class="tl_submit"><?php echo $GLOBALS['TL_LANG']['composer_client']['tools_resync'][2]; ?></a>
+        </div>
+    </fieldset>
 </div>

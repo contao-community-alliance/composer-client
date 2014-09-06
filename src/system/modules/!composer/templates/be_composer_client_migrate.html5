@@ -5,99 +5,99 @@
 <?php echo $this->getMessages(); ?>
 
 <form action="contao/main.php?do=composer"
-	  class="tl_form tl_composer_migrate" method="post" enctype="application/x-www-form-urlencoded">
-	<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
-	<input type="hidden" name="FORM_SUBMIT" value="tl_composer_migrate">
+      class="tl_form tl_composer_migrate" method="post" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+    <input type="hidden" name="FORM_SUBMIT" value="tl_composer_migrate">
 
-	<div class="tl_formbody_edit">
-		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_intro'], $this->getData()); ?>
+    <div class="tl_formbody_edit">
+        <?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_intro'], $this->getData()); ?>
 
-		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_preconditions'], $this->getData()); ?>
+        <?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_preconditions'], $this->getData()); ?>
 
-		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_setup_pre'], $this->getData()); ?>
+        <?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_setup_pre'], $this->getData()); ?>
 
-		<?php if ($this->oldPackageCount > 0): ?>
-			<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_mode'][0]; ?></h3>
-			<p><?php printf($GLOBALS['TL_LANG']['composer_client']['migrate_mode'][1], $this->oldPackageCount); ?></p>
+        <?php if ($this->oldPackageCount > 0): ?>
+            <h3><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_mode'][0]; ?></h3>
+            <p><?php printf($GLOBALS['TL_LANG']['composer_client']['migrate_mode'][1], $this->oldPackageCount); ?></p>
 
-			<div>
-				<label class="mode_upgrade<?php if ($this->composerSupported && $this->mode == 'upgrade'): ?> checked<?php endif; ?>">
-					<span class="input">
-						<input type="radio" name="mode" value="upgrade"<?php
-							if ($this->composerSupported && $this->mode == 'upgrade'): ?> checked<?php endif;
-							if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
-					</span>
-					<span class="text">
-						<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade'][0]; ?></strong><br>
-						<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade'][1]; ?>
-					</span>
-				</label>
-				<label class="mode_clean<?php if ($this->composerSupported && $this->mode == 'clean'): ?> checked<?php endif; ?>">
-					<span class="input">
-						<input type="radio" name="mode" value="clean"<?php
-							if ($this->composerSupported && $this->mode == 'clean'): ?> checked<?php endif;
-							if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
-					</span>
-					<span class="text">
-						<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_clean'][0]; ?></strong><br>
-						<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_clean'][1]; ?>
-					</span>
-				</label>
-				<label class="mode_none<?php if ($this->composerSupported && $this->mode == 'none'): ?> checked<?php endif; ?>">
-					<span class="input">
-						<input type="radio" name="mode" value="none"<?php
-							if ($this->composerSupported && $this->mode == 'none'): ?> checked<?php endif;
-							if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
-					</span>
-					<span class="text">
-						<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_none'][0]; ?></strong><br>
-						<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_none'][1]; ?>
-					</span>
-				</label>
-			</div>
-		<?php endif; ?>
+            <div>
+                <label class="mode_upgrade<?php if ($this->composerSupported && $this->mode == 'upgrade'): ?> checked<?php endif; ?>">
+                    <span class="input">
+                        <input type="radio" name="mode" value="upgrade"<?php
+                            if ($this->composerSupported && $this->mode == 'upgrade'): ?> checked<?php endif;
+                            if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
+                    </span>
+                    <span class="text">
+                        <strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade'][0]; ?></strong><br>
+                        <?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade'][1]; ?>
+                    </span>
+                </label>
+                <label class="mode_clean<?php if ($this->composerSupported && $this->mode == 'clean'): ?> checked<?php endif; ?>">
+                    <span class="input">
+                        <input type="radio" name="mode" value="clean"<?php
+                            if ($this->composerSupported && $this->mode == 'clean'): ?> checked<?php endif;
+                            if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
+                    </span>
+                    <span class="text">
+                        <strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_clean'][0]; ?></strong><br>
+                        <?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_clean'][1]; ?>
+                    </span>
+                </label>
+                <label class="mode_none<?php if ($this->composerSupported && $this->mode == 'none'): ?> checked<?php endif; ?>">
+                    <span class="input">
+                        <input type="radio" name="mode" value="none"<?php
+                            if ($this->composerSupported && $this->mode == 'none'): ?> checked<?php endif;
+                            if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
+                    </span>
+                    <span class="text">
+                        <strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_none'][0]; ?></strong><br>
+                        <?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_none'][1]; ?>
+                    </span>
+                </label>
+            </div>
+        <?php endif; ?>
 
-		<h3><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_setup'][0]; ?></h3>
-		<p><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_setup'][1]; ?></p>
+        <h3><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_setup'][0]; ?></h3>
+        <p><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_setup'][1]; ?></p>
 
-		<div>
-			<label class="setup_production<?php if ($this->composerSupported && $this->setup == 'production'): ?> checked<?php endif; ?>">
-				<span class="input">
-					<input type="radio" name="setup" value="production"<?php
-						if ($this->composerSupported && $this->setup == 'production'): ?> checked<?php endif;
-						if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
-				</span>
-				<span class="text">
-					<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production'][0]; ?></strong><br>
-					<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production'][1]; ?>
-				</span>
-			</label>
-			<label class="setup_development<?php if ($this->composerSupported && $this->setup == 'development'): ?> checked<?php endif; ?>">
-				<span class="input">
-					<input type="radio" name="setup" value="development"<?php
-						if ($this->composerSupported && $this->setup == 'development'): ?> checked<?php endif;
-						if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
-				</span>
-				<span class="text">
-					<strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_development'][0]; ?></strong><br>
-					<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_development'][1]; ?>
-					<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['vcs_requirements'], $this->getData()); ?>
-				</span>
-			</label>
-		</div>
+        <div>
+            <label class="setup_production<?php if ($this->composerSupported && $this->setup == 'production'): ?> checked<?php endif; ?>">
+                <span class="input">
+                    <input type="radio" name="setup" value="production"<?php
+                        if ($this->composerSupported && $this->setup == 'production'): ?> checked<?php endif;
+                        if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
+                </span>
+                <span class="text">
+                    <strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production'][0]; ?></strong><br>
+                    <?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_production'][1]; ?>
+                </span>
+            </label>
+            <label class="setup_development<?php if ($this->composerSupported && $this->setup == 'development'): ?> checked<?php endif; ?>">
+                <span class="input">
+                    <input type="radio" name="setup" value="development"<?php
+                        if ($this->composerSupported && $this->setup == 'development'): ?> checked<?php endif;
+                        if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
+                </span>
+                <span class="text">
+                    <strong><?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_development'][0]; ?></strong><br>
+                    <?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_development'][1]; ?>
+                    <?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['vcs_requirements'], $this->getData()); ?>
+                </span>
+            </label>
+        </div>
 
-		<?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_faq'], $this->getData()); ?>
-	</div>
+        <?php echo $this->parseSimpleTokens($GLOBALS['TL_LANG']['composer_client']['migrate_faq'], $this->getData()); ?>
+    </div>
 
-	<div class="tl_formbody_submit">
-		<div class="tl_submit_container">
-			<input type="submit" name="do" accesskey="s" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_do']; ?>" class="tl_submit"<?php
-				if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
-			<input type="submit" name="skip" accesskey="s" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_skip']; ?>" class="tl_submit"<?php
-				if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>
-				onclick="return confirm(<?php echo str_replace('"', "'", json_encode($GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm'])); ?>);">
-		</div>
-	</div>
+    <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+            <input type="submit" name="do" accesskey="s" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_do']; ?>" class="tl_submit"<?php
+                if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>>
+            <input type="submit" name="skip" accesskey="s" value="<?php echo $GLOBALS['TL_LANG']['composer_client']['migrate_skip']; ?>" class="tl_submit"<?php
+                if (!$this->composerSupported): ?> disabled="disabled"<?php endif; ?>
+                onclick="return confirm(<?php echo str_replace('"', "'", json_encode($GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm'])); ?>);">
+        </div>
+    </div>
 </form>
 
 <script src="system/modules/!composer/assets/js/migrate.js"></script>

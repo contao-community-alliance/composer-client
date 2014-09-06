@@ -9,22 +9,22 @@ namespace ContaoCommunityAlliance\Contao\Composer;
  */
 class ClassLoader
 {
-	static public function register()
-	{
-		spl_autoload_register('ContaoCommunityAlliance\Contao\Composer\ClassLoader::load', true, true);
-	}
+    public static function register()
+    {
+        spl_autoload_register('ContaoCommunityAlliance\Contao\Composer\ClassLoader::load', true, true);
+    }
 
-	static public function load($className)
-	{
-		if (strpos($className, 'ContaoCommunityAlliance\\Contao\\Composer\\') === 0) {
-			$className = substr($className, 40);
-			$className = str_replace('\\', '/', $className);
-			$className .= '.php';
+    public static function load($className)
+    {
+        if (strpos($className, 'ContaoCommunityAlliance\\Contao\\Composer\\') === 0) {
+            $className = substr($className, 40);
+            $className = str_replace('\\', '/', $className);
+            $className .= '.php';
 
-			$pathname = dirname(__FILE__) . '/' . $className;
-			if (is_file($pathname)) {
-				require($pathname);
-			}
-		}
-	}
+            $pathname = dirname(__FILE__) . '/' . $className;
+            if (is_file($pathname)) {
+                require($pathname);
+            }
+        }
+    }
 }

@@ -48,35 +48,35 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_faq'] = '
 <h2>FAQ</h2>
 <ul class="questions">
 <li>
-	<h3>It is necessary to use this client?</h3>
-	Not at all, it is optional. But some developers distribute new features or new extensions only via this package manager.
-	You may miss some essential updates if you not use it.
+    <h3>It is necessary to use this client?</h3>
+    Not at all, it is optional. But some developers distribute new features or new extensions only via this package manager.
+    You may miss some essential updates if you not use it.
 </li>
 <li>
-	<h3>Can I install packages, that are available in the current extension repository?</h3>
-	Yes you can. All public packages are synchronized into the new repository (they are prefixed with <em>contao-legacy/</em>).<br>
-	<em>Please note that existing commercial extensions cannot be installed with Composer due to license limitations.
-	Please ask the publisher to support Composer.</em>
+    <h3>Can I install packages, that are available in the current extension repository?</h3>
+    Yes you can. All public packages are synchronized into the new repository (they are prefixed with <em>contao-legacy/</em>).<br>
+    <em>Please note that existing commercial extensions cannot be installed with Composer due to license limitations.
+    Please ask the publisher to support Composer.</em>
 </li>
 <li>
-	<h3>Will there be a new extension repository?</h3>
-	Yes, a new extension repository exists on <a href="http://legacy-packages-via.contao-community-alliance.org/" target="_blank">legacy-packages-via.contao-community-alliance.org</a>.
-	Currently it is a plain packagist installation, but we will improve it shortly with all our needs.
+    <h3>Will there be a new extension repository?</h3>
+    Yes, a new extension repository exists on <a href="http://legacy-packages-via.contao-community-alliance.org/" target="_blank">legacy-packages-via.contao-community-alliance.org</a>.
+    Currently it is a plain packagist installation, but we will improve it shortly with all our needs.
 </li>
 <li>
-	<h3>What is Composer and this Composer package manager?</h3>
-	The answer is too long to be answered here. Read the article about the Composer Client in the <a href="http://de.contaowiki.org/Composer_Client" target="_blank">Contao Wiki</a>.
+    <h3>What is Composer and this Composer package manager?</h3>
+    The answer is too long to be answered here. Read the article about the Composer Client in the <a href="http://de.contaowiki.org/Composer_Client" target="_blank">Contao Wiki</a>.
 </li>
 <li>
-	<h3>Can I switch back to the old package manager?</h3>
-	Yes you can. Go to the Composer client settings dialog and choose "switch back to old client".
+    <h3>Can I switch back to the old package manager?</h3>
+    Yes you can. Go to the Composer client settings dialog and choose "switch back to old client".
 </li>
 <li>
-	<h3>I have problems with the new client, where can I ask for help?</h3>
-	This client is driven by the community.
-	You can ask in the <a href="https://community.contao.org/de/forumdisplay.php?6-Entwickler-Fragen" target="_blank">community board</a>,
-	the official IRC channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
-	or the <a href="https://github.com/contao-community-alliance/composer/issues" target="_blank">ticket system</a>.
+    <h3>I have problems with the new client, where can I ask for help?</h3>
+    This client is driven by the community.
+    You can ask in the <a href="https://community.contao.org/de/forumdisplay.php?6-Entwickler-Fragen" target="_blank">community board</a>,
+    the official IRC channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
+    or the <a href="https://github.com/contao-community-alliance/composer/issues" target="_blank">ticket system</a>.
 </li>
 </ul>';
 
@@ -85,43 +85,43 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_setup_pre'] = '
 <p>Before you start with the new client, we have to ask you some questions.</p>';
 
 $GLOBALS['TL_LANG']['composer_client']['migrate_mode']         = array(
-	'Migration mode',
-	'We detected that you have installed %d extensions with the old package manager. Now we want to ask you, what should we do with the old packages?'
+    'Migration mode',
+    'We detected that you have installed %d extensions with the old package manager. Now we want to ask you, what should we do with the old packages?'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_upgrade']      = array(
-	'Upgrade packages to Composer',
-	'Existing packages will be added to Composer package manager and reinstalled.<br>'
+    'Upgrade packages to Composer',
+    'Existing packages will be added to Composer package manager and reinstalled.<br>'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_clean']        = array(
-	'Remove packages',
-	'Remove previously installed packages and start with a clean setup.'
+    'Remove packages',
+    'Remove previously installed packages and start with a clean setup.'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_none']         = array(
-	'Do nothing (only for experts!)',
-	'Do nothing, keep everything where it is. This can make problems, only choose this if you know what you do!'
+    'Do nothing (only for experts!)',
+    'Do nothing, keep everything where it is. This can make problems, only choose this if you know what you do!'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_setup']        = array(
-	'Configuration setup',
-	'Please choose for which setup this installation is used.'
+    'Configuration setup',
+    'Please choose for which setup this installation is used.'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_production']   = array(
-	'For production use',
-	'Packages will be fetched as archives (only zip support is required). Files will be installed as copies.'
+    'For production use',
+    'Packages will be fetched as archives (only zip support is required). Files will be installed as copies.'
 );
 $GLOBALS['TL_LANG']['composer_client']['migrate_development']  = array(
-	'For development use',
-	'Packages will be fetched as sources with git, mercurial or svn. Files will be installed as symlinks.'
+    'For development use',
+    'Packages will be fetched as sources with git, mercurial or svn. Files will be installed as symlinks.'
 );
 $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']     = '
 <ul class="preconditions">
 <li class="{if gitAvailable==true}pass{else}fail{endif}">
-	git is {if gitAvailable==true}available{else}missing, most packages may fail to install!{endif}
+    git is {if gitAvailable==true}available{else}missing, most packages may fail to install!{endif}
 </li>
 <li class="{if hgAvailable==true}pass{else}fail{endif}">
-	mercurial is {if hgAvailable==true}available{else}missing, some packages may fail to install!{endif}
+    mercurial is {if hgAvailable==true}available{else}missing, some packages may fail to install!{endif}
 </li>
 <li class="{if svnAvailable==true}pass{else}fail{endif}">
-	svn is {if svnAvailable==true}available{else}missing, some packages may fail to install!{endif}
+    svn is {if svnAvailable==true}available{else}missing, some packages may fail to install!{endif}
 </li>
 </ul>
 ';
@@ -146,33 +146,33 @@ $GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'switch back to
  * Tools dialog
  */
 $GLOBALS['TL_LANG']['composer_client']['tools_resync'] = array(
-	'Resync',
-	'Resync all shadow copies and symlinks.',
-	'Resync now'
+    'Resync',
+    'Resync all shadow copies and symlinks.',
+    'Resync now'
 );
 
 /**
  * Settings dialog
  */
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability'] = array(
-	'Minimum stability',
-	'The minimum stability set the lowest stability allowed to be installed.'
+    'Minimum stability',
+    'The minimum stability set the lowest stability allowed to be installed.'
 );
 $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']     = array(
-	'Prefer stable',
-	'If possible, prefer stable packages even if minimum stability is lower than stable.'
+    'Prefer stable',
+    'If possible, prefer stable packages even if minimum stability is lower than stable.'
 );
 $GLOBALS['TL_LANG']['composer_client']['widget_preferred_install'] = array(
-	'Preferred install',
-	'Choose if you prefer source packages (require git, mercurial or svn) or dist archives (works every time).'
+    'Preferred install',
+    'Choose if you prefer source packages (require git, mercurial or svn) or dist archives (works every time).'
 );
 $GLOBALS['TL_LANG']['composer_client']['widget_github_oauth']      = array(
-	'github oauth Token',
-	'If you have "api limit reached" problems with github, put a github oauth token here.'
+    'github oauth Token',
+    'If you have "api limit reached" problems with github, put a github oauth token here.'
 );
 $GLOBALS['TL_LANG']['composer_client']['widget_discard_changes']   = array(
-	'Discard changes',
-	'Choose how changes should be handled.'
+    'Discard changes',
+    'Choose how changes should be handled.'
 );
 
 /**

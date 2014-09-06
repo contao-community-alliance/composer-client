@@ -14,21 +14,21 @@ use Composer\Util\Filesystem;
  */
 class DatabaseInstaller
 {
-	public function sqlCompileCommands($return)
-	{
-		if (!$GLOBALS['TL_CONFIG']['composerRemoveRepositoryTables'] && is_array($return['DROP'])) {
-			$return['DROP'] = array_filter(
-				$return['DROP'],
-				function ($sql) {
-					return strpos($sql, 'DROP TABLE `tl_repository_') === false;
-				}
-			);
+    public function sqlCompileCommands($return)
+    {
+        if (!$GLOBALS['TL_CONFIG']['composerRemoveRepositoryTables'] && is_array($return['DROP'])) {
+            $return['DROP'] = array_filter(
+                $return['DROP'],
+                function ($sql) {
+                    return strpos($sql, 'DROP TABLE `tl_repository_') === false;
+                }
+            );
 
-			if (empty($return['DROP'])) {
-				unset($return['DROP']);
-			}
-		}
+            if (empty($return['DROP'])) {
+                unset($return['DROP']);
+            }
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 }
