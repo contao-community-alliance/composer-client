@@ -36,9 +36,7 @@
     </target>
 
     <target name="composer-validate">
-        <exec dir="${basedir}" executable="/usr/bin/env" failonerror="true">
-            <arg value="php"/>
-            <arg value="composer.phar"/>
+        <exec dir="${basedir}" executable="composer" failonerror="true">
             <arg value="validate"/>
         </exec>
     </target>
