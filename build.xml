@@ -20,5 +20,13 @@
         <exec dir="${basedir}" executable="vendor/bin/validate-branch-alias.php" failonerror="true"/>
     </target>
 
-    <target name="test" depends="phpunit,phpcs,phpmd,branch-alias"/>
+    <target name="composer-validate">
+        <exec dir="${basedir}" executable="/usr/bin/env" failonerror="true">
+            <arg value="php"/>
+            <arg value="composer.phar"/>
+            <arg value="validate"/>
+        </exec>
+    </target>
+
+    <target name="test" depends="phpunit,phpcs,phpmd,branch-alias,composer-validate"/>
 </project>
