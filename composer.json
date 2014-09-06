@@ -1,7 +1,7 @@
 {
-    "name": "contao-community-alliance/composer",
+    "name": "contao-community-alliance/composer-client",
     "type": "contao-module",
-    "description": "composer integration into the contao cms",
+    "description": "The contao composer client.",
     "keywords": [
         "contao",
         "composer",
@@ -38,6 +38,9 @@
         "squizlabs/php_codesniffer": "~1.0",
         "phpmd/phpmd": "~2.0",
         "contao-community-alliance/build-system-tool-branch-alias-validation": "~1.0"
+    },
+    "replace": {
+        "contao-community-alliance/composer": "self.version"
     },
     "extra": {
         "contao": {
