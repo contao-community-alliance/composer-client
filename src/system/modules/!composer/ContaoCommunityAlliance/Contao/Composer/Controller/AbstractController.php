@@ -28,6 +28,8 @@ use Composer\Util\ConfigValidator;
 
 /**
  * Class AbstractController
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 abstract class AbstractController extends \Backend implements ControllerInterface
 {
@@ -128,7 +130,7 @@ abstract class AbstractController extends \Backend implements ControllerInterfac
 
         /** @var \Composer\Package\PackageInterface $package */
         foreach ($repository->getPackages() as $package) {
-            $this->fillDependencyMap($repository, $package, $dependencyMap, $inverted);
+            $this->fillDependencyMap($package, $dependencyMap, $inverted);
         }
 
         return $dependencyMap;
@@ -142,14 +144,12 @@ abstract class AbstractController extends \Backend implements ControllerInterfac
      * @param array               $dependencyMap
      */
     protected function fillDependencyMap(
-        RepositoryInterface $repository,
         PackageInterface $package,
         array &$dependencyMap,
         $inverted
     ) {
-        /** @var string $requireName */
         /** @var \Composer\Package\Link $requireLink */
-        foreach ($package->getRequires() as $requireName => $requireLink) {
+        foreach ($package->getRequires() as $requireLink) {
             if ($inverted) {
                 $dependencyMap[$package->getName()][$requireLink->getTarget()] = $requireLink->getPrettyConstraint();
             } else {

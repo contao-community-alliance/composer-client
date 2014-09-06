@@ -10,9 +10,15 @@
         </exec>
     </target>
 
+    <target name="phpmd">
+        <exec dir="${basedir}" executable="vendor/bin/phpmd" failonerror="true">
+            <arg line="${basedir}/src text naming,unusedcode --suffixes php"/>
+        </exec>
+    </target>
+
     <target name="branch-alias">
         <exec dir="${basedir}" executable="vendor/bin/validate-branch-alias.php" failonerror="true"/>
     </target>
 
-    <target name="test" depends="phpunit,phpcs,branch-alias"/>
+    <target name="test" depends="phpunit,phpcs,phpmd,branch-alias"/>
 </project>

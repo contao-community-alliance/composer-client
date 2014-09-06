@@ -32,6 +32,8 @@ class DetailsController extends AbstractController
 {
     /**
      * {@inheritdoc}
+     *
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function handle(\Input $input)
     {
@@ -108,8 +110,6 @@ class DetailsController extends AbstractController
      */
     protected function searchPackage($packageName)
     {
-        $rootPackage = $this->composer->getPackage();
-
         $pool = $this->getPool();
 
         $versions = array();

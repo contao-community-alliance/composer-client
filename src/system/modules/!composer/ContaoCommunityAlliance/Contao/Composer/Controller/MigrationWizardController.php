@@ -48,6 +48,8 @@ class MigrationWizardController extends AbstractController
 
     /**
      * {@inheritdoc}
+     *
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function handle(\Input $input)
     {

@@ -31,6 +31,8 @@ use ContaoCommunityAlliance\Contao\Composer\ConsoleColorConverter;
 
 /**
  * Class InstalledController
+ *
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class InstalledController extends AbstractController
 {
@@ -158,7 +160,7 @@ class InstalledController extends AbstractController
                 $dependencyOf = $dependencyMap[$package->getName()];
             }
             if (count($package->getReplaces())) {
-                foreach ($package->getReplaces() as $replace => $constraint) {
+                foreach (array_keys($package->getReplaces()) as $replace) {
                     if (isset($dependencyMap[$replace])) {
                         $dependencyOf = $dependencyMap[$replace];
                         break;
@@ -220,7 +222,7 @@ class InstalledController extends AbstractController
             }
         }
 
-        foreach ($groupedPackages as $group => $packages) {
+        foreach (array_keys($groupedPackages) as $group) {
             usort(
                 $groupedPackages[$group],
                 function ($a, $b) {
@@ -315,13 +317,13 @@ class InstalledController extends AbstractController
     /**
      * Compare two packages by their names.
      *
-     * @param PackageInterface $a
-     * @param PackageInterface $b
+     * @param PackageInterface $left
+     * @param PackageInterface $right
      *
      * @return int
      */
-    public function packageCompare(PackageInterface $a, PackageInterface $b)
+    public function packageCompare(PackageInterface $left, PackageInterface $right)
     {
-        return strnatcasecmp($a->getPrettyName(), $b->getPrettyName());
+        return strnatcasecmp($left->getPrettyName(), $right->getPrettyName());
     }
 }

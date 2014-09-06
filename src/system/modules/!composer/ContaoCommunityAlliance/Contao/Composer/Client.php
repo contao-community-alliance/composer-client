@@ -6,6 +6,8 @@ namespace ContaoCommunityAlliance\Contao\Composer;
  * Class Client
  *
  * Composer client integration.
+ *
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class Client extends \System
 {

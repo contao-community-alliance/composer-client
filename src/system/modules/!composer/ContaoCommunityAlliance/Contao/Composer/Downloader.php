@@ -37,6 +37,8 @@ class Downloader
      *
      * @return bool|null|string
      * @throws \Exception
+     *
+     * @SuppressWarnings("unused")
      */
     public static function fgetDownload($url, $file = false)
     {

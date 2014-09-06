@@ -42,7 +42,7 @@ class UndoMigrationController extends AbstractController
             $rootPackage = $this->composer->getPackage();
 
             $requires = $rootPackage->getRequires();
-            foreach ($requires as $package => $constraint) {
+            foreach (array_keys($requires) as $package) {
                 if ($package != 'contao-community-alliance/composer') {
                     unset($requires[$package]);
                 }

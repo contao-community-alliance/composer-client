@@ -47,6 +47,9 @@ use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
  * Class ClientBackend
  *
  * Composer client interface.
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class ClientBackend extends \Backend
 {

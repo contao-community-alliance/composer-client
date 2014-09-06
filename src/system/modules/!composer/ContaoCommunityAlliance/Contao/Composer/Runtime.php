@@ -228,8 +228,8 @@ EOF;
      */
     public static function clearComposerCache()
     {
-        $fs = new Filesystem();
-        return $fs->removeDirectory(COMPOSER_DIR_ABSOULTE . '/cache');
+        $filesystem = new Filesystem();
+        return $filesystem->removeDirectory(COMPOSER_DIR_ABSOULTE . '/cache');
     }
 
     /**
@@ -456,6 +456,8 @@ EOF;
 
     /**
      * Load composer and the composer class loader.
+     *
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public static function createComposer(IOInterface $io)
     {
@@ -483,6 +485,8 @@ EOF;
      * @param string $cmd
      *
      * @return bool Return true if the process terminate without error, false otherwise.
+     *
+     * @SuppressWarnings("unused")
      */
     public static function testProcess($cmd)
     {
