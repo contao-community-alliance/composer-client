@@ -27,9 +27,9 @@
         }
     ],
     "autoload-dev": {
-        "psr-0": {
-            "ContaoCommunityAlliance\\Contao\\Composer": "src/system/modules/!composer/",
-            "ContaoCommunityAlliance\\Contao\\Composer\\Test": "tests/"
+        "psr-4": {
+            "ContaoCommunityAlliance\\Contao\\Composer\\": "src/system/modules/!composer/src",
+            "ContaoCommunityAlliance\\Contao\\Composer\\Test\\": "tests"
         }
     },
     "require": {

@@ -13,7 +13,7 @@
         >
     <testsuites>
         <testsuite name="Contao Composer Test Suite">
-            <directory>./tests/ContaoCommunityAlliance/Contao/Composer/Test</directory>
+            <directory suffix="Test.php">./tests/</directory>
         </testsuite>
     </testsuites>
 
