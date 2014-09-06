@@ -7,6 +7,21 @@
     <target name="phpcs">
         <exec dir="${basedir}" executable="vendor/bin/phpcs" failonerror="true">
             <arg line="--standard=PSR1,PSR2 ${basedir}/src"/>
+            <!--
+            The config.php declare symbols (constants) and execute logic with side effects.
+            Unfortunately its impossible to change this, within contao, so we ignore this here.
+            -->
+            <arg line="--ignore=src/system/modules/!composer/config/config.php"/>
+            <!--
+            The class Contao2ClassFileExistsHack is a little shared helper class, that we be ignored here.
+            -->
+            <arg line="--ignore=src/system/modules/!composer/Contao2ClassFileExistsHack.php"/>
+            <!--
+            These language files are generated, we ignore them.
+            -->
+            <arg line="--ignore=src/system/modules/!composer/languages/de/*"/>
+            <arg line="--ignore=src/system/modules/!composer/languages/fr/*"/>
+            <arg line="--ignore=src/system/modules/!composer/languages/ru/*"/>
         </exec>
     </target>
 
