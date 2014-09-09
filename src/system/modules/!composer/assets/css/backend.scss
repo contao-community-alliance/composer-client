@@ -654,9 +654,11 @@ table#sql_table {
   left: 0;
 }
 
-#composer_client_editor div {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-  font-size: 13px;
+.ace_editor, .ace_editor * {
+  font-family: Courier,monospace !important;
+  font-size: 12px;
+  font-size: .75rem;
+  color: inherit;
 }
 
 /**
