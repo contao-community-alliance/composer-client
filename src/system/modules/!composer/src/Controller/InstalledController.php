@@ -28,6 +28,7 @@ use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
 use Composer\Util\ConfigValidator;
 use ContaoCommunityAlliance\Contao\Composer\ConsoleColorConverter;
+use ContaoCommunityAlliance\Contao\Composer\Downloader;
 
 /**
  * Class InstalledController
@@ -141,12 +142,10 @@ class InstalledController extends AbstractController
     protected function calculateLegacyReplaceMap(RepositoryInterface $repository)
     {
         $replaceMap = array();
-        $ch         = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://legacy-packages-via.contao-community-alliance.org/abandoned.json');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        $legacyReplaces = json_decode(curl_exec($ch), true);
-        curl_close($ch);
+        $legacyReplaces = json_decode(
+            Downloader::download('http://legacy-packages-via.contao-community-alliance.org/abandoned.json'),
+            true
+        );
 
         /** @var \Composer\Package\PackageInterface $package */
         foreach ($repository->getPackages() as $package) {
