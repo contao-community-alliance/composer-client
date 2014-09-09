@@ -32,6 +32,8 @@ $groupedPackages = $this->groupedPackages;
 $requiresList = $this->requiresList;
 /** @var array $dependenciesList */
 $dependenciesList = $this->dependenciesList;
+/** @var array $legacyReplacedBy */
+$legacyReplacedBy = $this->legacyReplaceMap;
 ?>
 
 <?php echo $this->getMessages(); ?>
@@ -119,6 +121,17 @@ $dependenciesList = $this->dependenciesList;
                                 echo $package->getPrettyName()
                                 ?>
                             </a>
+                            <?php
+                            if(isset($legacyReplacedBy[$package->getPrettyName()])):
+                                ?>
+                                <a class="upgradeto" href="contao/main.php?do=composer&amp;install=<?php echo $legacyReplacedBy[$package->getPrettyName()]; ?>">
+                                    <?php
+                                    echo $legacyReplacedBy[$package->getPrettyName()];
+                                    ?>
+                                </a>
+                            <?php
+                                endif;
+                            ?>
                             <?php
                         endif;
 

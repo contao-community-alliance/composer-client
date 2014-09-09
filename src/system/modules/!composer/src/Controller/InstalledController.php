@@ -52,6 +52,11 @@ class InstalledController extends AbstractController
             $repositoryManager->getLocalRepository()
         );
 
+        // calculate contao-legacy replace map.
+        $legacyReplaceMap = $this->calculateLegacyReplaceMap(
+            $repositoryManager->getLocalRepository()
+        );
+
         // build list of explicit required packages
         $requiresList = $this->buildRequiresList(
             $this->composer->getPackage(),
@@ -88,6 +93,7 @@ class InstalledController extends AbstractController
         $template->composer         = $this->composer;
         $template->dependencyMap    = $dependencyMap;
         $template->replaceMap       = $replaceMap;
+        $template->legacyReplaceMap = $legacyReplaceMap;
         $template->groupedPackages  = $groupedPackages;
         $template->requiresList     = $requiresList;
         $template->dependenciesList = $dependenciesList;
@@ -119,6 +125,33 @@ class InstalledController extends AbstractController
                 } else {
                     $replaceMap[$constraint->getTarget()][] = array($constraint->getSource());
                 }
+            }
+        }
+
+        return $replaceMap;
+    }
+
+    /**
+     * Build replacement map for installed packages.
+     *
+     * @param RepositoryInterface $repository
+     *
+     * @return array
+     */
+    protected function calculateLegacyReplaceMap(RepositoryInterface $repository)
+    {
+        $replaceMap = array();
+        $ch         = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://legacy-packages-via.contao-community-alliance.org/abandoned.json');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        $legacyReplaces = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        /** @var \Composer\Package\PackageInterface $package */
+        foreach ($repository->getPackages() as $package) {
+            if (isset($legacyReplaces[$package->getName()])) {
+                $replaceMap[$package->getName()] = $legacyReplaces[$package->getName()];
             }
         }
 
