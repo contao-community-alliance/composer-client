@@ -124,7 +124,7 @@ $legacyReplacedBy = $this->legacyReplaceMap;
                             <?php
                             if(isset($legacyReplacedBy[$package->getPrettyName()])):
                                 ?>
-                                <a class="upgradeto" href="contao/main.php?do=composer&amp;install=<?php echo $legacyReplacedBy[$package->getPrettyName()]; ?>">
+                                <br>&rdca; <a class="upgradeto" href="contao/main.php?do=composer&amp;install=<?php echo $legacyReplacedBy[$package->getPrettyName()]; ?>">
                                     <?php
                                     echo $legacyReplacedBy[$package->getPrettyName()];
                                     ?>

@@ -237,6 +237,13 @@ table.composer_package_list {
   padding: 4px 0;
   white-space: nowrap;
   width: 99%;
+  .upgradeto {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 2px 5px;
+    color: #fff;
+    background-color: #8ab858;
+  }
 }
 
 .col_name .toggler {
