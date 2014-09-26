@@ -55,7 +55,7 @@ EOF;
     "type": "project",
     "license": "proprietary",
     "require": {
-        "contao-community-alliance/composer": "~0.12"
+        "contao-community-alliance/composer-client": "~0.12"
     },
     "prefer-stable": true,
     "minimum-stability": "dev",
