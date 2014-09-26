@@ -37,9 +37,15 @@ use ContaoCommunityAlliance\Contao\Composer\Downloader;
  */
 class InstalledController extends AbstractController
 {
-    public static $UNMODIFIABLE_PACKAGES = array('contao/core');
+    public static $UNMODIFIABLE_PACKAGES = array(
+        'contao/core'
+    );
 
-    public static $UNDELETABLE_PACKAGES = array('contao/core', 'contao-community-alliance/composer');
+    public static $UNDELETABLE_PACKAGES = array(
+        'contao/core',
+        'contao-community-alliance/composer',
+        'contao-community-alliance/composer-client'
+    );
 
     /**
      * {@inheritdoc}
