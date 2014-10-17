@@ -55,8 +55,8 @@
             }
         },
         "branch-alias": {
-            "dev-master": "0.13.x-dev",
-            "dev-develop": "0.14.x-dev"
+            "dev-master": "0.14.x-dev",
+            "dev-develop": "0.15.x-dev"
         }
     },
     "prefer-stable": true,
