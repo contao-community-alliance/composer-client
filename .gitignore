@@ -12,6 +12,8 @@ nbproject/
 
 # Composer
 vendor/
+composer.lock
+composer.phar
 
 # Transifex
 /.tx/

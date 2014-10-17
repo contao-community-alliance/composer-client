@@ -1,3 +1,9 @@
+[![Version](http://img.shields.io/packagist/v/contao-community-alliance/composer-client.svg?style=flat-square)](https://packagist.org/packages/contao-community-alliance/composer-client)
+[![Stable Build Status](http://img.shields.io/travis/contao-community-alliance/composer-client/master.svg?style=flat-square&label=stable build)](https://travis-ci.org/contao-community-alliance/composer-client)
+[![Upstream Build Status](http://img.shields.io/travis/contao-community-alliance/composer-client/develop.svg?style=flat-square&label=dev build)](https://travis-ci.org/contao-community-alliance/composer-client)
+[![License](http://img.shields.io/packagist/l/contao-community-alliance/composer-client.svg?style=flat-square)](https://github.com/contao-community-alliance/composer-client/blob/master/LICENSE)
+[![Downloads](http://img.shields.io/packagist/dt/contao-community-alliance/composer-client.svg?style=flat-square)](https://packagist.org/packages/contao-community-alliance/composer-client)
+
 Composer integration for Contao
 ===============================
 

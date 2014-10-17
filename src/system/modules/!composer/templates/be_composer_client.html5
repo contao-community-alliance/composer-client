@@ -1,22 +1,22 @@
 <div id="tl_buttons">
-	<a href="contao/main.php?do=composer&amp;update=database" title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['update_database']); ?>">
-		<?php echo $this->generateImage(
-			'system/modules/!composer/assets/images/database_update.png',
-			$GLOBALS['TL_LANG']['composer_client']['update_database']
-		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['update_database']; ?>
-	</a>
-	<a href="contao/main.php?do=composer&amp;tools=dialog" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['tools_dialog']; ?>">
-		<?php echo $this->generateImage(
-			'system/modules/!composer/assets/images/tools_dialog.png',
-			$GLOBALS['TL_LANG']['composer_client']['tools_dialog']
-		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['tools_dialog']; ?>
-	</a>
-	<a href="contao/main.php?do=composer&amp;settings=dialog" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?>">
-		<?php echo $this->generateImage(
-			'system/modules/!composer/assets/images/settings_dialog.png',
-			$GLOBALS['TL_LANG']['composer_client']['settings_dialog']
-		); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?>
-	</a>
+    <a href="contao/main.php?do=composer&amp;update=database" title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['update_database']); ?>">
+        <?php echo $this->generateImage(
+            'system/modules/!composer/assets/images/database_update.png',
+            $GLOBALS['TL_LANG']['composer_client']['update_database']
+        ); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['update_database']; ?>
+    </a>
+    <a href="contao/main.php?do=composer&amp;tools=dialog" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['tools_dialog']; ?>">
+        <?php echo $this->generateImage(
+            'system/modules/!composer/assets/images/tools_dialog.png',
+            $GLOBALS['TL_LANG']['composer_client']['tools_dialog']
+        ); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['tools_dialog']; ?>
+    </a>
+    <a href="contao/main.php?do=composer&amp;settings=dialog" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?>">
+        <?php echo $this->generateImage(
+            'system/modules/!composer/assets/images/settings_dialog.png',
+            $GLOBALS['TL_LANG']['composer_client']['settings_dialog']
+        ); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?>
+    </a>
 </div>
 
 <h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['installed_headline']; ?></h2>
@@ -32,259 +32,272 @@ $groupedPackages = $this->groupedPackages;
 $requiresList = $this->requiresList;
 /** @var array $dependenciesList */
 $dependenciesList = $this->dependenciesList;
+/** @var array $legacyReplacedBy */
+$legacyReplacedBy = $this->legacyReplaceMap;
 ?>
 
 <?php echo $this->getMessages(); ?>
 
 <?php if ($this->output): ?>
-	<pre class="output"><?php echo $this->output; ?></pre>
+    <pre class="output"><?php echo $this->output; ?></pre>
 <?php endif; ?>
 
 <div class="tl_listing_container list_view">
-	<table class="tl_listing composer_package_list showColumns">
-		<?php
-		$n = 1;
-		/** @var string $group */
-		/** @var stdClass[] $items */
-		foreach ($groupedPackages as $group => $items):
-			$containsOnlyDependencies = true;
+    <table class="tl_listing composer_package_list showColumns">
+        <?php
+        $n = 1;
+        /** @var string $group */
+        /** @var stdClass[] $items */
+        foreach ($groupedPackages as $group => $items):
+            $containsOnlyDependencies = true;
 
-			foreach ($items as $item):
-				if ($item->removeable) {
-					$containsOnlyDependencies = false;
-					break;
-				}
-			endforeach;
-			?>
-			<tbody>
-			<tr<?php if ($containsOnlyDependencies): ?> class="dependency" style="display: none;"<?php endif; ?>>
-				<th class="tl_folder_tlist col_select"></th>
-				<th class="tl_folder_tlist col_type"></th>
-				<th class="tl_folder_tlist col_icon"></th>
-				<th class="tl_folder_tlist col_group"><?= $group ?></th>
-				<th class="tl_folder_tlist col_version"></th>
-				<th class="tl_folder_tlist col_pin"></th>
-				<th class="tl_folder_tlist col_remove"></th>
-			</tr>
-			<?php
-			foreach ($items as $item):
-				/** @var \Composer\Package\PackageInterface $package */
-				$package = $item->package;
-				?>
-				<tr <?php if (!$item->removeable): ?>class="dependency" style="display: none;"<?php endif; ?>
-					onmouseover="Theme.hoverRow(this,1);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,1);<?php endif; ?>"
-					onmouseout="Theme.hoverRow(this,0);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,0);<?php endif; ?>">
-					<td class="tl_file_list col_select">
-						<?php
-						if ($item->removeable && !in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNDELETABLE_PACKAGES)):
-						?>
-						<input type="checkbox" name="select" value="<?php echo htmlentities($package->getName(), ENT_QUOTES, 'UTF-8') ?>" disabled>
-						<?php
-						endif;
-						?>
-					</td>
-					<td class="tl_file_list col_type"><?php
-						$icon = sprintf('system/modules/!composer/assets/images/type-%s.png', $package->getType());
-						if (file_exists(TL_ROOT . '/' . $icon)) {
-							echo $this->generateImage(
-								$icon,
-								$package->getType(),
-								sprintf('title="%s"', $package->getType())
-							);
-						}
-						else {
-							printf(
-								'<span class="label %s" title="%s">%s</span>',
-								strtolower($package->getType()),
-								$package->getType(),
-								strtoupper($package->getType())
-							);
-						}
-					?></td>
-					<td class="tl_file_list col_icon"><?php
-						if ($item->installing):
-							echo $this->generateImage('system/modules/!composer/assets/images/installing.png', '');
-						elseif (!$item->removeable && $item->dependencyOf):
-							echo $this->generateImage('system/modules/!composer/assets/images/dependency.png', '');
-						endif;
-					?></td>
-					<td class="tl_file_list col_name">
-						<?php
-						if (in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNMODIFIABLE_PACKAGES)):
-							echo $package->getPrettyName();
-						else:
-							?>
-							<a href="contao/main.php?do=composer&amp;install=<?php echo $package->getPrettyName(); ?>">
-								<?php
-								echo $package->getPrettyName()
-								?>
-							</a>
-							<?php
-						endif;
+            foreach ($items as $item):
+                if ($item->removeable) {
+                    $containsOnlyDependencies = false;
+                    break;
+                }
+            endforeach;
+            ?>
+            <tbody>
+            <tr<?php if ($containsOnlyDependencies): ?> class="dependency" style="display: none;"<?php endif; ?>>
+                <th class="tl_folder_tlist col_select"></th>
+                <th class="tl_folder_tlist col_type"></th>
+                <th class="tl_folder_tlist col_icon"></th>
+                <th class="tl_folder_tlist col_group"><?= $group ?></th>
+                <th class="tl_folder_tlist col_version"></th>
+                <th class="tl_folder_tlist col_pin"></th>
+                <th class="tl_folder_tlist col_remove"></th>
+            </tr>
+            <?php
+            foreach ($items as $item):
+                /** @var \Composer\Package\PackageInterface $package */
+                $package = $item->package;
+                ?>
+                <tr <?php if (!$item->removeable): ?>class="dependency" style="display: none;"<?php endif; ?>
+                    onmouseover="Theme.hoverRow(this,1);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,1);<?php endif; ?>"
+                    onmouseout="Theme.hoverRow(this,0);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.nextSibling,0);<?php endif; ?>">
+                    <td class="tl_file_list col_select">
+                        <?php
+                        if ($item->removeable && !in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNDELETABLE_PACKAGES)):
+                        ?>
+                        <input type="checkbox" name="select" value="<?php echo htmlentities($package->getName(), ENT_QUOTES, 'UTF-8') ?>" disabled>
+                        <?php
+                        endif;
+                        ?>
+                    </td>
+                    <td class="tl_file_list col_type"><?php
+                        $icon = sprintf('system/modules/!composer/assets/images/type-%s.png', $package->getType());
+                        if (file_exists(TL_ROOT . '/' . $icon)) {
+                            echo $this->generateImage(
+                                $icon,
+                                $package->getType(),
+                                sprintf('title="%s"', $package->getType())
+                            );
+                        }
+                        else {
+                            printf(
+                                '<span class="label %s" title="%s">%s</span>',
+                                strtolower($package->getType()),
+                                $package->getType(),
+                                strtoupper($package->getType())
+                            );
+                        }
+                    ?></td>
+                    <td class="tl_file_list col_icon"><?php
+                        if ($item->installing):
+                            echo $this->generateImage('system/modules/!composer/assets/images/installing.png', '');
+                        elseif (!$item->removeable && $item->dependencyOf):
+                            echo $this->generateImage('system/modules/!composer/assets/images/dependency.png', '');
+                        endif;
+                    ?></td>
+                    <td class="tl_file_list col_name">
+                        <?php
+                        if (in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNMODIFIABLE_PACKAGES)):
+                            echo $package->getPrettyName();
+                        else:
+                            ?>
+                            <a href="contao/main.php?do=composer&amp;install=<?php echo $package->getPrettyName(); ?>">
+                                <?php
+                                echo $package->getPrettyName()
+                                ?>
+                            </a>
+                            <?php
+                            if(isset($legacyReplacedBy[$package->getPrettyName()])):
+                                ?>
+                                <br>&rdca; <a class="upgradeto" href="contao/main.php?do=composer&amp;install=<?php echo $legacyReplacedBy[$package->getPrettyName()]; ?>">
+                                    <?php
+                                    echo $legacyReplacedBy[$package->getPrettyName()];
+                                    ?>
+                                </a>
+                            <?php
+                                endif;
+                            ?>
+                            <?php
+                        endif;
 
-						if (isset($replaceThat[$package->getName()]) && isset($requires[$replaceThat[$package->getName()]])) {
-							printf(
-								'<span class="replace">%s</span>',
-								$replaceThat[$package->getName()]
-							);
-						}
-						?>
-					</td>
-					<td class="tl_file_list col_version"><?php
-						printf(
-							'<span class="stability-%s">%s</span>',
-							strtolower($package->getStability()),
-							$package->getPrettyVersion()
-						);
+                        if (isset($replaceThat[$package->getName()]) && isset($requires[$replaceThat[$package->getName()]])) {
+                            printf(
+                                '<span class="replace">%s</span>',
+                                $replaceThat[$package->getName()]
+                            );
+                        }
+                        ?>
+                    </td>
+                    <td class="tl_file_list col_version"><?php
+                        printf(
+                            '<span class="stability-%s">%s</span>',
+                            strtolower($package->getStability()),
+                            $package->getPrettyVersion()
+                        );
 
-						if ($package->getStability() == 'dev') {
-							if ($package->getInstallationSource() == 'source') {
-								$reference = $package->getSourceReference();
-							}
-							else {
-								$reference = $package->getDistReference();
-							}
+                        if ($package->getStability() == 'dev') {
+                            if ($package->getInstallationSource() == 'source') {
+                                $reference = $package->getSourceReference();
+                            }
+                            else {
+                                $reference = $package->getDistReference();
+                            }
 
-							// the reference is a hash
-							if (!is_numeric($reference)) {
-								$reference = substr($reference, 0, 8);
-							}
+                            // the reference is a hash
+                            if (!is_numeric($reference)) {
+                                $reference = substr($reference, 0, 8);
+                            }
 
-							if ($reference) {
-								printf(
-									' <span class="reference">(%s)</span>',
-									$reference
-								);
-							}
-						}
+                            if ($reference) {
+                                printf(
+                                    ' <span class="reference">(%s)</span>',
+                                    $reference
+                                );
+                            }
+                        }
 
-						if ($item->requireConstraint && !$item->requireConstraint->matches($item->versionConstraint)) {
-							printf(
-								' <span class="target">&rarr; %s</span>',
-								$item->requireConstraint->getPrettyString()
-							);
-						}
-					?></td>
-					<td class="tl_file_list col_pin">
-						<?php
-						if (
-							!$item->installing &&
-							!$item->removing &&
-							!in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNMODIFIABLE_PACKAGES)
-						): ?>
-							<?php
-							if (!$item->pinable):
-								?>
-								<img src="system/modules/!composer/assets/images/version_unpinable.png"
-									   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['unpinablePackage']); ?>">
-								<?php
-							else:
-								?>
-								<form action="contao/main.php?do=composer" class="tl_form" method="post"
-									  enctype="application/x-www-form-urlencoded">
-									<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
-									<input type="hidden" name="pin" value="<?php echo specialchars($package->getName()); ?>">
-									<?php if ($item->pinned): ?>
-									<input type="image" src="system/modules/!composer/assets/images/version_locked.png"
-										   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['unpinPackage']); ?>">
-									<?php else: ?>
-									<input type="image" src="system/modules/!composer/assets/images/version_unlocked.png"
-										   title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['pinPackage']); ?>">
-									<?php endif; ?>
-								</form>
-								<?php
-							endif;
-							?>
-						<?php
-						endif;
-						?>
-					</td>
-					<td class="tl_file_list col_remove">
-						<?php
-						if (!in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNDELETABLE_PACKAGES)):
-							if ($item->removeable):
-								?>
-								<form action="contao/main.php?do=composer" class="tl_form" method="post"
-									  enctype="application/x-www-form-urlencoded"
-									  onsubmit="return confirm(<?php echo str_replace('"', "'", json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemove'], $package->getName()))); ?>);">
-									<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
-									<input type="hidden" name="remove" value="<?php echo specialchars($package->getName()); ?>">
-									<input type="image" src="system/modules/!composer/assets/images/remove.png"
-											title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['removePackage']); ?>">
-								</form>
-								<?php
-							endif;
+                        if ($item->requireConstraint && !$item->requireConstraint->matches($item->versionConstraint)) {
+                            printf(
+                                ' <span class="target">&rarr; %s</span>',
+                                $item->requireConstraint->getPrettyString()
+                            );
+                        }
+                    ?></td>
+                    <td class="tl_file_list col_pin">
+                        <?php
+                        if (
+                            !$item->installing &&
+                            !$item->removing &&
+                            !in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNMODIFIABLE_PACKAGES)
+                        ): ?>
+                            <?php
+                            if (!$item->pinable):
+                                ?>
+                                <img src="system/modules/!composer/assets/images/version_unpinable.png"
+                                       title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['unpinablePackage']); ?>">
+                                <?php
+                            else:
+                                ?>
+                                <form action="contao/main.php?do=composer" class="tl_form" method="post"
+                                      enctype="application/x-www-form-urlencoded">
+                                    <input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+                                    <input type="hidden" name="pin" value="<?php echo specialchars($package->getName()); ?>">
+                                    <?php if ($item->pinned): ?>
+                                    <input type="image" src="system/modules/!composer/assets/images/version_locked.png"
+                                           title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['unpinPackage']); ?>">
+                                    <?php else: ?>
+                                    <input type="image" src="system/modules/!composer/assets/images/version_unlocked.png"
+                                           title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['pinPackage']); ?>">
+                                    <?php endif; ?>
+                                </form>
+                                <?php
+                            endif;
+                            ?>
+                        <?php
+                        endif;
+                        ?>
+                    </td>
+                    <td class="tl_file_list col_remove">
+                        <?php
+                        if (!in_array($package->getName(), \ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNDELETABLE_PACKAGES)):
+                            if ($item->removeable):
+                                ?>
+                                <form action="contao/main.php?do=composer" class="tl_form" method="post"
+                                      enctype="application/x-www-form-urlencoded"
+                                      onsubmit="return confirm(<?php echo str_replace('"', "'", json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemove'], $package->getName()))); ?>);">
+                                    <input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+                                    <input type="hidden" name="remove" value="<?php echo specialchars($package->getName()); ?>">
+                                    <input type="image" src="system/modules/!composer/assets/images/remove.png"
+                                            title="<?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['removePackage']); ?>">
+                                </form>
+                                <?php
+                            endif;
 
-							if ($item->removing):
-								?>
-								<span class="to-be-removed"><?php
-									echo $this->generateImage('system/modules/!composer/assets/images/removing.png', $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']);
-								?></span>
-								<?php
-							endif;
-						endif;
-						?>
-					</td>
-				</tr><?php // NOTE: do not add a newline or whitespaces here!!!
-				if ($item->dependencyOf):
-				?><tr class="dependant<?php if (!$item->removeable): ?> dependency<?php endif; ?>" style="display: none;"
-					onmouseover="Theme.hoverRow(this,1);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,1);<?php endif; ?>"
-					onmouseout="Theme.hoverRow(this,0);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,0);<?php endif; ?>">
-					<td class="tl_file_list col_dependants" colspan="7">
-						<table><?php
-							foreach ($item->dependencyOf as $dependantName => $dependantConstraint):
-								?><tr>
-									<td class="tl_file_list col_select"></td>
-									<td class="tl_file_list col_type"></td>
-									<td class="tl_file_list col_icon"><?php
-										echo $this->generateImage('system/modules/!composer/assets/images/dependant.png', '');
-									?></td>
-									<td class="tl_file_list col_name"><?= $dependantName ?></td>
-									<td class="tl_file_list col_version"><?= $dependantConstraint ?></td>
-									<td class="tl_file_list col_pin"></td>
-									<td class="tl_file_list col_remove"></td>
-								</tr><?php
-							endforeach;
-						?></table>
-					</td>
-				</tr>
-				<?php
-				endif;
-			endforeach;
-			?>
-			</tbody>
-			<?php
-		endforeach;
-		?>
-	</table>
-	<div class="actions">
-		<form action="contao/main.php?do=composer" id="tl_composer_actions" class="tl_form" method="post"
-				enctype="application/x-www-form-urlencoded"
-				onsubmit="var elements = this.elements; setTimeout(function() { Array.each(elements, function(element) { element.disabled = true; }); }, 1);">
-			<input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
-			<input type="hidden" name="packages" value="" class="package_names">
-		&rdsh;
-			<button name="remove" value="1" disabled onclick="return confirm(<?php echo htmlentities(json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemovePackages'], ':packages:')), ENT_QUOTES, 'UTF-8') ?>.replace(':packages:', this.form.elements['packages'].value));">
-				<img src="system/modules/!composer/assets/images/remove.png"> <?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['removePackages']); ?>
-			</button>
-		</form>
-	</div>
-	<hr>
-	<p class="dependants">
-		<label>
-			<input type="checkbox" id="ctrl_show_dependants"
-				   onchange="$$('tr.dependant').setStyle('display', this.checked ? '' : 'none'); this.checked && $$('tr.dependency').setStyle('display', $('ctrl_show_dependencies').checked ? '' : 'none');">
-			<?= $GLOBALS['TL_LANG']['composer_client']['show_dependants'] ?>
-		</label>
-	</p>
-	<p class="dependencies">
-		<label>
-			<input type="checkbox" id="ctrl_show_dependencies"
-				   onchange="$$('tr.dependency').setStyle('display', this.checked ? '' : 'none'); this.checked && $$('tr.dependant').setStyle('display', $('ctrl_show_dependants').checked ? '' : 'none');">
-			<?php printf($GLOBALS['TL_LANG']['composer_client']['show_dependencies'], count($dependenciesList)); ?>
-		</label>
-		(<a href="contao/main.php?do=composer&amp;show=dependency-graph"><?php echo $GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']; ?></a>)
-	</p>
+                            if ($item->removing):
+                                ?>
+                                <span class="to-be-removed"><?php
+                                    echo $this->generateImage('system/modules/!composer/assets/images/removing.png', $GLOBALS['TL_LANG']['composer_client']['toBeRemoved']);
+                                ?></span>
+                                <?php
+                            endif;
+                        endif;
+                        ?>
+                    </td>
+                </tr><?php // NOTE: do not add a newline or whitespaces here!!!
+                if ($item->dependencyOf):
+                ?><tr class="dependant<?php if (!$item->removeable): ?> dependency<?php endif; ?>" style="display: none;"
+                    onmouseover="Theme.hoverRow(this,1);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,1);<?php endif; ?>"
+                    onmouseout="Theme.hoverRow(this,0);<?php if ($item->dependencyOf): ?>Theme.hoverRow(this.previousSibling,0);<?php endif; ?>">
+                    <td class="tl_file_list col_dependants" colspan="7">
+                        <table><?php
+                            foreach ($item->dependencyOf as $dependantName => $dependantConstraint):
+                                ?><tr>
+                                    <td class="tl_file_list col_select"></td>
+                                    <td class="tl_file_list col_type"></td>
+                                    <td class="tl_file_list col_icon"><?php
+                                        echo $this->generateImage('system/modules/!composer/assets/images/dependant.png', '');
+                                    ?></td>
+                                    <td class="tl_file_list col_name"><?= $dependantName ?></td>
+                                    <td class="tl_file_list col_version"><?= $dependantConstraint ?></td>
+                                    <td class="tl_file_list col_pin"></td>
+                                    <td class="tl_file_list col_remove"></td>
+                                </tr><?php
+                            endforeach;
+                        ?></table>
+                    </td>
+                </tr>
+                <?php
+                endif;
+            endforeach;
+            ?>
+            </tbody>
+            <?php
+        endforeach;
+        ?>
+    </table>
+    <div class="actions">
+        <form action="contao/main.php?do=composer" id="tl_composer_actions" class="tl_form" method="post"
+                enctype="application/x-www-form-urlencoded"
+                onsubmit="var elements = this.elements; setTimeout(function() { Array.each(elements, function(element) { element.disabled = true; }); }, 1);">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
+            <input type="hidden" name="packages" value="" class="package_names">
+        &rdsh;
+            <button name="remove" value="1" disabled onclick="return confirm(<?php echo htmlentities(json_encode(sprintf($GLOBALS['TL_LANG']['composer_client']['confirmRemovePackages'], ':packages:')), ENT_QUOTES, 'UTF-8') ?>.replace(':packages:', this.form.elements['packages'].value));">
+                <img src="system/modules/!composer/assets/images/remove.png"> <?php echo specialchars($GLOBALS['TL_LANG']['composer_client']['removePackages']); ?>
+            </button>
+        </form>
+    </div>
+    <hr>
+    <p class="dependants">
+        <label>
+            <input type="checkbox" id="ctrl_show_dependants"
+                   onchange="$$('tr.dependant').setStyle('display', this.checked ? '' : 'none'); this.checked && $$('tr.dependency').setStyle('display', $('ctrl_show_dependencies').checked ? '' : 'none');">
+            <?= $GLOBALS['TL_LANG']['composer_client']['show_dependants'] ?>
+        </label>
+    </p>
+    <p class="dependencies">
+        <label>
+            <input type="checkbox" id="ctrl_show_dependencies"
+                   onchange="$$('tr.dependency').setStyle('display', this.checked ? '' : 'none'); this.checked && $$('tr.dependant').setStyle('display', $('ctrl_show_dependants').checked ? '' : 'none');">
+            <?php printf($GLOBALS['TL_LANG']['composer_client']['show_dependencies'], count($dependenciesList)); ?>
+        </label>
+        (<a href="contao/main.php?do=composer&amp;show=dependency-graph"><?php echo $GLOBALS['TL_LANG']['composer_client']['show_dependency_graph']; ?></a>)
+    </p>
 </div>
 
 <?php

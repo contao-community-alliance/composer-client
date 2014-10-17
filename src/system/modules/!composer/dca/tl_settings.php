@@ -1,14 +1,14 @@
 <?php
 
 if (!$GLOBALS['TL_CONFIG']['composerAllowRepoClient']) {
-	ContaoCommunityAlliance\Contao\Composer\Client::getInstance()
-		->setInactiveModulesOptionsCallback(
-			$GLOBALS['TL_DCA']['tl_settings']['fields']['inactiveModules']['options_callback']
-		);
-	$GLOBALS['TL_DCA']['tl_settings']['fields']['inactiveModules']['options_callback'] = array(
-		'ContaoCommunityAlliance\Contao\Composer\Client',
-		'getModules'
-	);
+    $client = ContaoCommunityAlliance\Contao\Composer\Client::getInstance();
+    $client->setInactiveModulesOptionsCallback(
+        $GLOBALS['TL_DCA']['tl_settings']['fields']['inactiveModules']['options_callback']
+    );
+    $GLOBALS['TL_DCA']['tl_settings']['fields']['inactiveModules']['options_callback'] = array(
+        'ContaoCommunityAlliance\Contao\Composer\Client',
+        'getModules'
+    );
 }
 
 
@@ -17,7 +17,9 @@ if (!$GLOBALS['TL_CONFIG']['composerAllowRepoClient']) {
  */
 $GLOBALS['TL_DCA']['tl_settings']['palettes']['__selector__'][] = 'composerExecutionMode';
 
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{composer_legend:hide},composerAutoUpdateLibrary,composerExecutionMode,composerVerbosity,composerRemoveRepositoryTables';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .=
+    ';{composer_legend:hide},composerAutoUpdateLibrary,' .
+    'composerExecutionMode,composerVerbosity,composerRemoveRepositoryTables';
 
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_process']  = 'composerPhpPath';
 $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached'] = 'composerPhpPath';
@@ -26,47 +28,53 @@ $GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached
 /**
  * Fields
  */
-$GLOBALS['TL_DCA']['tl_settings']['fields']['composerAutoUpdateLibrary'] = array(
-	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary'],
-	'inputType' => 'checkbox',
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerAutoUpdateLibrary']      = array(
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary'],
+    'inputType' => 'checkbox',
 );
-$GLOBALS['TL_DCA']['tl_settings']['fields']['composerExecutionMode'] = array(
-	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'],
-	'inputType' => 'select',
-	'options'   => array('inline', 'process', 'detached'),
-	'reference' => $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes'],
-	'eval'      => array(
-		'mandatory'      => true,
-		'tl_class'       => 'w50',
-		'helpwizard'     => true,
-		'submitOnChange' => true,
-	),
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerExecutionMode']          = array(
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode'],
+    'inputType' => 'select',
+    'options'   => array('inline', 'process', 'detached'),
+    'reference' => $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes'],
+    'eval'      => array(
+        'mandatory'      => true,
+        'tl_class'       => 'w50',
+        'helpwizard'     => true,
+        'submitOnChange' => true,
+    ),
 );
-$GLOBALS['TL_DCA']['tl_settings']['fields']['composerPhpPath']       = array(
-	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'],
-	'inputType' => 'text',
-	'eval'      => array(
-		'mandatory'      => true,
-		'tl_class'       => 'w50',
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerPhpPath']                = array(
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerPhpPath'],
+    'inputType' => 'text',
+    'eval'      => array(
+        'mandatory'      => true,
+        'tl_class'       => 'w50',
         'allowHtml'      => true,
         'preserveTags'   => true,
         'decodeEntities' => true,
-	),
+    ),
 );
 $GLOBALS['TL_DCA']['tl_settings']['fields']['composerRemoveRepositoryTables'] = array(
-	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'],
-	'inputType' => 'checkbox',
-	'eval'      => array(
-		'tl_class' => 'clr m12 w50',
-	),
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'],
+    'inputType' => 'checkbox',
+    'eval'      => array(
+        'tl_class' => 'clr m12 w50',
+    ),
 );
-$GLOBALS['TL_DCA']['tl_settings']['fields']['composerVerbosity'] = array(
-	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerVerbosity'],
-	'inputType' => 'select',
-	'options'   => array('VERBOSITY_QUIET', 'VERBOSITY_NORMAL', 'VERBOSITY_VERBOSE', 'VERBOSITY_VERY_VERBOSE', 'VERBOSITY_DEBUG'),
-	'reference' => $GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels'],
-	'eval'      => array(
-		'tl_class' => 'w50',
-		'helpwizard'     => true,
-	),
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerVerbosity']              = array(
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerVerbosity'],
+    'inputType' => 'select',
+    'options'   => array(
+        'VERBOSITY_QUIET',
+        'VERBOSITY_NORMAL',
+        'VERBOSITY_VERBOSE',
+        'VERBOSITY_VERY_VERBOSE',
+        'VERBOSITY_DEBUG'
+    ),
+    'reference' => $GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels'],
+    'eval'      => array(
+        'tl_class'   => 'w50',
+        'helpwizard' => true,
+    ),
 );

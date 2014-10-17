@@ -1,5 +1,5 @@
 <div id="tl_buttons">
-	<br>
+    <br>
 </div>
 
 <h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['detached']; ?></h2>
