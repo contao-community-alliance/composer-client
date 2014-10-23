@@ -38,6 +38,12 @@ $legacyReplacedBy = $this->legacyReplaceMap;
 
 <?php echo $this->getMessages(); ?>
 
+<?php
+$template = new BackendTemplate('be_composer_client_search_form');
+$template->setData($this->getData());
+echo $template->parse();
+?>
+
 <?php if ($this->output): ?>
     <pre class="output"><?php echo $this->output; ?></pre>
 <?php endif; ?>

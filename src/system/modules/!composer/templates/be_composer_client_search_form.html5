@@ -1,0 +1,52 @@
+
+<div class="tl_listing_container" style="position: relative">
+    <form action="contao/main.php" id="tl_composer_search" class="tl_form" method="get"
+          onsubmit="this.elements.search.disabled=true;">
+        <input type="hidden" name="do" value="composer">
+
+        <p>
+            <input type="text" name="keyword" id="ctrl_keyword" class="tl_text"
+                   style="display: block; width: 100%; box-sizing: border-box;"
+                   value="<?php echo specialchars($this->keyword); ?>"
+                   placeholder="<?php echo $GLOBALS['TL_LANG']['composer_client']['search_placeholder']; ?>">
+            <input type="reset" id="ctrl_reset" accesskey="r"
+                   style="margin: 0; padding: 0;
+                          border: none; background: none transparent;
+                          position: absolute; top: 4px; right: 20px;
+                          cursor: pointer;
+                          font-size: 22px; line-height: 19px"
+                   value="&times;">
+            <input type="submit" name="search" id="ctrl_search" accesskey="s"
+                   style="margin: 0; padding: 0;
+                          border: none; background: none transparent;
+                          position: absolute; top: -6px; right: 5px;
+                          cursor: pointer;
+                          font-size: 35px; line-height: 35px"
+                   value="&rsaquo;">
+        </p>
+
+        <p>
+            Repositories:
+            &nbsp; <label><input type="checkbox" class="tl_checkbox" checked> Contao.org</label>
+            &nbsp; <label><input type="checkbox" class="tl_checkbox" checked> Packagist.org</label>
+            &nbsp; <label><input type="checkbox" class="tl_checkbox"> avisota/contao-core @ bitbucket.org</label>
+            &nbsp; <label><input type="checkbox" class="tl_checkbox"> contao-community-alliance/composer-client @ github.com</label>
+        </p>
+
+        <p>
+            Typen:
+            &nbsp; <label><input type="checkbox" class="tl_checkbox" checked> Contao Erweiterungen</label>
+            &nbsp; <label><input type="checkbox" class="tl_checkbox"> PHP Bibliotheken</label>
+            &nbsp; <label><input type="checkbox" class="tl_checkbox"> sonstige Pakete</label>
+        </p>
+
+        <p>
+            Stabilität:
+            &nbsp; <label><input type="radio" name="stability" class="tl_radio" checked> Stabil</label>
+            &nbsp; <label><input type="radio" name="stability" class="tl_radio"> RC</label>
+            &nbsp; <label><input type="radio" name="stability" class="tl_radio"> Beta</label>
+            &nbsp; <label><input type="radio" name="stability" class="tl_radio"> Alpha</label>
+            &nbsp; <label><input type="radio" name="stability" class="tl_radio"> Entwicklung</label>
+        </p>
+    </form>
+</div>

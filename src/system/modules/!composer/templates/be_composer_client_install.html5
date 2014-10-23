@@ -44,7 +44,9 @@ $source = $preferedCandidate->getSourceUrl();
         </a>
     </div>
 
-    <h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['install_headline']; ?></h2>
+    <h2 class="sub_headline"><?php
+        echo sprintf($GLOBALS['TL_LANG']['composer_client']['install_headline'], $preferedCandidate->getName());
+        ?></h2>
 
     <?php echo $this->getMessages(); ?>
 
@@ -53,197 +55,142 @@ $source = $preferedCandidate->getSourceUrl();
     <?php endif; ?>
 
     <div class="tl_formbody_edit" id="tl_composer_install">
-        <h3 id="ctrl_composer_name" class="stability-<?php echo strtolower($preferedCandidate->getStability()); ?>">
-            <span class="name"><?php echo $preferedCandidate->getName(); ?></span>
-
-        </h3>
-        <?php if (!empty($keywords)): ?>
-        <div class="type" title="<?php echo $type; ?>"><?php echo implode(' ', array_map('ucfirst', explode('-', $type))); ?></div>
-        <?php endif; ?>
-        <?php if (!empty($keywords)): ?>
-        <div class="keywords">
-            <span class="keyword"><?php echo implode('</span> <span class="keyword">', $keywords) ?></span>
-        </div>
-        <?php endif; ?>
-        <div id="ctrl_composer_details">
-            <p class="description"><?php echo nl2br($preferedCandidate->getDescription()); ?></p>
-            <table>
-                <?php if (!empty($support)): ?>
-                <tr>
-                    <th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_support']; ?></th>
-                    <td></td>
-                </tr>
-                <?php if (!empty($support['email'])): ?>
-                <tr>
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $GLOBALS['TL_LANG']['composer_client']['package_support_email']; ?>:</th>
-                    <td><a href="mailto:<?php echo $support['email']; ?>" target="_blank"><?php echo $support['email']; ?></a></td>
-                </tr>
-                <?php endif; ?>
-                <?php if (!empty($support['issues'])): ?>
-                <tr>
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $GLOBALS['TL_LANG']['composer_client']['package_support_issues']; ?>:</th>
-                    <td>
-                        <?php
-                        $url = parse_url($support['issues']);
-                        $link = $url['host'];
-                        if (!empty($url['path'])) {
-                            $link .= $url['path'];
-                        }
-                        if (!empty($url['query'])) {
-                            $link .= $url['query'];
-                        }
-                        printf(
-                            '<a href="%s" target="_blank">%s</a>',
-                            $support['issues'],
-                            $link
-                        );
-                        ?>
-                    </td>
-                </tr>
-                <?php endif; ?>
-                <?php if (!empty($support['wiki'])): ?>
-                <tr>
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $GLOBALS['TL_LANG']['composer_client']['package_support_wiki']; ?>:</th>
-                    <td>
-                        <?php
-                        $url = parse_url($support['wiki']);
-                        $link = $url['host'];
-                        if (!empty($url['path'])) {
-                            $link .= $url['path'];
-                        }
-                        if (!empty($url['query'])) {
-                            $link .= $url['query'];
-                        }
-                        printf(
-                            '<a href="%s" target="_blank">%s</a>',
-                            $support['wiki'],
-                            $link
-                        );
-                        ?>
-                    </td>
-                </tr>
-                <?php endif; ?>
-                <?php if (!empty($support['irc'])): ?>
-                <tr>
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $GLOBALS['TL_LANG']['composer_client']['package_support_irc']; ?>:</th>
-                    <td>
-                        <?php
-                        $url = parse_url($support['irc']);
-                        $link = $url['host'];
-                        if (!empty($url['path'])) {
-                            $link .= $url['path'];
-                        }
-                        if (!empty($url['query'])) {
-                            $link .= $url['query'];
-                        }
-                        printf(
-                            '<a href="%s" target="_blank">%s</a>',
-                            $support['irc'],
-                            $link
-                        );
-                        ?>
-                    </td>
-                </tr>
-                <?php endif; ?>
-                <?php if (!empty($support['source'])): ?>
-                <tr>
-                    <th>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $GLOBALS['TL_LANG']['composer_client']['package_support_source']; ?>:</th>
-                    <td>
-                        <?php
-                        $url = parse_url($support['source']);
-                        $link = $url['host'];
-                        if (!empty($url['path'])) {
-                            $link .= $url['path'];
-                        }
-                        if (!empty($url['query'])) {
-                            $link .= $url['query'];
-                        }
-                        printf(
-                            '<a href="%s" target="_blank">%s</a>',
-                            $support['source'],
-                            $link
-                        );
-                        ?>
-                    </td>
-                </tr>
-                <?php endif; ?>
-                <?php endif; ?>
-                <?php if (!empty($authors)): ?>
-                <tr>
-                    <th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_authors']; ?>:</th>
-                    <td>
-                        <?php
-                        echo implode(
-                            ', ',
-                            array_map(
-                                function ($author) {
-                                    return sprintf(
-                                        '<a href="mailto:%s">%s</a>',
-                                        $author['email'],
-                                        $author['name']
-                                    );
-                                },
-                                $authors
-                            )
-                        );
-                        ?>
-                    </td>
-                </tr>
-                <?php endif; ?>
-                <?php if (!empty($homepage)): ?>
-                <tr>
-                    <th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_homepage']; ?>:</th>
-                    <td>
-                        <?php
-                        $url = parse_url($homepage);
-                        $link = $url['host'];
-                        if (!empty($url['path'])) {
-                            $link .= $url['path'];
-                        }
-                        if (!empty($url['query'])) {
-                            $link .= $url['query'];
-                        }
-                        printf(
-                            '<a href="%s" target="_blank">%s</a>',
-                            $homepage,
-                            $link
-                        );
-                        ?>
-                    </td>
-                </tr>
-                <?php endif; ?>
-                <?php if (!empty($source)): ?>
-                <tr>
-                    <th><?php echo $GLOBALS['TL_LANG']['composer_client']['package_source']; ?>:</th>
-                    <td>
-                        <?php
-                        $url = parse_url($source);
-                        $link = $url['host'];
-                        if (!empty($url['path'])) {
-                            $link .= $url['path'];
-                        }
-                        if (!empty($url['query'])) {
-                            $link .= $url['query'];
-                        }
-                        printf(
-                            '<a href="%s" target="_blank">%s</a>',
-                            $source,
-                            $link
-                        );
-                        ?>
-                    </td>
-                </tr>
-                <?php endif; ?>
-            </table>
+        <div id="ctrl_composer_details" style="overflow:hidden">
+            <h3>Avisota Komponente: Nachrichtenverwaltung</h3>
+            <figure>
+                <img src="http://placehold.it/352x150"><br>
+                <img src="http://placehold.it/55x35/990000/ffffff">
+                <img src="http://placehold.it/55x35/009900/ffffff">
+                <img src="http://placehold.it/55x35/009999/ffffff">
+                <img src="http://placehold.it/55x35/000099/ffffff">
+                <img src="http://placehold.it/55x35/990099/ffffff">
+            </figure>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent cursus euismod efficitur. Integer lacinia vehicula lectus, aliquet placerat libero congue quis. Duis at nibh dapibus justo elementum facilisis quis eu felis. Donec est sapien, cursus nec urna ut, dictum feugiat neque. Sed sit amet laoreet tortor. Sed non velit vulputate, fringilla quam sagittis, porttitor leo. Nulla feugiat turpis felis, et vulputate dui rhoncus et. Aliquam tincidunt, diam quis hendrerit placerat, enim erat malesuada nibh, in posuere sapien nibh id ipsum. Phasellus eget dignissim elit. Nam lobortis libero ac eros luctus feugiat.</p>
+            <p>Sed eu nisi fringilla, gravida eros et, accumsan turpis. Suspendisse scelerisque sem tristique placerat molestie. Phasellus eget elementum nibh. Phasellus egestas, risus at semper efficitur, sem nulla tempus lectus, placerat mattis lorem orci sit amet nulla. Donec volutpat placerat nisi non commodo. Curabitur mattis blandit purus, eget facilisis leo suscipit vitae. Cras dignissim felis dolor, a semper augue semper eu.</p>
+            <?php if (!empty($keywords)): ?>
+            <div class="keywords">
+                <span class="keyword"><?php echo implode('</span> <span class="keyword">', $keywords) ?></span>
+            </div>
+            <?php endif; ?>
         </div>
         <div id="ctrl_composer_versions">
+            <h3>Installieren</h3>
+
+            <div class="tab-togglers">
+                <a href="#" class="tab">Releaseauswahl</a>
+                <a href="#" class="tab">Erweiterte Auswahl</a>
+                <a href="#" class="tab active">Expertenmodus</a>
+            </div>
+            <div class="tab-contents">
+                <div class="tab">
+                    <div class="slider">
+                        <div class="parts">
+                            <div class="part">v1</div>
+                            <div class="part active">v2</div>
+                            <div class="part">dev</div>
+                        </div>
+
+                        <div class="knop" style="left:50%">
+                            v2
+                        </div>
+                    </div>
+                </div>
+                <div class="tab">
+                    <div class="slider">
+                        <div class="parts">
+                            <div class="part">v1</div>
+                            <div class="part active">v2</div>
+                            <div class="part">dev</div>
+                        </div>
+
+                        <div class="knop" style="left:40%">
+                            2.1
+                            <span class="caption">von</span>
+                        </div>
+                        <div class="knop" style="left:60%">
+                            2.6
+                            <span class="caption">bis</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab active">
+                    <fieldset>
+                        <input value="&gt;=2.1,&lt;2.7-dev" class="tl_input version-input">
+                    </fieldset>
+                </div>
+            </div>
+
+            <table style="width: 100%">
+                <colgroup>
+                    <col style="width: 50%;">
+                    <col style="width: 25%;">
+                    <col style="width: 25%;">
+                </colgroup>
+                <tr>
+                    <td style="vertical-align: top; padding-right: 6px;">
+                        <h3>Über den Entwickler</h3>
+                        <table style="width: 100%">
+                            <colgroup>
+                                <col style="width:33%;">
+                                <col style="width:66%;">
+                            </colgroup>
+                            <tr>
+                                <td style="vertical-align: top; padding-right: 12px;">
+                                    <img src="system/modules/!composer/assets/mockup/bit3.svg"
+                                         style="width:100%;height:auto;">
+                                </td>
+                                <td style="vertical-align: top; padding-left: 12px;">
+                                    <p>
+                                        <strong>bit3 UG</strong><br>
+                                        Musterstraße 123<br>
+                                        12345 Musterstadt<br>
+                                        Deutschland
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="vertical-align: top; padding-left: 6px; padding-right: 6px;">
+                        <h3>Kontakt &amp; Social</h3>
+                        <p>
+                             <img style="vertical-align: -3px" src="system/modules/!composer/assets/mockup/web.png"> bit3.de
+                        </p>
+                        <p>
+                             <img style="vertical-align: -3px" src="system/modules/!composer/assets/mockup/email.png"> info@bit3.de
+                        </p>
+                        <p>
+                             <img style="vertical-align: -3px" src="system/modules/!composer/assets/mockup/facebook.png"> facebook.com/bit3UG
+                        </p>
+                        <p>
+                             <img style="vertical-align: -3px" src="system/modules/!composer/assets/mockup/twitter.png"> twitter.com/bit3ug
+                        </p>
+                        <p>
+                             <img style="vertical-align: -3px" src="system/modules/!composer/assets/mockup/github.png"> github.com/bit3
+                        </p>
+                    </td>
+                    <td style="vertical-align: top; padding-left: 6px;">
+                        <h3>Reputation</h3>
+                        <p>14 aktive Erweiterungen</p>
+                        <p>3 aktive Entwickler</p>
+                        <p>13,4 Stunden &empty; Reaktionszeit</p>
+                        <p>52 Bewertungen</p>
+                        <p>87% positiv</p>
+                    </td>
+                </tr>
+            </table>
+
+            <br>
+            <br>
+
+
             <?php
+            /*
             foreach ($candidates as $index => $candidate):
                 $requires = $candidate->getRequires();
 
                 $compatible = true;
                 if (isset($requires['contao/core']) && $requires['contao/core'] instanceof \Composer\Package\Link) {
-                    /** @var \Composer\Package\Link $link */
+                    /** @var \Composer\Package\Link $link * /
                     $link = $requires['contao/core'];
 
                     if (!$link->getConstraint()->matches($contaoConstraint)) {
@@ -295,13 +242,13 @@ $source = $preferedCandidate->getSourceUrl();
                     </div>
                     <div class="details">
                         <?php
-                        /** @var \Composer\Package\Link[] $requires */
+                        /** @var \Composer\Package\Link[] $requires * /
                         $requires = $candidate->getRequires();
                         $suggests = $candidate->getSuggests();
                         $provides = $candidate->getProvides();
                         $conflicts = $candidate->getConflicts();
                         $replaces = $candidate->getReplaces();
-                        /** @var \Composer\Package\Link $replace */
+                        /** @var \Composer\Package\Link $replace * /
                         ?>
                         <table>
                             <colgroup>
@@ -470,7 +417,7 @@ $source = $preferedCandidate->getSourceUrl();
                         </table>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php endforeach; */ ?>
         </div>
     </div>
 

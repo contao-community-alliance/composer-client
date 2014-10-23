@@ -36,6 +36,7 @@ TemplateLoader::addFiles(
         'be_composer_client'                  => 'system/modules/!composer/templates',
         'be_composer_client_errors'           => 'system/modules/!composer/templates',
         'be_composer_client_search'           => 'system/modules/!composer/templates',
+        'be_composer_client_search_form'      => 'system/modules/!composer/templates',
         'be_composer_client_dependency_graph' => 'system/modules/!composer/templates',
         'be_composer_client_detached'         => 'system/modules/!composer/templates',
     )

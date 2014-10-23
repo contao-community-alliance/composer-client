@@ -24,6 +24,12 @@ $installationManager = $composer->getInstallationManager();
     <pre class="output"><?php echo $this->output; ?></pre>
 <?php endif; ?>
 
+<?php
+$template = new BackendTemplate('be_composer_client_search_form');
+$template->setData($this->getData());
+echo $template->parse();
+?>
+
 <div class="tl_listing_container list_view" id="tl_composer_search">
     <table class="tl_listing showColumns">
         <thead>
@@ -35,7 +41,7 @@ $installationManager = $composer->getInstallationManager();
         <tbody>
         <?php $n = 1; foreach ($this->packages as $package): ?>
             <tr class="<?php echo $n++ % 2 == 0 ? 'even' : 'odd'; if (!$package['contao-compatible']): ?> incompatible<?php endif; ?>" onmouseover="Theme.hoverRow(this,1)" onmouseout="Theme.hoverRow(this,0)">
-                <td class="tl_file_list col_type"><?php
+                <td class="tl_file_list col_type" style="vertical-align: top; padding-top: 12px;"><?php
                     $icon = sprintf('system/modules/!composer/assets/images/type-%s.png', $package['type']);
                     if (file_exists(TL_ROOT . '/' . $icon)) {
                         echo $this->generateImage(
@@ -53,9 +59,16 @@ $installationManager = $composer->getInstallationManager();
                         );
                     }
                 ?></td>
-                <td class="tl_file_list col_name">
+                <td class="tl_file_list col_name" style="padding-bottom: 8px;">
+                    <div class="language" style="float: right; padding-top: 8px;">
+                        <img src="system/modules/!composer/assets/flags/en.png">
+                        <img src="system/modules/!composer/assets/flags/de.png">
+                    </div>
                     <div class="name">
-                        <a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>"><?php echo $package['name']; ?></a>
+                        <a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>">
+                            <?php echo empty($package['title']) ? $package['name'] : $package['title']; ?>
+                            <span style="color:#666">[<?php echo $package['name']; ?>]</span>
+                        </a>
                         <?php
                         if (!$package['contao-compatible']):
                         ?>
@@ -67,8 +80,11 @@ $installationManager = $composer->getInstallationManager();
                     <div class="description">
                         <p><?php echo nl2br($package['description']); ?></p>
                     </div>
+                    <div class="author">
+                        von <a href="http://bit3.de">bit3 UG</a>
+                    </div>
                 </td>
-                <td class="tl_file_list col_action"><?php
+                <td class="tl_file_list col_action" style="vertical-align: top;padding-top: 12px;"><?php
                     if ($package['contao-compatible']):
                         $versions = $localRepository->findPackages($package['name']);
                         if (count($versions)):
@@ -99,9 +115,3 @@ $installationManager = $composer->getInstallationManager();
         </tbody>
     </table>
 </div>
-
-<?php
-$template = new BackendTemplate('be_composer_client_form');
-$template->setData($this->getData());
-echo $template->parse();
-?>
