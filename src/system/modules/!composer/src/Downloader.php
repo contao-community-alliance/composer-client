@@ -20,11 +20,11 @@ class Downloader
      */
     public static function download($url, $file = false)
     {
-        if (Runtime::isAllowUrlFopenEnabled()) {
-            return static::fgetDownload($url, $file);
+        if (Runtime::isCurlEnabled()) {
+            return static::curlDownload($url, $file);
         } else {
-            if (Runtime::isCurlEnabled()) {
-                return static::curlDownload($url, $file);
+            if (Runtime::isAllowUrlFopenEnabled()) {
+                return static::fgetDownload($url, $file);
             } else {
                 throw new \RuntimeException('No download mechanism available');
             }
