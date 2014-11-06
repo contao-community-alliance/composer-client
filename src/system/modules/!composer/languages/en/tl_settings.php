@@ -3,11 +3,11 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary'] = array(
+$GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary']      = array(
     'Update composer library automatically',
     'The composer library (also known as <code>composer.phar</code>) will be updated after 30 days automatically.'
 );
-$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']     = array(
+$GLOBALS['TL_LANG']['tl_settings']['composerExecutionMode']          = array(
     'Execution mode',
     'Please select how the composer binary shall get executed.'
 );
@@ -20,11 +20,14 @@ $GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'] = array(
     'The old ER2 repository client tables will not be removed by the composer client database update tool, ' .
     'until you enable this checkbox.'
 );
-
-$GLOBALS['TL_LANG']['tl_settings']['composerVerbosity'] = array(
-    'Verbosity in logging',
-    'The console has 5 levels of verbosity, ' .
-    'usually you will want to leave this to the default verbosity unless you experience problems.'
+$GLOBALS['TL_LANG']['tl_settings']['composerProfiling']              = array(
+    'Enable profiling',
+    'Display timing and memory usage information.'
+);
+$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'] = array(
+    'Remove repository client tables',
+    'The old ER2 repository client tables will not be removed by the composer client database update tool, ' .
+    'until you enable this checkbox.'
 );
 
 

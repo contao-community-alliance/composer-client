@@ -192,6 +192,10 @@ class UpdatePackagesController extends AbstractController
             default:
         }
 
+        if ($GLOBALS['TL_CONFIG']['composerProfiling']) {
+            $cmd .= ' --profile';
+        }
+
         return $cmd;
     }
 

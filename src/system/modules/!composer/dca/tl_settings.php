@@ -21,8 +21,10 @@ $GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .=
     ';{composer_legend:hide},composerAutoUpdateLibrary,' .
     'composerExecutionMode,composerVerbosity,composerRemoveRepositoryTables';
 
-$GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_process']  = 'composerPhpPath';
-$GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached'] = 'composerPhpPath';
+$GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_process']  =
+    'composerPhpPath,composerProfiling';
+$GLOBALS['TL_DCA']['tl_settings']['subpalettes']['composerExecutionMode_detached'] =
+    'composerPhpPath,composerProfiling';
 
 
 /**
@@ -49,17 +51,17 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['composerPhpPath']                = 
     'inputType' => 'text',
     'eval'      => array(
         'mandatory'      => true,
-        'tl_class'       => 'w50',
+        'tl_class'       => 'clr long',
         'allowHtml'      => true,
         'preserveTags'   => true,
         'decodeEntities' => true,
     ),
 );
-$GLOBALS['TL_DCA']['tl_settings']['fields']['composerRemoveRepositoryTables'] = array(
-    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'],
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerProfiling']              = array(
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerProfiling'],
     'inputType' => 'checkbox',
     'eval'      => array(
-        'tl_class' => 'clr m12 w50',
+        'tl_class'   => 'm12 w50',
     ),
 );
 $GLOBALS['TL_DCA']['tl_settings']['fields']['composerVerbosity']              = array(
@@ -74,7 +76,14 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['composerVerbosity']              = 
     ),
     'reference' => $GLOBALS['TL_LANG']['tl_settings']['composerVerbosityLevels'],
     'eval'      => array(
-        'tl_class'   => 'w50',
+        'tl_class'   => 'clr w50',
         'helpwizard' => true,
+    ),
+);
+$GLOBALS['TL_DCA']['tl_settings']['fields']['composerRemoveRepositoryTables'] = array(
+    'label'     => &$GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables'],
+    'inputType' => 'checkbox',
+    'eval'      => array(
+        'tl_class' => 'm12 w50',
     ),
 );
