@@ -161,11 +161,8 @@ class UpdatePackagesController extends AbstractController
         $this->redirect('contao/main.php?do=composer&update=database');
     }
 
-    protected function runProcess($packages, $dryRun)
+    private function buildCmd($packages, $dryRun)
     {
-        // disable all hooks
-        $GLOBALS['TL_HOOKS'] = array();
-
         $cmd = sprintf(
             '%s composer.phar update --no-ansi --no-interaction',
             $GLOBALS['TL_CONFIG']['composerPhpPath']
@@ -176,7 +173,7 @@ class UpdatePackagesController extends AbstractController
         }
 
         if ($packages) {
-            $cmd .= ' --with-dependencies ' . implode(' ', $packages);
+            $cmd .= ' --with-dependencies ' . implode(' ', array_map('escapeshellarg', $packages));
         }
 
         switch ($GLOBALS['TL_CONFIG']['composerVerbosity']) {
@@ -195,9 +192,18 @@ class UpdatePackagesController extends AbstractController
             default:
         }
 
-        $inputStream = fopen('php://temp', 'r');
+        return $cmd;
+    }
+
+    protected function runProcess($packages, $dryRun)
+    {
+        // disable all hooks
+        $GLOBALS['TL_HOOKS'] = array();
+
+        $cmd          = $this->buildCmd($packages, $dryRun);
+        $inputStream  = fopen('php://temp', 'r');
         $outputStream = fopen('php://temp', 'rw');
-        $pipes = array();
+        $pipes        = array();
 
         $proc = proc_open(
             $cmd,
@@ -229,34 +235,7 @@ class UpdatePackagesController extends AbstractController
 
     protected function runDetached($packages, $dryRun)
     {
-        $cmd = sprintf(
-            '%s composer.phar update --ansi --no-interaction',
-            $GLOBALS['TL_CONFIG']['composerPhpPath']
-        );
-
-        if ($dryRun) {
-            $cmd .= ' --dry-run';
-        }
-
-        if ($packages) {
-            $cmd .= ' --with-dependencies ' . implode(' ', $packages);
-        }
-
-        switch ($GLOBALS['TL_CONFIG']['composerVerbosity']) {
-            case 'VERBOSITY_QUIET':
-                $cmd .= ' --quiet';
-                break;
-            case 'VERBOSITY_VERBOSE':
-                $cmd .= ' -v';
-                break;
-            case 'VERBOSITY_VERY_VERBOSE':
-                $cmd .= ' -vv';
-                break;
-            case 'VERBOSITY_DEBUG':
-                $cmd .= ' -vvv';
-                break;
-            default:
-        }
+        $cmd = $this->buildCmd($packages, $dryRun);
 
         file_put_contents(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME, '$ ' . $cmd . PHP_EOL);
 
