@@ -179,6 +179,22 @@ class UpdatePackagesController extends AbstractController
             $cmd .= ' --with-dependencies ' . implode(' ', $packages);
         }
 
+        switch ($GLOBALS['TL_CONFIG']['composerVerbosity']) {
+            case 'VERBOSITY_QUIET':
+                $cmd .= ' --quiet';
+                break;
+            case 'VERBOSITY_VERBOSE':
+                $cmd .= ' -v';
+                break;
+            case 'VERBOSITY_VERY_VERBOSE':
+                $cmd .= ' -vv';
+                break;
+            case 'VERBOSITY_DEBUG':
+                $cmd .= ' -vvv';
+                break;
+            default:
+        }
+
         $inputStream = fopen('php://temp', 'r');
         $outputStream = fopen('php://temp', 'rw');
         $pipes = array();
@@ -224,6 +240,22 @@ class UpdatePackagesController extends AbstractController
 
         if ($packages) {
             $cmd .= ' --with-dependencies ' . implode(' ', $packages);
+        }
+
+        switch ($GLOBALS['TL_CONFIG']['composerVerbosity']) {
+            case 'VERBOSITY_QUIET':
+                $cmd .= ' --quiet';
+                break;
+            case 'VERBOSITY_VERBOSE':
+                $cmd .= ' -v';
+                break;
+            case 'VERBOSITY_VERY_VERBOSE':
+                $cmd .= ' -vv';
+                break;
+            case 'VERBOSITY_DEBUG':
+                $cmd .= ' -vvv';
+                break;
+            default:
         }
 
         file_put_contents(TL_ROOT . '/' . DetachedController::OUT_FILE_PATHNAME, '$ ' . $cmd . PHP_EOL);
