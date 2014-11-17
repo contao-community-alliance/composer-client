@@ -67,6 +67,14 @@ EOF;
     "repositories": [
         {
             "type": "composer",
+            "url": "https://legacy-packages-via.contao-community-alliance.org/"
+        },
+        {
+            "type": "artifact",
+            "url": "packages"
+        },
+        {
+            "type": "composer",
             "url": "http://legacy-packages-via.contao-community-alliance.org/"
         }
     ]
