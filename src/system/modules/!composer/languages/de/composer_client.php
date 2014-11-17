@@ -58,35 +58,35 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_faq']                   = '
 <h2>FAQ</h2>
 <ul class="questions">
 <li>
-    <h3>Muss ich diese Erweiterungsverwaltung nutzen?</h3>
-    Natürlich nicht. Jedoch veröffentlichen einige Entwickler neue Erweiterungen oder Funktionen nur noch über Composer.
+	<h3>Muss ich diese Erweiterungsverwaltung nutzen?</h3>
+	Natürlich nicht. Jedoch veröffentlichen einige Entwickler neue Erweiterungen oder Funktionen nur noch über Composer. 
 Im Zweifel verpasst Du wichtige Updates oder neue Erweiterungen, wenn Du Composer nicht nutzt.
 </li>
 <li>
-    <h3>Kann ich Erweiterungen aus der aktuellen Erweiterungsverwaltung installieren?</h3>
-    Ja. Alle öffentlichen Erweiterungen aus der bekannten Erweiterungsverwaltung werden synchronisiert und tragen das Prefix <em>contao-legacy/</em>).<br>
-    <em>Bitte beachte jedoch das kommerzielle Erweiterungen aufgrund eingeschränkter Lizenzmöglichkeiten nicht mit Composer installiert werden können.
-    Bitte erfrage in diesem Fall ComposerUnterstützung beim Entwickler.</em>
+	<h3>Kann ich Erweiterungen aus der aktuellen Erweiterungsverwaltung installieren?</h3>
+	Ja. Alle öffentlichen Erweiterungen aus der bekannten Erweiterungsverwaltung werden synchronisiert und tragen das Prefix <em>contao-legacy/</em>).<br>
+	<em>Bitte beachte jedoch das kommerzielle Erweiterungen aufgrund eingeschränkter Lizenzmöglichkeiten nicht mit Composer installiert werden können.
+	Bitte erfrage in diesem Fall ComposerUnterstützung beim Entwickler.</em>
 </li>
 <li>
-    <h3>Wird es eine neue Erweiterungsverwaltung geben?</h3>
-    Ja, die neue Erweiterungsverwaltung befindet sich unter <a href="http://legacy-packages-via.contao-community-alliance.org/" target="_blank">legacy-packages-via.contao-community-alliance.org</a>.
-    Aktuell ist dies eine normale packagist Installation, die wir jedoch in Kürze an unsere Bedürfnisse anpassen werden.
+	<h3>Wird es eine neue Erweiterungsverwaltung geben?</h3>
+	Ja, die neue Erweiterungsverwaltung befindet sich unter <a href="http://legacy-packages-via.contao-community-alliance.org/" target="_blank">legacy-packages-via.contao-community-alliance.org</a>.
+	Aktuell ist dies eine normale packagist Installation, die wir jedoch in Kürze an unsere Bedürfnisse anpassen werden.
 </li>
 <li>
-    <h3>Was ist Composer und die Composer Paketverwaltung?</h3>
-    Die Antwort darauf würde hier den Rahmen sprengen. Mehr Infos zu Composer findest Du im <a href="http://de.contaowiki.org/Composer_Client" target="_blank">Contao Wiki</a>.
+	<h3>Was ist Composer und die Composer Paketverwaltung?</h3>
+	Die Antwort darauf würde hier den Rahmen sprengen. Mehr Infos zu Composer findest Du im <a href="http://de.contaowiki.org/Composer_Client" target="_blank">Contao Wiki</a>.
 </li>
 <li>
-    <h3>Kann ich wieder zur alten Erweiterungsverwaltung wechseln?</h3>
-    Ja. Gehe dazu in die Einstellung der Paketverwaltung und wähle: "switch back to old client".
+	<h3>Kann ich wieder zur alten Erweiterungsverwaltung wechseln?</h3>
+	Ja. Gehe dazu in die Einstellung der Paketverwaltung und wähle: "switch back to old client".
 </li>
 <li>
-    <h3>Ich habe Probleme mit der Paketverwaltung, wo finde ich Unterstützung?</h3>
-    Composer ist ein Community Projekt. Hilfe erhältst Du hier:
-    Du kannst im <a href="https://community.contao.org/de/forumdisplay.php?6-Entwickler-Fragen" target="_blank">Form</a>,
-    dem offiziellen IRC channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
-    oder im <a href="https://github.com/contao-community-alliance/composer/issues" target="_blank">Ticket System</a> deine Fragen stellen.
+	<h3>Ich habe Probleme mit der Paketverwaltung, wo finde ich Unterstützung?</h3>
+	Composer ist ein Community Projekt. Hilfe erhältst Du hier:
+	Du kannst im <a href="https://community.contao.org/de/forumdisplay.php?6-Entwickler-Fragen" target="_blank">Form</a>,
+	dem offiziellen IRC channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
+	oder im <a href="https://github.com/contao-community-alliance/composer/issues" target="_blank">Ticket System</a> deine Fragen stellen.
 </li>
 </ul>';
 $GLOBALS['TL_LANG']['composer_client']['migrate_intro']                 = '
@@ -202,13 +202,13 @@ $GLOBALS['TL_LANG']['composer_client']['update_database']               = 'Daten
 $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']              = '
 <ul class="preconditions">
 <li class="{if gitAvailable==true}pass{else}fail{endif}">
-    git ist {if gitAvailable==true}verfügbar{else}nicht verfügbar, die meisten Pakete können nicht installiert werden!{endif}
+	git ist {if gitAvailable==true}verfügbar{else}nicht verfügbar, die meisten Pakete können nicht installiert werden!{endif}
 </li>
 <li class="{if hgAvailable==true}pass{else}fail{endif}">
-    mercurial ist {if hgAvailable==true}verfügbar{else}nicht verfügbar, manche Pakete können nicht installiert werden!{endif}
+	mercurial ist {if hgAvailable==true}verfügbar{else}nicht verfügbar, manche Pakete können nicht installiert werden!{endif}
 </li>
 <li class="{if svnAvailable==true}pass{else}fail{endif}">
-    svn ist {if svnAvailable==true}verfügbar{else}nicht verfügbar, manche Pakete können nicht installiert werden!{endif}
+	svn ist {if svnAvailable==true}verfügbar{else}nicht verfügbar, manche Pakete können nicht installiert werden!{endif}
 </li>
 </ul>';
 $GLOBALS['TL_LANG']['composer_client']['version_bugfix']                = 'Bugfix Release %s (%s)';
