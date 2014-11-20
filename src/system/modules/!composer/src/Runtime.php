@@ -82,6 +82,50 @@ EOF;
 EOF;
 
     /**
+     * Flag if curl is enabled and not disabled.
+     *
+     * @var bool
+     */
+    private static $curlIsEnabled = null;
+
+    /**
+     * List of curl functions to check against disabled functions.
+     *
+     * @var array
+     */
+    private static $curlFunctions = array(
+        'curl_close',
+        'curl_copy_handle',
+        'curl_errno',
+        'curl_error',
+        'curl_escape',
+        'curl_exec',
+        'curl_file_create',
+        'curl_getinfo',
+        'curl_init',
+        'curl_multi_add_handle',
+        'curl_multi_close',
+        'curl_multi_exec',
+        'curl_multi_getcontent',
+        'curl_multi_info_read',
+        'curl_multi_init',
+        'curl_multi_remove_handle',
+        'curl_multi_select',
+        'curl_multi_setopt',
+        'curl_multi_strerror',
+        'curl_pause',
+        'curl_reset',
+        'curl_setopt_array',
+        'curl_setopt',
+        'curl_share_close',
+        'curl_share_init',
+        'curl_share_setopt',
+        'curl_strerror',
+        'curl_unescape',
+        'curl_version',
+    );
+
+    /**
      * List of disabled functions.
      *
      * @var array
@@ -274,7 +318,19 @@ EOF;
      */
     public static function isCurlEnabled()
     {
-        return function_exists('curl_init');
+        if (null === self::$curlIsEnabled) {
+            self::$curlIsEnabled = true;
+
+            if (!function_exists('curl_init')) {
+                self::$curlIsEnabled = false;
+            }
+
+            if (count(array_intersect(self::$curlFunctions, self::getDisabledFunctions()))) {
+                self::$curlIsEnabled = false;
+            }
+        }
+
+        return self::$curlIsEnabled;
     }
 
     /**
