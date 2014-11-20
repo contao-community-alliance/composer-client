@@ -82,6 +82,13 @@ EOF;
 EOF;
 
     /**
+     * List of disabled functions.
+     *
+     * @var array
+     */
+    private static $disabledFunctions = null;
+
+    /**
      * Initialize the composer environment.
      */
     public static function initialize()
@@ -329,13 +336,27 @@ EOF;
     }
 
     /**
+     * Get the disabled functions.
+     *
+     * @return array
+     */
+    public static function getDisabledFunctions()
+    {
+        if (null === self::$disabledFunctions) {
+            self::$disabledFunctions = array_map('trim', explode(',', ini_get('disable_functions')));
+        }
+
+        return self::$disabledFunctions;
+    }
+
+    /**
      * Try to disable APC.
      *
      * @return bool Return true on success, false if not.
      */
     public static function disableApc()
     {
-        if (in_array('ini_set', explode(',', ini_get('disable_functions')))) {
+        if (in_array('ini_set', self::getDisabledFunctions())) {
             return false;
         }
 
@@ -498,7 +519,7 @@ EOF;
      */
     public static function testProcess($cmd)
     {
-        if (in_array('proc_open', array_map('trim', explode(',', ini_get('disable_functions'))))) {
+        if (in_array('proc_open', self::getDisabledFunctions())) {
             return false;
         }
 
