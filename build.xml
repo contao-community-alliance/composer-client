@@ -1,45 +1,11 @@
-<?xml version="1.0"?>
-<project name="composer client" default="test">
-    <target name="phpunit">
-        <exec dir="${basedir}" executable="vendor/bin/phpunit" failonerror="false"/>
-    </target>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ This project is using the Contao Community Alliance Build System (CCABS)
 
-    <target name="phpcs">
-        <exec dir="${basedir}" executable="vendor/bin/phpcs" failonerror="true">
-            <arg line="--standard=PSR1,PSR2 ${basedir}/src"/>
-            <!--
-            The config.php declare symbols (constants) and execute logic with side effects.
-            Unfortunately its impossible to change this, within contao, so we ignore this here.
-            -->
-            <arg line="--ignore=src/system/modules/!composer/config/config.php"/>
-            <!--
-            The class Contao2ClassFileExistsHack is a little shared helper class, that we be ignored here.
-            -->
-            <arg line="--ignore=src/system/modules/!composer/Contao2ClassFileExistsHack.php"/>
-            <!--
-            These language files are generated, we ignore them.
-            -->
-            <arg line="--ignore=src/system/modules/!composer/languages/de/*"/>
-            <arg line="--ignore=src/system/modules/!composer/languages/fr/*"/>
-            <arg line="--ignore=src/system/modules/!composer/languages/ru/*"/>
-        </exec>
-    </target>
+ For documentation visit:
+   https://github.com/contao-community-alliance/build-system
 
-    <target name="phpmd">
-        <exec dir="${basedir}" executable="vendor/bin/phpmd" failonerror="true">
-            <arg line="${basedir}/src text naming,unusedcode --suffixes php"/>
-        </exec>
-    </target>
-
-    <target name="branch-alias">
-        <exec dir="${basedir}" executable="vendor/bin/validate-branch-alias.php" failonerror="true"/>
-    </target>
-
-    <target name="composer-validate">
-        <exec dir="${basedir}" executable="composer" failonerror="true">
-            <arg value="validate"/>
-        </exec>
-    </target>
-
-    <target name="test" depends="phpunit,phpcs,phpmd,branch-alias,composer-validate"/>
+-->
+<project name="composer client" default="build">
+    <import file="vendor/contao-community-alliance/build-system/ccabs.main.xml" />
 </project>
