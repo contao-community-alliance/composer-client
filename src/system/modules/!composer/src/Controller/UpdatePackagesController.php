@@ -2,31 +2,10 @@
 
 namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 
-use Composer\Composer;
-use Composer\Console\HtmlOutputFormatter;
-use Composer\DependencyResolver\DefaultPolicy;
-use Composer\DependencyResolver\Pool;
-use Composer\DependencyResolver\Request;
-use Composer\DependencyResolver\Solver;
-use Composer\DependencyResolver\SolverProblemsException;
 use Composer\Downloader\DownloadManager;
-use Composer\Factory;
 use Composer\Installer;
-use Composer\IO\BufferIO;
-use Composer\Json\JsonFile;
-use Composer\Package\BasePackage;
-use Composer\Package\CompletePackageInterface;
-use Composer\Package\LinkConstraint\VersionConstraint;
-use Composer\Package\PackageInterface;
-use Composer\Package\RootPackageInterface;
-use Composer\Package\Version\VersionParser;
 use Composer\Plugin\CommandEvent;
 use Composer\Plugin\PluginEvents;
-use Composer\Repository\CompositeRepository;
-use Composer\Repository\InstalledArrayRepository;
-use Composer\Repository\PlatformRepository;
-use Composer\Repository\RepositoryInterface;
-use Composer\Util\ConfigValidator;
 use ContaoCommunityAlliance\Composer\Plugin\ConfigUpdateException;
 use ContaoCommunityAlliance\Composer\Plugin\DuplicateContaoException;
 use Symfony\Component\Console\Input\ArgvInput;
