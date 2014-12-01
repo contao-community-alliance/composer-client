@@ -22,6 +22,7 @@
             <arg line="--ignore=src/system/modules/!composer/languages/de/*"/>
             <arg line="--ignore=src/system/modules/!composer/languages/fr/*"/>
             <arg line="--ignore=src/system/modules/!composer/languages/ru/*"/>
+            <arg line="--ignore=src/system/modules/!composer/languages/rm/*"/>
         </exec>
     </target>
 
