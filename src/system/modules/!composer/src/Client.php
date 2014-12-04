@@ -83,6 +83,6 @@ class Client extends \System
             $this->Config->update("\$GLOBALS['TL_CONFIG']['inactiveModules']", serialize($inactiveModules));
             $this->reload();
         }
-        unset($GLOBALS['TL_HOOK']['loadLanguageFiles']['composer']);
+        unset($GLOBALS['TL_HOOK']['loadLanguageFile']['composer']);
     }
 }
