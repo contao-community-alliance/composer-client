@@ -69,7 +69,7 @@ class DetachedController extends AbstractController
             $this->redirect('contao/main.php?do=composer&amp;update=database');
         } else {
             if ($isRunning && \Input::getInstance()->post('terminate')) {
-                shell_exec(sprintf('kill %d', $pid));
+                posix_kill($pid, SIGTERM);
                 $this->reload();
             }
         }
