@@ -19,7 +19,7 @@ Checkout this repository and link it to system/modules (initial)
 
 ```
 cd /path/to/my/project/documentroot
-git clone git@github.com:contao-community-alliance/composer.git composer/vendor/contao-community-alliance/composer
+git clone git@github.com:contao-community-alliance/composer-client.git composer/vendor/contao-community-alliance/composer
 cd system/modules
 ln -s ../../composer/vendor/contao-community-alliance/composer/src/system/modules/\!composer .
 cd ../..

@@ -27,8 +27,9 @@ class DetachedController extends AbstractController
         $output = $outFile->getContent();
         $pid    = $pidFile->getContent();
 
-        $isRunning = (bool) trim(shell_exec(sprintf('ps -p %d -o comm=', $pid)));
-
+        // We send special signal 0 to test for existance of the process which is much more bullet proof than
+        // using anything like shell_exec() wrapped ps/pgrep magic (which is not available on all systems).
+        $isRunning = (bool) posix_kill($pid, 0);
         $startTime = new \DateTime();
         $startTime->setTimestamp(filectime(TL_ROOT . '/' . self::PID_FILE_PATHNAME));
 
@@ -44,7 +45,7 @@ class DetachedController extends AbstractController
             $this->redirect('contao/main.php?do=composer&amp;update=database');
         } else {
             if ($isRunning && \Input::getInstance()->post('terminate')) {
-                shell_exec(sprintf('kill %d', $pid));
+                posix_kill($pid, SIGTERM);
                 $this->reload();
             }
         }
