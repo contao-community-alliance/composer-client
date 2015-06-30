@@ -1,4 +1,5 @@
 language: php
+
 php:
     - "5.3"
     - "5.4"
@@ -11,12 +12,14 @@ env:
         - CONTAO_VERSION=~3.2.0
         - CONTAO_VERSION=~3.3.0
 
+sudo: false
+
 install:
     - composer require contao/core $CONTAO_VERSION --prefer-dist --dev
     - composer install --prefer-dist --dev
 
 script: ant -keep-going
 
-#matrix:
-#  allow_failures:
-#    - env: CONTAO_VERSION=~3.3.0
+# Hack to make things work again - we can not use a shallow repository.
+git:
+  depth: 2147483647
