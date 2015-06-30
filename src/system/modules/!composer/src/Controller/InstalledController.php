@@ -104,8 +104,9 @@ class InstalledController extends AbstractController
         $template->groupedPackages  = $groupedPackages;
         $template->requiresList     = $requiresList;
         $template->dependenciesList = $dependenciesList;
-        $converter                  = new ConsoleColorConverter();
-        $template->output           = $converter->parse($_SESSION['COMPOSER_OUTPUT']);
+        if ('detached' !== $GLOBALS['TL_CONFIG']['composerExecutionMode']) {
+            $template->output = $_SESSION['COMPOSER_OUTPUT'];
+        }
 
         unset($_SESSION['COMPOSER_OUTPUT']);
 
