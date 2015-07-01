@@ -1,24 +1,34 @@
 language: php
+
 php:
-    - "5.3"
-    - "5.4"
-    - "5.5"
-    - "5.6"
+    - 5.3
+    - 5.4
+    - 5.5
+    - 5.6
 
 env:
-    global:
-    matrix:
-        - CONTAO_VERSION=~2.11.0
-        - CONTAO_VERSION=~3.1.0
-        - CONTAO_VERSION=~3.2.0
-        - CONTAO_VERSION=~3.3.0
+    - CONTAO_VERSION=~2.11.0
+    - CONTAO_VERSION=~3.1.0
+    - CONTAO_VERSION=~3.2.0
+    - CONTAO_VERSION=~3.3.0
+    - CONTAO_VERSION=~3.4.0
+    - CONTAO_VERSION=~3.5.0
+
+# Exclude impossible Contao Version combinations.
+matrix:
+    exclude:
+        - php: 5.3
+          env: CONTAO_VERSION=~3.5.0
+
+sudo: false
 
 install:
-    - composer require contao/core $CONTAO_VERSION --prefer-dist --dev
-    - composer install --prefer-dist --dev
+    - travis_retry composer self-update && composer --version
+    - travis_retry composer require contao/core $CONTAO_VERSION --prefer-dist --dev
+    - travis_retry composer install --prefer-dist --dev --no-interaction
 
 script: ant -keep-going
 
-#matrix:
-#  allow_failures:
-#    - env: CONTAO_VERSION=~3.3.0
+# Hack to make things work again - we can not use a shallow repository.
+git:
+  depth: 2147483647
