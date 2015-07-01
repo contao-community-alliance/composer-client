@@ -17,6 +17,7 @@ env:
 sudo: false
 
 install:
+    - travis_retry composer self-update && composer --version
     - travis_retry composer require contao/core $CONTAO_VERSION --prefer-dist --dev
     - travis_retry composer install --prefer-dist --dev --no-interaction
 
