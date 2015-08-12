@@ -97,6 +97,8 @@ class Downloader
         $headerStream = fopen('php://temp', 'wb+');
         $fileStream   = fopen($file, 'wb+');
 
+        // SNI workaround for very old systems like CentOS who do not support SNI.
+        self::checkSNI($url, $curl);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($curl, CURLOPT_WRITEHEADER, $headerStream);
@@ -133,5 +135,44 @@ class Downloader
         }
 
         return $return;
+    }
+
+    /**
+     * Check if SNI is available and disable remote host checking if not.
+     *
+     * @param string   $url  The url.
+     *
+     * @param resource $curl The curl resource.
+     *
+     * @return void
+     */
+    private static function checkSNI($url, $curl)
+    {
+        if ('https' !== substr($url, 0, 5)) {
+            return;
+        }
+
+        $curlVersion = curl_version();
+        // Curl 7.18.1 - March 30 2008 supports server name indication (RFC 4366), aka SNI
+        // (http://curl.haxx.se/changes.html)
+        if (version_compare(trim($curlVersion['version']), '7.18.1', '<')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            $_SESSION['TL_ERROR'][] =
+                'Warning: SNI support not available, curl version too old. Host verification has been deactivated.';
+            return;
+        }
+        // We only check for OpenSSL.
+        $ssl = explode('/', trim($curlVersion['ssl_version']));
+        if ((count($ssl) !== 2) || ($ssl[0] !== 'OpenSSL')) {
+            return;
+        }
+
+        // OpenSSL 0.9.8f support SNI, 0.9.8k and later has this enabled by default
+        // (https://wiki.apache.org/httpd/NameBasedSSLVHostsWithSNI)
+        if (version_compare($ssl[2], '0.9.8f', '<')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            $_SESSION['TL_ERROR'][] =
+                'Warning: SNI support not available, OpenSSL version too old. Host verification has been deactivated.';
+        }
     }
 }
