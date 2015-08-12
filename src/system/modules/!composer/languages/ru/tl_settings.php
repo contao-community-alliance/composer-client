@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2014-05-23T03:00:44+02:00
+ * last-updated: 2015-07-07T20:18:54+02:00
  */
 
 $GLOBALS['TL_LANG']['tl_settings']['composerAutoUpdateLibrary']['0']                         = 'Автоматическое обновление библиотеки Composer';
@@ -23,6 +23,8 @@ $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']['0']    
 $GLOBALS['TL_LANG']['tl_settings']['composerExecutionModes']['process']['1']                 = 'Composer будет выполняться через вызов подпроцесса как внешняя программа. Это обычно быстрее, но возможно только на системах, поддерживающих proc_open() и подвергается максимальным ограничениям по времени выполнения PHP.';
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath']['0']                                   = 'PHP путь/команда';
 $GLOBALS['TL_LANG']['tl_settings']['composerPhpPath']['1']                                   = 'Путь или команда к бинарному файлу php.';
+$GLOBALS['TL_LANG']['tl_settings']['composerProfiling']['0']                                 = 'Включить профилирование';
+$GLOBALS['TL_LANG']['tl_settings']['composerProfiling']['1']                                 = 'Показать сведения об использовании времени и памяти.';
 $GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables']['0']                    = 'Удалить таблицы клиента хранилища расширений';
 $GLOBALS['TL_LANG']['tl_settings']['composerRemoveRepositoryTables']['1']                    = 'Таблицы старого клиента хранилища расширений не будут удалены Composer, до тех пор, пока вы не выберите этот чек-бокс.';
 $GLOBALS['TL_LANG']['tl_settings']['composerVerbosity']['0']                                 = 'Детализация журнала консоли';
