@@ -1,7 +1,7 @@
 
 <div class="tl_formbody_submit">
     <div class="tl_submit_container">
-        <form action="contao/main.php" id="tl_composer_search" class="tl_form" style="float:left" method="get"
+        <form action="contao/main.php" id="tl_composer_search" class="tl_form" method="get"
               onsubmit="this.elements.search.disabled=true;">
             <input type="hidden" name="do" value="composer">
             <input type="text" name="keyword" id="ctrl_keyword" class="tl_text"
@@ -10,7 +10,7 @@
             <input type="submit" name="search" id="ctrl_search" class="tl_submit" accesskey="s"
                    value="<?php echo $GLOBALS['TL_LANG']['composer_client']['search']; ?>">
         </form>
-        <form action="contao/main.php?do=composer" id="tl_composer_update" class="tl_form" style="text-align: right" method="post"
+        <form action="contao/main.php?do=composer" id="tl_composer_update" class="tl_form" method="post"
               enctype="application/x-www-form-urlencoded"
               onsubmit="var elements = this.elements; setTimeout(function() { Array.each(elements, function(element) { element.disabled = true; }); }, 1);">
             <input type="hidden" name="REQUEST_TOKEN" value="<?php echo REQUEST_TOKEN; ?>">
