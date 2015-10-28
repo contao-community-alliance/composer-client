@@ -34,9 +34,7 @@
         "contao-community-alliance/composer-plugin": "~2.2"
     },
     "require-dev": {
-        "contao-community-alliance/build-system-all-tasks": "~1.0",
-        "contao-community-alliance/build-system": "~1.0",
-        "contao-community-alliance/coding-standard": "~1.0"
+        "phpcq/all-tasks": "~1.1"
     },
     "replace": {
         "contao-community-alliance/composer": "self.version"
