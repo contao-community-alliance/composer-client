@@ -31,7 +31,7 @@
     "require": {
         "php": ">=5.3.4",
         "contao/core": ">=3.2,<4-dev",
-        "contao-community-alliance/composer-plugin": "~2.2"
+        "contao-community-alliance/composer-plugin": "^2.3.8"
     },
     "require-dev": {
         "phpcq/all-tasks": "~1.1"
