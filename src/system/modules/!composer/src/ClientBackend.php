@@ -276,8 +276,7 @@ class ClientBackend extends \Backend
         $composerDevWarningTime = Runtime::readComposerDevWarningTime();
         $incompatibleVersion    = mktime(11, 0, 0, 6, 5, 2014) > ($composerDevWarningTime - 30 * 86400);
 
-        if (
-            !$composerDevWarningTime
+        if (!$composerDevWarningTime
             || $GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary']
                && ($incompatibleVersion || time() > $composerDevWarningTime)
         ) {
@@ -285,8 +284,7 @@ class ClientBackend extends \Backend
             $_SESSION['TL_CONFIRM']['composerUpdated'] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
         }
 
-        if (
-            $composerDevWarningTime
+        if ($composerDevWarningTime
             && !$GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary']
             && $incompatibleVersion
         ) {

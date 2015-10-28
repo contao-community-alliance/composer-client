@@ -131,37 +131,6 @@ class DetailsController extends AbstractController
                     /** @var \DateTime $dsb */
                     return $dsb->getTimestamp() - $dsa->getTimestamp();
                 }
-
-                /*
-                $versionA = $this->reformatVersion($packageA);
-                $versionB = $this->reformatVersion($packageB);
-
-                $classicA = preg_match('#^\d(\.\d+)*$#', $versionA);
-                $classicB = preg_match('#^\d(\.\d+)*$#', $versionB);
-
-                $branchA = 'dev-' == substr($packageA->getPrettyVersion(), 0, 4);
-                $branchB = 'dev-' == substr($packageB->getPrettyVersion(), 0, 4);
-
-                if ($branchA && $branchB) {
-                    return strcasecmp($branchA, $branchB);
-                }
-                if ($classicA && $classicB) {
-                    if ($packageA->getPrettyVersion() == 'dev-master') {
-                        return -1;
-                    }
-                    if ($packageB->getPrettyVersion() == 'dev-master') {
-                        return 1;
-                    }
-                    return version_compare($versionB, $versionA);
-                }
-                if ($classicA) {
-                    return -1;
-                }
-                if ($classicB) {
-                    return 1;
-                }
-                return 0;
-                */
             }
         );
 

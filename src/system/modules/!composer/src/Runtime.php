@@ -17,11 +17,8 @@
 
 namespace ContaoCommunityAlliance\Contao\Composer;
 
-use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\IOInterface;
-use Composer\Json\JsonFile;
-use Composer\Package\Version\VersionParser;
 use Composer\Util\Filesystem;
 
 /**
@@ -196,8 +193,7 @@ EOF;
         }
 
         // check .htaccess exists and is up to date
-        if (
-            !file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess')
+        if (!file_exists(COMPOSER_DIR_ABSOULTE . '/.htaccess')
             || str_replace(array("\r", "\n", "\t", ' '), '', file_get_contents(COMPOSER_DIR_ABSOULTE . '/.htaccess'))
                == str_replace(array("\r", "\n", "\t", ' '), '', static::HTACCESS_OLD)
         ) {
@@ -285,8 +281,7 @@ EOF;
         $buffer         = '';
         do {
             $buffer .= fread($configPathname->handle, 1024);
-        } while (
-            !preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches)
+        } while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches)
             && !feof($configPathname->handle)
         );
         if ($matches[1]) {
