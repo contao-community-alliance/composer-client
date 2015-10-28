@@ -18,13 +18,6 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
     return;
 }
 
-if (version_compare(VERSION, '3', '<')) {
-    include(TL_ROOT . '/system/modules/!composer/src/ClassLoader.php');
-    \ContaoCommunityAlliance\Contao\Composer\ClassLoader::register();
-    spl_autoload_register('__autoload');
-    \Contao2ClassFileExistsHack::register();
-}
-
 define('COMPOSER_MIN_PHPVERSION', '5.3.4');
 define('COMPOSER_DIR_RELATIVE', 'composer');
 define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);

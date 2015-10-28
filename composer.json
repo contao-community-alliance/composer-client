@@ -30,7 +30,7 @@
     },
     "require": {
         "php": ">=5.3.4",
-        "contao/core": ">=2.11,<5-dev",
+        "contao/core": ">=3.2,<4-dev",
         "contao-community-alliance/composer-plugin": "~2.2"
     },
     "require-dev": {
