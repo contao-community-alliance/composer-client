@@ -180,19 +180,6 @@ $GLOBALS['TL_LANG']['composer_client']['tools_dialog']                  = 'Werkz
 $GLOBALS['TL_LANG']['composer_client']['tools_resync']['0']             = 'erneute Synchronisierung';
 $GLOBALS['TL_LANG']['composer_client']['tools_resync']['1']             = 'Alle durch Composer erstellten Ordnerkopien oder Symlinks werden erneut angelegt.';
 $GLOBALS['TL_LANG']['composer_client']['tools_resync']['2']             = 'erneute Synchronisierung jetzt durchführen';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration']                = 'Zum alten Erweiterungskatalog zurückwechseln';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration_text']           = '
-<p>Lieber Nutzer, schade das Du dich entschieden hast wieder zur alten Erweiterungsverwaltung zurückzukehren.</p>
-<p>Ein paar Worte, wie der Wechsel funktioniert:</p>
-<ul>
-<li>Vor dem Wechsel werden alle installierten Pakete entfernt.</li>
-<li>Der Migrationsstatus wird zurückgesetzt.</li>
-<li>Der Composer Client wird deaktiviert</li>
-<li>Die Erweiterungsverwaltung wird wieder aktiviert</li>
-<li>Alle Erweiterungen müssen erneut installiert werden!</li>
-</ul>
-<br>
-';
 $GLOBALS['TL_LANG']['composer_client']['unknown_license']               = 'Unbekannte Lizenz';
 $GLOBALS['TL_LANG']['composer_client']['unpinPackage']                  = 'Verankerung auf Version aufheben.';
 $GLOBALS['TL_LANG']['composer_client']['unpinablePackage']              = 'Development Release können nicht verankert werden.';

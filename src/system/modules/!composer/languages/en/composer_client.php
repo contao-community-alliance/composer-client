@@ -176,19 +176,6 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_do']           = 'do migration';
 $GLOBALS['TL_LANG']['composer_client']['migrate_skip']         = 'skip migration (only if you know what you do)';
 $GLOBALS['TL_LANG']['composer_client']['migrate_skip_confirm'] =
     'Skipping the migration may be dangerous, skip migration only if you know what you do. Skip migration now?';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration_text']  = '
-<p>Dear user, we are sorry that you decide to switch back to the old packages client.</p>
-<p>Some words about how the switch works:</p>
-<ul>
-<li>Before switching, all installed packages will be removed.</li>
-<li>Migration status will be reset.</li>
-<li>The Composer client will be disabled</li>
-<li>The repository client will be enabled</li>
-<li>You need to reinstall all extensions, that are managed by the repository client!</li>
-</ul>
-<br>
-';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'switch back to old client now';
 
 /**
  * Tools dialog
@@ -340,7 +327,6 @@ $GLOBALS['TL_LANG']['composer_client']['migrate']              = 'Migrate';
 $GLOBALS['TL_LANG']['composer_client']['update_database']      = 'Update database';
 $GLOBALS['TL_LANG']['composer_client']['tools_dialog']         = 'Tools';
 $GLOBALS['TL_LANG']['composer_client']['settings_dialog']      = 'Settings';
-$GLOBALS['TL_LANG']['composer_client']['undo_migration']       = 'Switch back to old client';
 $GLOBALS['TL_LANG']['composer_client']['clear_composer_cache'] = 'Clear Composer cache';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']         = 'Experts mode';
 $GLOBALS['TL_LANG']['composer_client']['update_composer']      = 'Update Composer';
