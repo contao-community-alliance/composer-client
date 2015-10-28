@@ -20,14 +20,6 @@
             $GLOBALS['TL_LANG']['composer_client']['experts_mode']
         ); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['experts_mode']; ?>
     </a>
-    <br>
-    <br>
-    <a href="contao/main.php?do=composer&amp;migrate=undo" title="<?php echo $GLOBALS['TL_LANG']['composer_client']['undo_migration']; ?>">
-        <?php echo $this->generateImage(
-            'system/modules/!composer/assets/images/undo_migration.png',
-            $GLOBALS['TL_LANG']['composer_client']['undo_migration']
-        ); ?> <?php echo $GLOBALS['TL_LANG']['composer_client']['undo_migration']; ?>
-    </a>
 </div>
 
 <h2 class="sub_headline"><?php echo $GLOBALS['TL_LANG']['composer_client']['settings_dialog']; ?></h2>

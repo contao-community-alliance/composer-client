@@ -38,7 +38,6 @@ use ContaoCommunityAlliance\Contao\Composer\Controller\SearchController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\SettingsController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\SolveController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\ToolsController;
-use ContaoCommunityAlliance\Contao\Composer\Controller\UndoMigrationController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdateDatabaseController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
 
@@ -135,11 +134,6 @@ class ClientBackend extends \Backend
             || !$extra['contao']['migrated']
         ) {
             $controller = new MigrationWizardController();
-        }
-
-        // undo migration
-        if ($input->get('migrate') == 'undo') {
-            $controller = new UndoMigrationController();
         }
 
         // do update database
