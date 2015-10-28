@@ -497,24 +497,8 @@ EOF;
         $registered = true;
 
         if (file_exists(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php')) {
-            $isContao2 = version_compare(VERSION, '3', '<');
-
-            // unregister contao class loader
-            if ($isContao2) {
-                spl_autoload_unregister('__autoload');
-            }
-
             // register composer vendor class loader
             require_once(COMPOSER_DIR_ABSOULTE . '/vendor/autoload.php');
-
-            // reregister contao class loader
-            if ($isContao2) {
-                spl_autoload_register('__autoload');
-
-                // swift is not autoloaded in Contao 2.x
-                require_once(TL_ROOT . '/plugins/swiftmailer/classes/Swift.php');
-                require_once(TL_ROOT . '/plugins/swiftmailer/swift_init.php');
-            }
         }
     }
 
@@ -531,21 +515,11 @@ EOF;
 
         $registered = true;
 
-        // unregister contao class loader
-        if (version_compare(VERSION, '3', '<')) {
-            spl_autoload_unregister('__autoload');
-        }
-
         // register composer class loader
         if (file_exists(COMPOSER_DIR_ABSOULTE . '/composer.phar')) {
             $phar             = new \Phar(COMPOSER_DIR_ABSOULTE . '/composer.phar');
             $autoloadPathname = $phar['vendor/autoload.php'];
             require_once($autoloadPathname->getPathname());
-        }
-
-        // reregister contao class loader
-        if (version_compare(VERSION, '3', '<')) {
-            spl_autoload_register('__autoload');
         }
     }
 

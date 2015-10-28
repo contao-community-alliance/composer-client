@@ -51,15 +51,8 @@ class UpdateDatabaseController extends AbstractController
             $this->reload();
         }
 
-        if (version_compare(VERSION, '3', '>=')) {
-            /** @var \Contao\Database\Installer $installer */
-            $installer = \System::importStatic('Database\Installer');
-        } else {
-            $this->import('DbInstaller');
-            /** @var \DbInstaller $installer */
-            $installer = $this->DbInstaller;
-        }
-
+        /** @var \Contao\Database\Installer $installer */
+        $installer = \System::importStatic('Database\Installer');
         $form = $installer->generateSqlForm();
 
         if (empty($_SESSION['sql_commands'])) {

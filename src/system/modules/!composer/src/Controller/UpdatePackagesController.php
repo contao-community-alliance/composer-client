@@ -89,10 +89,6 @@ class UpdatePackagesController extends AbstractController
         // disable all hooks
         $GLOBALS['TL_HOOKS'] = array();
 
-        if (version_compare(VERSION, '3', '<')) {
-            spl_autoload_unregister('__autoload');
-        }
-
         $lockPathname = preg_replace('#\.json$#', '.lock', $this->configPathname);
 
         /** @var DownloadManager $downloadManager */
