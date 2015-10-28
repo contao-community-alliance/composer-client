@@ -1,13 +1,16 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Composer integration for Contao.
  *
- * Copyright (c) 2005-2013 Leo Feyer
+ * PHP version 5
  *
- * @package !composer
- * @link    https://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @copyright  ContaoCommunityAlliance 2013
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author     Tristan Lins <tristan.lins@bit3.de>
+ * @package    Composer
+ * @license    LGPLv3
+ * @filesource
  */
 
 

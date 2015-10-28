@@ -1,0 +1,5 @@
+exclude:
+  - src/system/modules/!composer/languages
+  - tests
+
+mapping:
