@@ -6,7 +6,6 @@ use Composer\Installer;
 use Composer\Package\AliasPackage;
 use Composer\Package\CompletePackage;
 use Composer\Package\Link;
-use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Repository\RepositoryInterface;
@@ -200,7 +199,7 @@ class InstalledController extends AbstractController
                 'removing'          => !in_array($name, $requiresList) && !isset($dependencyMap[$name]),
                 'pinable'           => $package->getStability() != 'dev',
                 'pinned'            => array_key_exists($name, $versionLocks),
-                'versionConstraint' => new VersionConstraint('=', $package->getVersion()),
+                'versionConstraint' => $this->createConstraint('=', $package->getVersion()),
                 'requireConstraint' => isset($requires[$package->getName()]) ? $requires[$package->getName(
                 )]->getConstraint() : false,
             );
@@ -233,7 +232,7 @@ class InstalledController extends AbstractController
                 'removing'          => false,
                 'pinable'           => false,
                 'pinned'            => false,
-                'versionConstraint' => new VersionConstraint('=', $package->getVersion()),
+                'versionConstraint' => $this->createConstraint('=', $package->getVersion()),
                 'requireConstraint' => false,
             );
 

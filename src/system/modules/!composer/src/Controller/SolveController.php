@@ -11,7 +11,6 @@ use Composer\Json\JsonFile;
 use Composer\Package\AliasPackage;
 use Composer\Package\BasePackage;
 use Composer\Package\Link;
-use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackage;
 use Composer\Package\RootPackageInterface;
@@ -98,7 +97,7 @@ class SolveController extends AbstractController
         $request = new Request($pool);
 
         // add root package
-        $rootPackageConstraint = new VersionConstraint('=', $rootPackage->getVersion());
+        $rootPackageConstraint = $this->createConstraint('=', $rootPackage->getVersion());
         $rootPackageConstraint->setPrettyString($rootPackage->getPrettyVersion());
         $request->install($rootPackage->getName(), $rootPackageConstraint);
 
@@ -112,7 +111,7 @@ class SolveController extends AbstractController
         }
         /** @var PackageInterface $package */
         foreach ($installedRepository->getPackages() as $package) {
-            $request->install($package->getName(), new VersionConstraint('=', $package->getVersion()));
+            $request->install($package->getName(), $this->createConstraint('=', $package->getVersion()));
         }
 
         $operations = array();

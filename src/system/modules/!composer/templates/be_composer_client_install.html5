@@ -27,7 +27,12 @@ $preferedCandidate = $candidates[0];
 $selectedCandidate = -1;
 
 $contaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
-$contaoConstraint = new \Composer\Package\LinkConstraint\VersionConstraint('=', $contaoVersion);
+
+if (class_exists('Composer\Semver\Constraint\Constraint')) {
+    $contaoConstraint = new \Composer\Semver\Constraint\Constraint('=', $contaoVersion);
+} else {
+    $contaoConstraint = new \Composer\Package\LinkConstraint\VersionConstraint('=', $contaoVersion);
+}
 $contaoConstraint->setPrettyString($contaoVersion);
 
 $type = $preferedCandidate->getType();

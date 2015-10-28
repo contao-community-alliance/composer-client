@@ -11,6 +11,7 @@ use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
 use Composer\Repository\RepositoryManager;
+use Composer\Semver\Constraint\Constraint;
 
 /**
  * Class AbstractController
@@ -164,5 +165,24 @@ abstract class AbstractController extends \Backend implements ControllerInterfac
         $pool->addRepository($repositories);
 
         return $pool;
+    }
+
+    /**
+     * Create a constraint instance and set operator and version to compare a package with.
+     *
+     * @param string $operator A comparison operator.
+     * @param string $version  A version to compare to.
+     *
+     * @return Constraint|\Composer\Package\LinkConstraint\VersionConstraint
+     * @see    https://github.com/contao-community-alliance/composer-plugin/issues/44
+     * @see    https://github.com/composer/semver/issues/17
+     */
+    protected function createConstraint($operator, $version)
+    {
+        if (!class_exists('Composer\Semver\Constraint\Constraint')) {
+            return new \Composer\Package\LinkConstraint\VersionConstraint($operator, $version);
+        }
+
+        return new Constraint($operator, $version);
     }
 }

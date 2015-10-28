@@ -5,7 +5,6 @@ namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 use Composer\Installer;
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Link;
-use Composer\Package\LinkConstraint\VersionConstraint;
 use Composer\Package\PackageInterface;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
@@ -104,7 +103,7 @@ class SearchController extends AbstractController
         $results = $repositories->search(implode(' ', $tokens), $searchIn);
 
         $contaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);
-        $constraint    = new VersionConstraint('=', $contaoVersion);
+        $constraint    = $this->createConstraint('=', $contaoVersion);
         $constraint->setPrettyString($contaoVersion);
 
         $packages = array();
