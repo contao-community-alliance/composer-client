@@ -684,3 +684,12 @@ table#sql_table {
   margin: 12px 18px;
   text-align: center;
 }
+
+.tl_formbody_submit {
+  #tl_composer_search {
+    float: left;
+  }
+  #tl_composer_update {
+    text-align: right;
+  }
+}
