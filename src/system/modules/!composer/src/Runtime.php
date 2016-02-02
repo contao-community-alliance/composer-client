@@ -35,7 +35,7 @@ class Runtime
   Order deny,allow
   Deny from all
 
-  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|svg|svgz)$">
+  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|woff2|svg|svgz)$">
     Order allow,deny
     Allow from all
   </FilesMatch>
@@ -44,7 +44,7 @@ class Runtime
 <IfModule mod_authz_core.c>
   Require all denied
 
-  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|svg|svgz)$">
+  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|woff2|svg|svgz)$">
     Require all granted
   </FilesMatch>
 </IfModule>
