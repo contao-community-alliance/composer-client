@@ -40,6 +40,7 @@ use ContaoCommunityAlliance\Contao\Composer\Controller\SolveController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\ToolsController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdateDatabaseController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class ClientBackend
@@ -224,7 +225,7 @@ class ClientBackend extends \Backend
     {
         try {
             Runtime::updateComposer();
-            $_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
+            Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['composerUpdated']);
             return true;
         } catch (\Exception $e) {
             $this->log(
@@ -232,7 +233,7 @@ class ClientBackend extends \Backend
                 'ContaoCommunityAlliance\Contao\Composer\ClientBackend updateComposer',
                 'TL_ERROR'
             );
-            $_SESSION['TL_ERROR'][] = $e->getMessage();
+            Messages::addError($e->getMessage());
             return false;
         }
     }
@@ -275,15 +276,14 @@ class ClientBackend extends \Backend
                && ($incompatibleVersion || time() > $composerDevWarningTime)
         ) {
             Runtime::updateComposer();
-            $_SESSION['TL_CONFIRM']['composerUpdated'] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
+            Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['composerUpdated']);
         }
 
         if ($composerDevWarningTime
             && !$GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary']
             && $incompatibleVersion
         ) {
-            $_SESSION['TL_ERROR']['composerUpdateNecessary'] =
-                $GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary'];
+            Messages::addError($GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary']);
         }
 
         // register composer class loader

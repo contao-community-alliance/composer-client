@@ -21,6 +21,7 @@ use Composer\Plugin\CommandEvent;
 use Composer\Plugin\PluginEvents;
 use ContaoCommunityAlliance\Composer\Plugin\ConfigUpdateException;
 use ContaoCommunityAlliance\Composer\Plugin\DuplicateContaoException;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\StreamOutput;
 
@@ -61,8 +62,8 @@ class UpdatePackagesController extends AbstractController
             ) {
                 unset($_SESSION['COMPOSER_DUPLICATE_CONTAO_EXCEPTION']);
                 do {
-                    $_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
-                    $e                      = $e->getPrevious();
+                    Messages::addError(str_replace(TL_ROOT, '', $e->getMessage()));
+                    $e = $e->getPrevious();
                 } while ($e);
                 $this->redirect('contao/main.php?do=composer');
             } else {
@@ -71,14 +72,14 @@ class UpdatePackagesController extends AbstractController
             }
         } catch (ConfigUpdateException $e) {
             do {
-                $_SESSION['TL_CONFIRM'][] = str_replace(TL_ROOT, '', $e->getMessage());
-                $e                        = $e->getPrevious();
+                Messages::addConfirmation(str_replace(TL_ROOT, '', $e->getMessage()));
+                $e = $e->getPrevious();
             } while ($e);
             $this->reload();
         } catch (\RuntimeException $e) {
             do {
-                $_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
-                $e                      = $e->getPrevious();
+                Messages::addError(str_replace(TL_ROOT, '', $e->getMessage()));
+                $e = $e->getPrevious();
             } while ($e);
             $this->redirect('contao/main.php?do=composer');
         }

@@ -18,6 +18,7 @@ namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 use Composer\Installer;
 use Composer\Json\JsonFile;
 use ContaoCommunityAlliance\Contao\Composer\Runtime;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class MigrationWizardController
@@ -97,7 +98,7 @@ class MigrationWizardController extends AbstractController
                 // mark migration skipped
                 $config['extra']['contao']['migrated'] = 'skipped';
 
-                $_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['migrationSkipped'];
+                Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['migrationSkipped']);
             } else {
                 if (\Database::getInstance()->tableExists('tl_repository_installs')) {
                     switch ($mode) {
@@ -165,7 +166,7 @@ class MigrationWizardController extends AbstractController
                 // mark migration done
                 $config['extra']['contao']['migrated'] = 'done';
 
-                $_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['migrationDone'];
+                Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['migrationDone']);
             }
 
             // write config

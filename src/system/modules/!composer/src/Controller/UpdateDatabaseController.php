@@ -16,6 +16,7 @@
 namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 
 use Composer\Installer;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class UpdateDatabaseController
@@ -47,7 +48,7 @@ class UpdateDatabaseController extends AbstractController
                 }
             }
             $_SESSION['sql_commands'] = array();
-            $_SESSION['TL_CONFIRM'][] = sprintf($GLOBALS['TL_LANG']['composer_client']['databaseUpdated'], $count);
+            Messages::addConfirmation(sprintf($GLOBALS['TL_LANG']['composer_client']['databaseUpdated'], $count));
             $this->reload();
         }
 
@@ -56,7 +57,7 @@ class UpdateDatabaseController extends AbstractController
         $form = $installer->generateSqlForm();
 
         if (empty($_SESSION['sql_commands'])) {
-            $_SESSION['TL_INFO'][] = $GLOBALS['TL_LANG']['composer_client']['databaseUptodate'];
+            Messages::addInfo($GLOBALS['TL_LANG']['composer_client']['databaseUptodate']);
             $this->redirect('contao/main.php?do=composer');
         }
 

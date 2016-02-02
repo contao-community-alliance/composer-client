@@ -17,6 +17,7 @@ namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 
 use Composer\Installer;
 use ContaoCommunityAlliance\Contao\Composer\Runtime;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class ClearComposerCacheController
@@ -29,7 +30,8 @@ class ClearComposerCacheController extends AbstractController
     public function handle(\Input $input)
     {
         if (Runtime::clearComposerCache()) {
-            $_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared'];
+            Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']);
+
         }
 
         $this->redirect('contao/main.php?do=composer');
