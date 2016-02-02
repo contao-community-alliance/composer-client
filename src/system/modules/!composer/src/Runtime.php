@@ -10,6 +10,7 @@
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Dominik Zogg <dominik.zogg@gmail.com>
  * @author     Oliver Hoff <oliver@hofff.com>
+ * @author     Nicky Hoff <nick@hofff.com>
  * @package    Composer
  * @license    LGPLv3
  * @filesource
