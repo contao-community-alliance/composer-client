@@ -186,7 +186,7 @@ class Downloader
 
         // OpenSSL 0.9.8f support SNI, 0.9.8k and later has this enabled by default
         // (https://wiki.apache.org/httpd/NameBasedSSLVHostsWithSNI)
-        if (version_compare($ssl[2], '0.9.8f', '<')) {
+        if (version_compare($ssl[1], '0.9.8f', '<')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
             Messages::addWarning(
                 'SNI support not available, OpenSSL version too old. Host verification has been deactivated.'
