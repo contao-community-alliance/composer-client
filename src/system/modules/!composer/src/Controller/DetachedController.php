@@ -115,6 +115,7 @@ class DetachedController extends AbstractController
     {
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             shell_exec(sprintf('taskkill.exe /PID %d', $pid));
+            return;
         }
 
         posix_kill($pid, SIGTERM);
