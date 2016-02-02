@@ -20,6 +20,7 @@ namespace ContaoCommunityAlliance\Contao\Composer;
 use Composer\Factory;
 use Composer\IO\IOInterface;
 use Composer\Util\Filesystem;
+use ContaoCommunityAlliance\Contao\Composer\Util\ErrorHandler;
 
 /**
  * Class Runtime
@@ -179,6 +180,9 @@ EOF;
         if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '<')) {
             return;
         }
+
+        // Hijack the error handler as we can not use the one from Contao.
+        ErrorHandler::replaceErrorHandler();
 
         // check composer folder exists
         if (!is_dir(COMPOSER_DIR_ABSOULTE)) {
