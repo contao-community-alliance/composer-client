@@ -21,6 +21,7 @@ use Composer\Factory;
 use Composer\IO\IOInterface;
 use Composer\Util\Filesystem;
 use Composer\Util\Silencer;
+use ContaoCommunityAlliance\Contao\Composer\Util\CaBundleWorkaround;
 use ContaoCommunityAlliance\Contao\Composer\Util\ErrorHandler;
 
 /**
@@ -525,6 +526,8 @@ EOF;
             $phar             = new \Phar(COMPOSER_DIR_ABSOULTE . '/composer.phar');
             $autoloadPathname = $phar['vendor/autoload.php'];
             require_once($autoloadPathname->getPathname());
+
+            CaBundleWorkaround::setCaFileIfOpenBaseDirInUse($phar);
         }
     }
 
