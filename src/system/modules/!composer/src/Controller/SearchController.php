@@ -92,27 +92,6 @@ class SearchController extends AbstractController
             )
         );
 
-        /*
-        $localRepository       = $this->composer
-            ->getRepositoryManager()
-            ->getLocalRepository();
-        $platformRepository    = new PlatformRepository();
-        $installedRepositories = new CompositeRepository(
-            array(
-                $localRepository,
-                $platformRepository
-            )
-        );
-        $repositories          = array_merge(
-            array($installedRepositories),
-            $this->composer
-                ->getRepositoryManager()
-                ->getRepositories()
-        );
-
-        $repositories = new CompositeRepository($repositories);
-        */
-
         $results = $repositories->search(implode(' ', $tokens), $searchIn);
 
         $contaoVersion = VERSION . (is_numeric(BUILD) ? '.' . BUILD : '-' . BUILD);

@@ -41,18 +41,6 @@ class DetailsController extends AbstractController
         if ($input->post('version')) {
             $version = base64_decode(rawurldecode($input->post('version')));
 
-            /*
-            $this->redirect(
-                'contao/main.php?' . http_build_query(
-                    array(
-                        'do'      => 'composer',
-                        'solve'   => $packageName,
-                        'version' => $version
-                    )
-                )
-            );
-            */
-
             // make a backup
             copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
 
