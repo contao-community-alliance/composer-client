@@ -20,6 +20,7 @@ namespace ContaoCommunityAlliance\Contao\Composer;
 use Composer\Factory;
 use Composer\IO\IOInterface;
 use Composer\Util\Filesystem;
+use Composer\Util\Silencer;
 use ContaoCommunityAlliance\Contao\Composer\Util\ErrorHandler;
 
 /**
@@ -547,7 +548,11 @@ EOF;
         $factory = new Factory();
 
         // create composer
-        $composer = $factory->createComposer($io);
+        if (class_exists('\Composer\Util\Silencer')) {
+            $composer = Silencer::call(array($factory, 'createComposer'), $io);
+        } else {
+            $composer = $factory->createComposer($io);
+        }
 
         return $composer;
     }
