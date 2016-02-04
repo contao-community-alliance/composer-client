@@ -94,9 +94,9 @@ class DetachedController extends AbstractController
     {
         // Windows magic, call tasklist.exe and scan for the pid in there.
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $processes = shell_exec(sprintf('tasklist.exe /FI "PID eq %d" /FO CSV /NH', $pid));
+            $process = shell_exec(sprintf('tasklist.exe /FI "PID eq %d" /FO CSV /NH', $pid));
 
-            return in_array($pid, str_getcsv($processes, ','));
+            return in_array($pid, str_getcsv($process, ','));
         }
 
         // We send special signal 0 to test for existance of the process which is much more bullet proof than
