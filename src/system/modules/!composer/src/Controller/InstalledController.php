@@ -33,11 +33,25 @@ use ContaoCommunityAlliance\Contao\Composer\Downloader;
 class InstalledController extends AbstractController
 {
     public static $UNMODIFIABLE_PACKAGES = array(
-        'contao/core'
+        'contao/core',
+        'contao/calendar-bundle',
+        'contao/comments-bundle',
+        'contao/core-bundle',
+        'contao/faq-bundle',
+        'contao/listing-bundle',
+        'contao/news-bundle',
+        'contao/newsletter-bundle'
     );
 
     public static $UNDELETABLE_PACKAGES = array(
         'contao/core',
+        'contao/calendar-bundle',
+        'contao/comments-bundle',
+        'contao/core-bundle',
+        'contao/faq-bundle',
+        'contao/listing-bundle',
+        'contao/news-bundle',
+        'contao/newsletter-bundle',
         'contao-community-alliance/composer',
         'contao-community-alliance/composer-client'
     );

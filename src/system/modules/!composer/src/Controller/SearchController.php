@@ -22,6 +22,7 @@ use Composer\Package\PackageInterface;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
 use Composer\Repository\RepositoryInterface;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class SearchController
@@ -52,9 +53,8 @@ class SearchController extends AbstractController
         );
 
         if (empty($packages)) {
-            $_SESSION['TL_ERROR'][] = sprintf(
-                $GLOBALS['TL_LANG']['composer_client']['noSearchResult'],
-                $keyword
+            Messages::addError(
+                sprintf($GLOBALS['TL_LANG']['composer_client']['noSearchResult'], $keyword)
             );
 
             $_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
@@ -91,27 +91,6 @@ class SearchController extends AbstractController
                 $repositoryManager->getRepositories()
             )
         );
-
-        /*
-        $localRepository       = $this->composer
-            ->getRepositoryManager()
-            ->getLocalRepository();
-        $platformRepository    = new PlatformRepository();
-        $installedRepositories = new CompositeRepository(
-            array(
-                $localRepository,
-                $platformRepository
-            )
-        );
-        $repositories          = array_merge(
-            array($installedRepositories),
-            $this->composer
-                ->getRepositoryManager()
-                ->getRepositories()
-        );
-
-        $repositories = new CompositeRepository($repositories);
-        */
 
         $results = $repositories->search(implode(' ', $tokens), $searchIn);
 

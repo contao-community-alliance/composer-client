@@ -21,6 +21,8 @@ use Composer\Plugin\CommandEvent;
 use Composer\Plugin\PluginEvents;
 use ContaoCommunityAlliance\Composer\Plugin\ConfigUpdateException;
 use ContaoCommunityAlliance\Composer\Plugin\DuplicateContaoException;
+use ContaoCommunityAlliance\Contao\Composer\Util\FunctionAvailabilityCheck;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\StreamOutput;
 
@@ -42,7 +44,9 @@ class UpdatePackagesController extends AbstractController
             $packages = array_filter($packages);
             $dryRun   = $input->get('dry-run') || $input->post('dry-run');
 
-            switch ($GLOBALS['TL_CONFIG']['composerExecutionMode']) {
+            $mode = $this->determineRuntimeMode();
+
+            switch ($mode) {
                 case 'inline':
                     $this->runInline($packages, $dryRun);
                     break;
@@ -61,8 +65,8 @@ class UpdatePackagesController extends AbstractController
             ) {
                 unset($_SESSION['COMPOSER_DUPLICATE_CONTAO_EXCEPTION']);
                 do {
-                    $_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
-                    $e                      = $e->getPrevious();
+                    Messages::addError(str_replace(TL_ROOT, '', $e->getMessage()));
+                    $e = $e->getPrevious();
                 } while ($e);
                 $this->redirect('contao/main.php?do=composer');
             } else {
@@ -71,14 +75,14 @@ class UpdatePackagesController extends AbstractController
             }
         } catch (ConfigUpdateException $e) {
             do {
-                $_SESSION['TL_CONFIRM'][] = str_replace(TL_ROOT, '', $e->getMessage());
-                $e                        = $e->getPrevious();
+                Messages::addConfirmation(str_replace(TL_ROOT, '', $e->getMessage()));
+                $e = $e->getPrevious();
             } while ($e);
             $this->reload();
         } catch (\RuntimeException $e) {
             do {
-                $_SESSION['TL_ERROR'][] = str_replace(TL_ROOT, '', $e->getMessage());
-                $e                      = $e->getPrevious();
+                Messages::addError(str_replace(TL_ROOT, '', $e->getMessage()));
+                $e = $e->getPrevious();
             } while ($e);
             $this->redirect('contao/main.php?do=composer');
         }
@@ -244,5 +248,38 @@ class UpdatePackagesController extends AbstractController
 
         // redirect to database update
         $this->redirect('contao/main.php?do=composer');
+    }
+
+    /**
+     * Determine the runtime mode to use depending on the availability of functions.
+     *
+     * @return mixed
+     */
+    private function determineRuntimeMode()
+    {
+        $mode = $GLOBALS['TL_CONFIG']['composerExecutionMode'];
+        if ('inline' === $mode) {
+            return $mode;
+        }
+        $functions = array();
+
+        if ($mode === 'process') {
+            $functions = array('proc_open', 'proc_close');
+        }
+        if ($mode === 'detached') {
+            $functions = array('shell_exec');
+            if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
+                $functions[] = 'posix_kill';
+            }
+        }
+
+        foreach ($functions as $function) {
+            if (!FunctionAvailabilityCheck::isFunctionEnabled($function)) {
+                Messages::addWarning($function . ' is disabled, reverting from ' . $mode . ' to inline execution');
+                return 'inline';
+            }
+        }
+
+        return $mode;
     }
 }

@@ -189,6 +189,15 @@ span.stability-dev {
 /**
  * Listing view
  */
+
+.composer_warn {
+  margin: 1px 0 0;
+  padding: 4px 5px 5px 25px;
+  border-radius: 3px;
+  color: #999900;
+  background: #faeeee url(../images/warn.png) no-repeat 5px center;
+}
+
 table.composer_package_list {
   table-layout: fixed;
 }
@@ -683,4 +692,13 @@ table#sql_table {
 .uptime {
   margin: 12px 18px;
   text-align: center;
+}
+
+.tl_formbody_submit {
+  #tl_composer_search {
+    float: left;
+  }
+  #tl_composer_update {
+    text-align: right;
+  }
 }

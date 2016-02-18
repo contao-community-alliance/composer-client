@@ -16,6 +16,8 @@
 
 namespace ContaoCommunityAlliance\Contao\Composer;
 
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
+
 /**
  * Class Downloader
  *
@@ -171,8 +173,9 @@ class Downloader
         // (http://curl.haxx.se/changes.html)
         if (version_compare(trim($curlVersion['version']), '7.18.1', '<')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-            $_SESSION['TL_ERROR'][] =
-                'Warning: SNI support not available, curl version too old. Host verification has been deactivated.';
+            Messages::addWarning(
+                'SNI support not available, curl version too old. Host verification has been deactivated.'
+            );
             return;
         }
         // We only check for OpenSSL.
@@ -183,10 +186,11 @@ class Downloader
 
         // OpenSSL 0.9.8f support SNI, 0.9.8k and later has this enabled by default
         // (https://wiki.apache.org/httpd/NameBasedSSLVHostsWithSNI)
-        if (version_compare($ssl[2], '0.9.8f', '<')) {
+        if (version_compare($ssl[1], '0.9.8f', '<')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-            $_SESSION['TL_ERROR'][] =
-                'Warning: SNI support not available, OpenSSL version too old. Host verification has been deactivated.';
+            Messages::addWarning(
+                'SNI support not available, OpenSSL version too old. Host verification has been deactivated.'
+            );
         }
     }
 }

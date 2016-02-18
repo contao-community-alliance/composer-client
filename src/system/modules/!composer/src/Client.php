@@ -57,14 +57,12 @@ class Client extends \System
         $this->import($callback[0]);
         $modules = $this->$callback[0]->$callback[1]();
 
-        foreach (array('repository', 'rep_base', 'rep_client') as $module) {
-            if (isset($modules[$module])) {
-                $modules[$module] = sprintf(
-                    '<span style="text-decoration:line-through">%s</span> <span style="color:#f00">%s</span>',
-                    $modules[$module],
-                    $GLOBALS['TL_LANG']['MSG']['disabled_by_composer']
-                );
-            }
+        if (isset($modules['repository'])) {
+            $modules['repository'] = sprintf(
+                '<span style="text-decoration:line-through">%s</span> <span style="color:#f00">%s</span>',
+                $modules['repository'],
+                $GLOBALS['TL_LANG']['MSG']['disabled_by_composer']
+            );
         }
 
         return $modules;
@@ -77,14 +75,6 @@ class Client extends \System
         $activeModules   = $this->Config->getActiveModules();
         $inactiveModules = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
 
-        if (in_array('rep_base', $activeModules)) {
-            $inactiveModules[] = 'rep_base';
-            $reset             = true;
-        }
-        if (in_array('rep_client', $activeModules)) {
-            $inactiveModules[] = 'rep_client';
-            $reset             = true;
-        }
         if (in_array('repository', $activeModules)) {
             $inactiveModules[] = 'repository';
             $skipFile          = new \File('system/modules/repository/.skip');

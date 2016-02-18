@@ -22,6 +22,7 @@ use Composer\Package\PackageInterface;
 use ContaoCommunityAlliance\Composer\Plugin\CopyInstaller;
 use ContaoCommunityAlliance\Composer\Plugin\Plugin;
 use ContaoCommunityAlliance\Composer\Plugin\SymlinkInstaller;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class ResyncController
@@ -48,7 +49,7 @@ class ResyncController extends AbstractController
 
         // plugin not found -> abort
         if (!$plugin) {
-            $_SESSION['TL_ERROR'][] = $GLOBALS['TL_LANG']['composer_client']['pluginNotFound'];
+            Messages::addError($GLOBALS['TL_LANG']['composer_client']['pluginNotFound']);
             $this->redirect('contao/main.php?do=composer&tools=dialog');
         }
 
@@ -77,15 +78,19 @@ class ResyncController extends AbstractController
                 );
                 $installer->updateContaoFiles($package);
 
-                $_SESSION['TL_INFO'][] = sprintf(
-                    $GLOBALS['TL_LANG']['composer_client']['resyncedPackage'],
-                    $package->getName()
+                Messages::addInfo(
+                    sprintf(
+                        $GLOBALS['TL_LANG']['composer_client']['resyncedPackage'],
+                        $package->getName()
+                    )
                 );
             } catch (\RuntimeException $e) {
-                $_SESSION['TL_ERROR'][] = sprintf(
-                    $GLOBALS['TL_LANG']['composer_client']['resyncFailed'],
-                    $package->getName(),
-                    $e->getMessage()
+                Messages::addError(
+                    sprintf(
+                        $GLOBALS['TL_LANG']['composer_client']['resyncFailed'],
+                        $package->getName(),
+                        $e->getMessage()
+                    )
                 );
             }
         }

@@ -10,6 +10,7 @@
  * @author     Tristan Lins <tristan.lins@bit3.de>
  * @author     Dominik Zogg <dominik.zogg@gmail.com>
  * @author     Oliver Hoff <oliver@hofff.com>
+ * @author     Nicky Hoff <nick@hofff.com>
  * @package    Composer
  * @license    LGPLv3
  * @filesource
@@ -20,6 +21,9 @@ namespace ContaoCommunityAlliance\Contao\Composer;
 use Composer\Factory;
 use Composer\IO\IOInterface;
 use Composer\Util\Filesystem;
+use Composer\Util\Silencer;
+use ContaoCommunityAlliance\Contao\Composer\Util\CaBundleWorkaround;
+use ContaoCommunityAlliance\Contao\Composer\Util\ErrorHandler;
 
 /**
  * Class Runtime
@@ -35,7 +39,7 @@ class Runtime
   Order deny,allow
   Deny from all
 
-  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|svg|svgz)$">
+  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|woff2|svg|svgz)$">
     Order allow,deny
     Allow from all
   </FilesMatch>
@@ -44,7 +48,7 @@ class Runtime
 <IfModule mod_authz_core.c>
   Require all denied
 
-  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|svg|svgz)$">
+  <FilesMatch "\.(js|css|htc|png|gif|jpe?g|ico|swf|flv|mp4|webm|ogv|mp3|ogg|oga|eot|otf|tt[cf]|woff|woff2|svg|svgz)$">
     Require all granted
   </FilesMatch>
 </IfModule>
@@ -179,6 +183,9 @@ EOF;
         if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '<')) {
             return;
         }
+
+        // Hijack the error handler as we can not use the one from Contao.
+        ErrorHandler::replaceErrorHandler();
 
         // check composer folder exists
         if (!is_dir(COMPOSER_DIR_ABSOULTE)) {
@@ -520,6 +527,8 @@ EOF;
             $phar             = new \Phar(COMPOSER_DIR_ABSOULTE . '/composer.phar');
             $autoloadPathname = $phar['vendor/autoload.php'];
             require_once($autoloadPathname->getPathname());
+
+            CaBundleWorkaround::setCaFileIfOpenBaseDirInUse($phar);
         }
     }
 
@@ -543,7 +552,11 @@ EOF;
         $factory = new Factory();
 
         // create composer
-        $composer = $factory->createComposer($io);
+        if (class_exists('\Composer\Util\Silencer')) {
+            $composer = Silencer::call(array($factory, 'createComposer'), $io);
+        } else {
+            $composer = $factory->createComposer($io);
+        }
 
         return $composer;
     }

@@ -40,6 +40,8 @@ use ContaoCommunityAlliance\Contao\Composer\Controller\SolveController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\ToolsController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdateDatabaseController;
 use ContaoCommunityAlliance\Contao\Composer\Controller\UpdatePackagesController;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ClientBackend
@@ -224,7 +226,7 @@ class ClientBackend extends \Backend
     {
         try {
             Runtime::updateComposer();
-            $_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
+            Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['composerUpdated']);
             return true;
         } catch (\Exception $e) {
             $this->log(
@@ -232,33 +234,32 @@ class ClientBackend extends \Backend
                 'ContaoCommunityAlliance\Contao\Composer\ClientBackend updateComposer',
                 'TL_ERROR'
             );
-            $_SESSION['TL_ERROR'][] = $e->getMessage();
+            Messages::addError($e->getMessage());
             return false;
         }
     }
 
+    /**
+     * Return the proper debug level value.
+     *
+     * @return int
+     */
     protected function getDebugLevel()
     {
         switch ($GLOBALS['TL_CONFIG']['composerVerbosity']) {
             case 'VERBOSITY_QUIET':
-                $level = 0;
-                break;
+                return OutputInterface::VERBOSITY_QUIET;
             case 'VERBOSITY_VERBOSE':
-                $level = 2;
-                break;
+                return OutputInterface::VERBOSITY_VERBOSE;
             case 'VERBOSITY_VERY_VERBOSE':
-                $level = 3;
-                break;
+                return OutputInterface::VERBOSITY_VERY_VERBOSE;
             case 'VERBOSITY_DEBUG':
-                $level = 4;
-                break;
+                return OutputInterface::VERBOSITY_DEBUG;
             case 'VERBOSITY_NORMAL':
             default:
-                $level = 1;
-                break;
         }
 
-        return $level;
+        return OutputInterface::VERBOSITY_NORMAL;
     }
 
     /**
@@ -275,15 +276,14 @@ class ClientBackend extends \Backend
                && ($incompatibleVersion || time() > $composerDevWarningTime)
         ) {
             Runtime::updateComposer();
-            $_SESSION['TL_CONFIRM']['composerUpdated'] = $GLOBALS['TL_LANG']['composer_client']['composerUpdated'];
+            Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['composerUpdated']);
         }
 
         if ($composerDevWarningTime
             && !$GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary']
             && $incompatibleVersion
         ) {
-            $_SESSION['TL_ERROR']['composerUpdateNecessary'] =
-                $GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary'];
+            Messages::addError($GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary']);
         }
 
         // register composer class loader

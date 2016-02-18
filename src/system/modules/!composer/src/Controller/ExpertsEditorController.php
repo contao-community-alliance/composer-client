@@ -17,6 +17,7 @@ namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 
 use Composer\Installer;
 use Composer\Util\ConfigValidator;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class ExpertsEditorController
@@ -44,7 +45,7 @@ class ExpertsEditorController extends AbstractController
             list($errors, $publishErrors, $warnings) = $validator->validate(TL_ROOT . '/' . $tempPathname);
 
             if (!$errors && !$publishErrors) {
-                $_SESSION['TL_CONFIRM'][] = $GLOBALS['TL_LANG']['composer_client']['configValid'];
+                Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['configValid']);
                 $this->import('Files');
                 $this->Files->rename($tempPathname, $this->configPathname);
             } else {
@@ -53,20 +54,20 @@ class ExpertsEditorController extends AbstractController
 
                 if ($errors) {
                     foreach ($errors as $message) {
-                        $_SESSION['TL_ERROR'][] = 'Error: ' . $message;
+                        Messages::addError('Error: ' . $message);
                     }
                 }
 
                 if ($publishErrors) {
                     foreach ($publishErrors as $message) {
-                        $_SESSION['TL_ERROR'][] = 'Publish error: ' . $message;
+                        Messages::addError('Publish error: ' . $message);
                     }
                 }
             }
 
             if ($warnings) {
                 foreach ($warnings as $message) {
-                    $_SESSION['TL_ERROR'][] = 'Warning: ' . $message;
+                    Messages::addWarning('Warning: ' . $message);
                 }
             }
 
