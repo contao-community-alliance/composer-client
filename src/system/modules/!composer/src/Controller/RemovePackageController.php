@@ -17,6 +17,7 @@ namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 
 use Composer\Installer;
 use Composer\Json\JsonFile;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class RemovePackageController
@@ -58,9 +59,8 @@ class RemovePackageController extends AbstractController
         }
         $json->write($config);
 
-        $_SESSION['TL_INFO'][] = sprintf(
-            $GLOBALS['TL_LANG']['composer_client']['removeCandidate'],
-            implode(', ', $removeNames)
+        Messages::addInfo(
+            sprintf($GLOBALS['TL_LANG']['composer_client']['removeCandidate'], implode(', ', $removeNames))
         );
 
         $_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();

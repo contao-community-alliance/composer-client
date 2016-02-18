@@ -18,6 +18,7 @@ namespace ContaoCommunityAlliance\Contao\Composer\Controller;
 use Composer\Installer;
 use Composer\Json\JsonFile;
 use Composer\Package\PackageInterface;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class DetailsController
@@ -40,18 +41,6 @@ class DetailsController extends AbstractController
         if ($input->post('version')) {
             $version = base64_decode(rawurldecode($input->post('version')));
 
-            /*
-            $this->redirect(
-                'contao/main.php?' . http_build_query(
-                    array(
-                        'do'      => 'composer',
-                        'solve'   => $packageName,
-                        'version' => $version
-                    )
-                )
-            );
-            */
-
             // make a backup
             copy(TL_ROOT . '/' . $this->configPathname, TL_ROOT . '/' . $this->configPathname . '~');
 
@@ -65,10 +54,8 @@ class DetailsController extends AbstractController
             ksort($config['require']);
             $json->write($config);
 
-            $_SESSION['TL_INFO'][] = sprintf(
-                $GLOBALS['TL_LANG']['composer_client']['added_candidate'],
-                $packageName,
-                $version
+            Messages::addInfo(
+                sprintf($GLOBALS['TL_LANG']['composer_client']['added_candidate'], $packageName, $version)
             );
 
             $_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
@@ -79,9 +66,8 @@ class DetailsController extends AbstractController
         $installationCandidates = $this->searchPackage($packageName);
 
         if (empty($installationCandidates)) {
-            $_SESSION['TL_ERROR'][] = sprintf(
-                $GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'],
-                $packageName
+            Messages::addError(
+                sprintf($GLOBALS['TL_LANG']['composer_client']['noInstallationCandidates'], $packageName)
             );
 
             $_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();

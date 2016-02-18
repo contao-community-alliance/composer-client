@@ -31,6 +31,7 @@ use Composer\Package\Version\VersionParser;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\InstalledArrayRepository;
 use Composer\Repository\PlatformRepository;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class SolveController
@@ -60,10 +61,8 @@ class SolveController extends AbstractController
             $config['require'][$packageName] = $version;
             $json->write($config);
 
-            $_SESSION['TL_INFO'][] = sprintf(
-                $GLOBALS['TL_LANG']['composer_client']['added_candidate'],
-                $packageName,
-                $version
+            Messages::addInfo(
+                sprintf($GLOBALS['TL_LANG']['composer_client']['added_candidate'], $packageName, $version)
             );
 
             $_SESSION['COMPOSER_OUTPUT'] .= $this->io->getOutput();
@@ -151,9 +150,8 @@ class SolveController extends AbstractController
                 }
             }
         } catch (SolverProblemsException $e) {
-            $_SESSION['TL_ERROR'][] = sprintf(
-                '<span style="white-space: pre-line">%s</span>',
-                trim($e->getMessage())
+            Messages::addError(
+                sprintf('<span style="white-space: pre-line">%s</span>', trim($e->getMessage()))
             );
         }
 

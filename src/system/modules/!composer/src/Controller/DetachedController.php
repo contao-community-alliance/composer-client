@@ -40,9 +40,7 @@ class DetachedController extends AbstractController
         $output = $outFile->getContent();
         $pid    = $pidFile->getContent();
 
-        // We send special signal 0 to test for existance of the process which is much more bullet proof than
-        // using anything like shell_exec() wrapped ps/pgrep magic (which is not available on all systems).
-        $isRunning = (bool) posix_kill($pid, 0);
+        $isRunning = $this->isPidStillRunning($pid);
         $startTime = new \DateTime();
         $startTime->setTimestamp(filectime(TL_ROOT . '/' . self::PID_FILE_PATHNAME));
 
@@ -58,7 +56,7 @@ class DetachedController extends AbstractController
             $this->redirect('contao/main.php?do=composer&amp;update=database');
         } else {
             if ($isRunning && \Input::getInstance()->post('terminate')) {
-                posix_kill($pid, SIGTERM);
+                $this->killPid($pid);
                 $this->reload();
             }
         }
@@ -83,5 +81,43 @@ class DetachedController extends AbstractController
             $template->uptime    = $uptime;
             return $template->parse();
         }
+    }
+
+    /**
+     * Cross OS wrapper method to check if a process with the given pid is running.
+     *
+     * @param string $pid The id of the process to check.
+     *
+     * @return bool
+     */
+    private function isPidStillRunning($pid)
+    {
+        // Windows magic, call tasklist.exe and scan for the pid in there.
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $process = shell_exec(sprintf('tasklist.exe /FI "PID eq %d" /FO CSV /NH', $pid));
+
+            return in_array($pid, str_getcsv($process, ','));
+        }
+
+        // We send special signal 0 to test for existance of the process which is much more bullet proof than
+        // using anything like shell_exec() wrapped ps/pgrep magic (which is not available on all systems).
+        return (bool) posix_kill($pid, 0);
+    }
+
+    /**
+     * Cross OS wrapper method to kill a process by it's pid.
+     *
+     * @param string $pid The id of the process to kill.
+     *
+     * @return void
+     */
+    private function killPid($pid)
+    {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            shell_exec(sprintf('taskkill.exe /PID %d', $pid));
+            return;
+        }
+
+        posix_kill($pid, SIGTERM);
     }
 }
