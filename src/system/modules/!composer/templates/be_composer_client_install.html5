@@ -247,9 +247,13 @@ $source = $preferedCandidate->getSourceUrl();
                 $requires = $candidate->getRequires();
 
                 $compatible = true;
-                if (isset($requires['contao/core']) && $requires['contao/core'] instanceof \Composer\Package\Link) {
+                foreach (ContaoCommunityAlliance\Contao\Composer\Controller\InstalledController::$UNMODIFIABLE_PACKAGES as $packageName) {
+                    if (!(isset($requires[$packageName]) && $requires[$packageName] instanceof \Composer\Package\Link)) {
+                        continue;
+                    }
+
                     /** @var \Composer\Package\Link $link */
-                    $link = $requires['contao/core'];
+                    $link = $requires[$packageName];
 
                     if (!$link->getConstraint()->matches($contaoConstraint)) {
                         $compatible = false;
