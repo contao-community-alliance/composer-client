@@ -227,12 +227,27 @@ EOF;
      * Load and install the composer.phar.
      *
      * @return bool
+     *
+     * @throws \Exception When a download exception occured.
      */
     public static function updateComposer()
     {
-        $url  = 'https://getcomposer.org/composer.phar';
-        $file = COMPOSER_DIR_ABSOULTE . '/composer.phar';
-        Downloader::download($url, $file);
+        $url     = 'https://getcomposer.org/composer.phar';
+        $file    = COMPOSER_DIR_ABSOULTE . '/composer.phar';
+        $tmpFile = COMPOSER_DIR_ABSOULTE . '/composer.new.phar';
+        $backup  = COMPOSER_DIR_ABSOULTE . '/composer.previous.phar';
+        try {
+            Downloader::download($url, $tmpFile);
+        } catch (\Exception $exception) {
+            unlink($tmpFile);
+            throw $exception;
+        }
+        if (is_file($backup)) {
+            unlink($backup);
+        }
+        rename($file, $backup);
+        rename($tmpFile, $file);
+
         return true;
     }
 
