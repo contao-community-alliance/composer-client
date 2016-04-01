@@ -15,15 +15,14 @@
  * @filesource
  */
 
-if (version_compare(PHP_VERSION, '5.3', '<')) {
-    trigger_error('Composer client requires PHP 5.3, even with Contao 2.11', E_USER_ERROR);
-    return;
-}
-
 define('COMPOSER_MIN_PHPVERSION', '5.3.4');
 define('COMPOSER_DIR_RELATIVE', 'composer');
 define('COMPOSER_DIR_ABSOULTE', TL_ROOT . '/' . COMPOSER_DIR_RELATIVE);
 
+if (version_compare(PHP_VERSION, COMPOSER_MIN_PHPVERSION, '<')) {
+    trigger_error('Composer client requires PHP ' . COMPOSER_MIN_PHPVERSION, E_USER_ERROR);
+    return;
+}
 
 /**
  * Initialize the composer runtime.
