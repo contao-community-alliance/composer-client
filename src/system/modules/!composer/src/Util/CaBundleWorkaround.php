@@ -62,7 +62,11 @@ class CaBundleWorkaround
         // Fall back to the embedded certificate list otherwise.
         // Note that we can not use the internal mechanism of composer for this, as there sys_get_temp_dir() is used.
         // This will resort to /tmp on most systems which is almost certainly not within the allowed paths.
-        $file = $phar['res/cacert.pem']->getPathname();
+        if (class_exists('Composer\CaBundle\CaBundle')) {
+            $file = \Composer\CaBundle\CaBundle::getBundledCaBundlePath();
+        } else {
+            $file = $phar['res/cacert.pem']->getPathname();
+        }
         // Try to unpack cacert.pem and use it.
         $hash       = hash_file('sha256', $file);
         $targetPath = rtrim(TL_ROOT . '/system/cache', '\\/') . '/composer-cacert-' . $hash . '.pem';
