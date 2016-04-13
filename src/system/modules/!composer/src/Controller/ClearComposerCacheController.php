@@ -31,7 +31,6 @@ class ClearComposerCacheController extends AbstractController
     {
         if (Runtime::clearComposerCache()) {
             Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']);
-
         }
 
         $this->redirect('contao/main.php?do=composer');
