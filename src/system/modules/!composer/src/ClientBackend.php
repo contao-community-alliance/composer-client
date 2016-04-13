@@ -269,11 +269,12 @@ class ClientBackend extends \Backend
     {
         // search for composer build version
         $composerDevWarningTime = Runtime::readComposerDevWarningTime();
-        $incompatibleVersion    = mktime(11, 0, 0, 6, 5, 2014) > ($composerDevWarningTime - 30 * 86400);
+        $incompatibleVersion    = (false === $composerDevWarningTime)
+            || (mktime(11, 0, 0, 6, 5, 2014) > ($composerDevWarningTime - 30 * 86400));
 
-        if (!$composerDevWarningTime
-            || $GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary']
-               && ($incompatibleVersion || time() > $composerDevWarningTime)
+        // Update if allowed or composer version is incompatible.
+        if ($incompatibleVersion
+            || ($GLOBALS['TL_CONFIG']['composerAutoUpdateLibrary'] && (time() > $composerDevWarningTime))
         ) {
             Runtime::updateComposer();
             Messages::addConfirmation($GLOBALS['TL_LANG']['composer_client']['composerUpdated']);
