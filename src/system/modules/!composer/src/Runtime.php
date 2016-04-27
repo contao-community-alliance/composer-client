@@ -297,13 +297,30 @@ EOF;
     public static function readComposerDevWarningTime()
     {
         $configPathname = new \File(COMPOSER_DIR_RELATIVE . '/composer.phar');
+        return static::readComposerDevWarningTimeFromStream($configPathname->handle);
+    }
+
+    /**
+     * Read the stub from the composer.phar and return the warning timestamp.
+     *
+     * @param resource $stream The stream to read from.
+     *
+     * @return bool|int
+     */
+    public static function readComposerDevWarningTimeFromStream($stream)
+    {
         $buffer         = '';
         do {
-            $buffer .= fread($configPathname->handle, 1024);
+            $buffer .= fread($stream, 1024);
         } while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches)
-            && !feof($configPathname->handle)
+            && !preg_match('#\s*RELEASE_DATE = \'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\';#', $buffer, $matches)
+            && !feof($stream)
         );
-        if ($matches[1]) {
+        if (isset($matches[1])) {
+            if (!is_numeric($matches[1])) {
+                $date = \DateTime::createFromFormat('Y-m-d H:i:s', $matches[1]);
+                return $date->getTimestamp();
+            }
             return (int) $matches[1];
         }
         return false;
