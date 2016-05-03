@@ -114,7 +114,7 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_faq'] = '
 </li>
 <li>
     <h3>Can I switch back to the old package manager?</h3>
-    Yes you can. Go to the Composer client settings dialog and choose "switch back to old client".
+    Yes you can but it requires handwork. Please read the <a href="https://github.com/contao-community-alliance/composer-client/wiki/Switch-back">wiki</a> for a guide.
 </li>
 <li>
     <h3>I have problems with the new client, where can I ask for help?</h3>

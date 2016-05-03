@@ -83,15 +83,12 @@ EOF;
     "repositories": [
         {
             "type": "composer",
-            "url": "https://legacy-packages-via.contao-community-alliance.org/"
+            "url": "https?://legacy-packages-via.contao-community-alliance.org",
+            "allow_ssl_downgrade": false
         },
         {
             "type": "artifact",
             "url": "packages"
-        },
-        {
-            "type": "composer",
-            "url": "http://legacy-packages-via.contao-community-alliance.org/"
         }
     ]
 }
@@ -230,12 +227,27 @@ EOF;
      * Load and install the composer.phar.
      *
      * @return bool
+     *
+     * @throws \Exception When a download exception occured.
      */
     public static function updateComposer()
     {
-        $url  = 'https://getcomposer.org/composer.phar';
-        $file = COMPOSER_DIR_ABSOULTE . '/composer.phar';
-        Downloader::download($url, $file);
+        $url     = 'https://getcomposer.org/composer.phar';
+        $file    = COMPOSER_DIR_ABSOULTE . '/composer.phar';
+        $tmpFile = COMPOSER_DIR_ABSOULTE . '/composer.new.phar';
+        $backup  = COMPOSER_DIR_ABSOULTE . '/composer.previous.phar';
+        try {
+            Downloader::download($url, $tmpFile);
+        } catch (\Exception $exception) {
+            unlink($tmpFile);
+            throw $exception;
+        }
+        if (is_file($backup)) {
+            unlink($backup);
+        }
+        rename($file, $backup);
+        rename($tmpFile, $file);
+
         return true;
     }
 
@@ -285,13 +297,30 @@ EOF;
     public static function readComposerDevWarningTime()
     {
         $configPathname = new \File(COMPOSER_DIR_RELATIVE . '/composer.phar');
+        return static::readComposerDevWarningTimeFromStream($configPathname->handle);
+    }
+
+    /**
+     * Read the stub from the composer.phar and return the warning timestamp.
+     *
+     * @param resource $stream The stream to read from.
+     *
+     * @return bool|int
+     */
+    public static function readComposerDevWarningTimeFromStream($stream)
+    {
         $buffer         = '';
         do {
-            $buffer .= fread($configPathname->handle, 1024);
+            $buffer .= fread($stream, 1024);
         } while (!preg_match('#define\(\'COMPOSER_DEV_WARNING_TIME\',\s*(\d+)\);#', $buffer, $matches)
-            && !feof($configPathname->handle)
+            && !preg_match('#\s*RELEASE_DATE = \'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\';#', $buffer, $matches)
+            && !feof($stream)
         );
-        if ($matches[1]) {
+        if (isset($matches[1])) {
+            if (!is_numeric($matches[1])) {
+                $date = \DateTime::createFromFormat('Y-m-d H:i:s', $matches[1]);
+                return $date->getTimestamp();
+            }
             return (int) $matches[1];
         }
         return false;

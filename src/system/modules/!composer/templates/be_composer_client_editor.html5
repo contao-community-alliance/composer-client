@@ -24,7 +24,8 @@
     </div>
 </form>
 
-<script>window.ace || document.write('<script src="<?php echo TL_ASSETS_URL; ?>assets/ace/<?php echo $GLOBALS['TL_ASSETS']['ACE']; ?>/ace.js" charset="utf-8">\x3C/script>')</script>
+<?php $ace = (version_compare(VERSION . '.' . BUILD, '3.3.0', '>=')) ? $GLOBALS['TL_ASSETS']['ACE'] : ACE; ?>
+<script>window.ace || document.write('<script src="<?php echo TL_ASSETS_URL; ?>assets/ace/<?php echo $ace; ?>/ace.js" charset="utf-8">\x3C/script>')</script>
 <script>
     var config = $('ctrl_config');
 
