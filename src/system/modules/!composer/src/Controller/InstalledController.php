@@ -22,8 +22,8 @@ use Composer\Package\Link;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Repository\RepositoryInterface;
-use ContaoCommunityAlliance\Contao\Composer\ConsoleColorConverter;
 use ContaoCommunityAlliance\Contao\Composer\Downloader;
+use ContaoCommunityAlliance\Contao\Composer\Util\Messages;
 
 /**
  * Class InstalledController
@@ -158,8 +158,17 @@ class InstalledController extends AbstractController
     protected function calculateLegacyReplaceMap(RepositoryInterface $repository)
     {
         $replaceMap = array();
+        try {
+            $abandon = Downloader::download('https://legacy-packages-via.contao-community-alliance.org/abandoned.json');
+        } catch (\Exception $exception) {
+            Messages::addError(
+                $exception->getMessage()
+            );
+
+            return array();
+        }
         $legacyReplaces = json_decode(
-            Downloader::download('http://legacy-packages-via.contao-community-alliance.org/abandoned.json'),
+            $abandon,
             true
         );
 

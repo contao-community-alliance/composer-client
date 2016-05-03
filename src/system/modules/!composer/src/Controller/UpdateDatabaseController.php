@@ -56,7 +56,7 @@ class UpdateDatabaseController extends AbstractController
         $installer = \System::importStatic('Database\Installer');
         $form = $installer->generateSqlForm();
 
-        if (empty($_SESSION['sql_commands'])) {
+        if (empty($form)) {
             Messages::addInfo($GLOBALS['TL_LANG']['composer_client']['databaseUptodate']);
             $this->redirect('contao/main.php?do=composer');
         }
