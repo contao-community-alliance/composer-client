@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2015-07-10T00:40:34+02:00
+ * last-updated: 2016-05-05T02:00:09+02:00
  */
 
 $GLOBALS['TL_LANG']['composer_client']['check']                         = 'بررسی سازگاری';
@@ -23,7 +23,7 @@ $GLOBALS['TL_LANG']['composer_client']['detached']                      = 'بر�
 $GLOBALS['TL_LANG']['composer_client']['discard_changes_yes']           = 'دور انداختن';
 $GLOBALS['TL_LANG']['composer_client']['dry-run']                       = 'اجرای آزمایشی';
 $GLOBALS['TL_LANG']['composer_client']['editor_headline']               = 'وضعیت حرفه‌ای';
-$GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'نیازمندهای سیستم';
+$GLOBALS['TL_LANG']['composer_client']['errors_headline']               = 'نیازمندی‌های سیستم';
 $GLOBALS['TL_LANG']['composer_client']['experts_mode']                  = 'حالت پیشرفته';
 $GLOBALS['TL_LANG']['composer_client']['install_auto']                  = 'خودکار';
 $GLOBALS['TL_LANG']['composer_client']['install_composer']              = 'نصب کومپوزر';
@@ -91,6 +91,7 @@ $GLOBALS['TL_LANG']['composer_client']['unknown_license']               = 'مج�
 $GLOBALS['TL_LANG']['composer_client']['update']                        = 'بروزرسانی بسته‌ها';
 $GLOBALS['TL_LANG']['composer_client']['update_composer']               = 'بروزرسانی کومپوزر';
 $GLOBALS['TL_LANG']['composer_client']['update_database']               = 'بروزرسانی پایگاه‌داده';
+$GLOBALS['TL_LANG']['composer_client']['widget_discard_changes']['0']   = 'لغو تغییرات';
 $GLOBALS['TL_LANG']['composer_client']['widget_minimum_stability']['0'] = 'پایداری کمینه';
 $GLOBALS['TL_LANG']['composer_client']['widget_prefer_stable']['0']     = 'پایداری برگزیده';
 
