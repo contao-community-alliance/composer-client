@@ -71,7 +71,7 @@ EOF;
     "type": "project",
     "license": "proprietary",
     "require": {
-        "contao-community-alliance/composer-client": "~0.12"
+        "contao-community-alliance/composer-client": "~0.14"
     },
     "prefer-stable": true,
     "minimum-stability": "dev",
@@ -83,8 +83,7 @@ EOF;
     "repositories": [
         {
             "type": "composer",
-            "url": "https?://legacy-packages-via.contao-community-alliance.org",
-            "allow_ssl_downgrade": false
+            "url": "https://legacy-packages-via.contao-community-alliance.org"
         },
         {
             "type": "artifact",
