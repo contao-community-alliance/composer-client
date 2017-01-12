@@ -12,21 +12,21 @@ $GLOBALS['TL_LANG']['composer_client']['composerCacheCleared']          = 'Der C
 $GLOBALS['TL_LANG']['composer_client']['composerUpdateNecessary']       = 'Dies ist eine inkompatible Version der Composer Bibliothek. Es ist erforderlich, die Composer Bibliothek zu aktualisieren, ansonsten wird der Composer Client nicht wie erwartet funktionieren. ';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdateRequired']        = 'Die Composer Version ist älter als 30 Tage, bitte aktualisieren Sie Composer.';
 $GLOBALS['TL_LANG']['composer_client']['composerUpdated']               = 'Composer wurde aktualisiert!';
-$GLOBALS['TL_LANG']['composer_client']['composer_install_headline']     = 'Composer Installation';
-$GLOBALS['TL_LANG']['composer_client']['composer_missing']              = 'Die Composer Bibliothek ist nicht komplett installiert. <br><strong>Composer installieren</strong> klicken, um Composer und alle Abhängigkeiten zu installieren.';
+$GLOBALS['TL_LANG']['composer_client']['composer_install_headline']     = 'Composer-Installation';
+$GLOBALS['TL_LANG']['composer_client']['composer_missing']              = 'Die Composer-Bibliothek ist nicht komplett installiert. <br><strong>Composer installieren</strong> klicken, um Composer und alle Abhängigkeiten zu installieren.';
 $GLOBALS['TL_LANG']['composer_client']['configValid']                   = 'Die Konfiguration ist gültig.';
 $GLOBALS['TL_LANG']['composer_client']['confirmRemove']                 = 'Möchten Sie das Paket %s wirklich löschen?';
 $GLOBALS['TL_LANG']['composer_client']['confirmRemovePackages']         = 'Sind Sie sicher, dass Sie die folgenden Pakete entfernen wollen?
 %s';
 $GLOBALS['TL_LANG']['composer_client']['could_not_disable_apc']         = 'APC konnte nicht deaktiviert werden.<br>
 APC und Composer produzieren zusammen immer wieder Fehler, bitte <a href="http://php.net/apc" target="_blank">APC</a> deaktivieren.';
-$GLOBALS['TL_LANG']['composer_client']['curl_missing']                  = 'cURL ist notwendig um Pakete herunterzuladen.<br>Bitte das PHP Modul <a href="http://php.net/curl" target="_blank">curl</a> installieren oder aktivieren. ';
+$GLOBALS['TL_LANG']['composer_client']['curl_missing']                  = 'cURL ist notwendig um Pakete herunterzuladen.<br>Bitte das PHP-Modul <a href="http://php.net/curl" target="_blank">curl</a> installieren oder aktivieren. ';
 $GLOBALS['TL_LANG']['composer_client']['databaseUpdated']               = 'Datenbank aktualisiert. Es wurden %d Anfragen ausgeführt.';
 $GLOBALS['TL_LANG']['composer_client']['databaseUptodate']              = 'Die Datenbank ist aktuell.';
 $GLOBALS['TL_LANG']['composer_client']['dependency_graph_headline']     = 'Abhängigkeitsgraph';
 $GLOBALS['TL_LANG']['composer_client']['dependency_of']                 = 'Abhängigkeit von %s';
 $GLOBALS['TL_LANG']['composer_client']['dependency_recursion']          = '(zirkulierende Abhängigkeit)';
-$GLOBALS['TL_LANG']['composer_client']['detached']                      = 'Paket Update';
+$GLOBALS['TL_LANG']['composer_client']['detached']                      = 'Paket-Update';
 $GLOBALS['TL_LANG']['composer_client']['discard_changes_no']            = 'lokale Änderungen behalten (Update anhalten)';
 $GLOBALS['TL_LANG']['composer_client']['discard_changes_stash']         = 'Update durchführen & lokale Änderung übernehmen';
 $GLOBALS['TL_LANG']['composer_client']['discard_changes_yes']           = 'lokale Änderungen verwerfen';
@@ -90,8 +90,8 @@ Im Zweifel verpasst Du wichtige Updates oder neue Erweiterungen, wenn Du Compose
 </li>
 </ul>';
 $GLOBALS['TL_LANG']['composer_client']['migrate_intro']                 = '
-<p>Lieber Nutzer, dies ist die neue Contao Paketverwaltung, basierend auf dem PHP Abhängigkeitsverwalter <a href="http://getcomposer.org/" target="_blank">Composer</a>.</p>
-<p>Dies ist eine öffentliche Beta-Phase. Wir brauchen deine Hilfe diese Verwaltung zu testen und uns Feedback zu geben damit Composer schon bald die neue Contao Erweiterungsverwaltung werden kann.</p>';
+<p>Lieber Nutzer, dies ist die neue Contao-Paketverwaltung, basierend auf dem PHP-Abhängigkeitsverwalter <a href="http://getcomposer.org/" target="_blank">Composer</a>.</p>
+<p>Dies ist eine öffentliche Beta-Phase. Wir brauchen deine Hilfe diese Verwaltung zu testen damit sie bald die Standard-Erweiterungsverwaltung von Contao wird.</p>';
 $GLOBALS['TL_LANG']['composer_client']['migrate_mode']['0']             = 'Migrationsmodus';
 $GLOBALS['TL_LANG']['composer_client']['migrate_mode']['1']             = 'Wir haben gesehen das Du %d Erweiterungen aus der alten Erweiterungsverwaltung nutzt. Nun wollen wir wissen, was wir mit diesen tun sollen.';
 $GLOBALS['TL_LANG']['composer_client']['migrate_none']['0']             = 'Nichts tun (only for experts!)';
@@ -150,7 +150,7 @@ $GLOBALS['TL_LANG']['composer_client']['package_support_source']        = 'Sourc
 $GLOBALS['TL_LANG']['composer_client']['package_support_wiki']          = 'Wiki';
 $GLOBALS['TL_LANG']['composer_client']['package_type']                  = 'Typ';
 $GLOBALS['TL_LANG']['composer_client']['package_version']               = 'Version';
-$GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'PHP Version <strong>PHP %1$s</strong> oder neuer wird vorrausgesetzt. Deine Installation läuft mit PHP Version <strong>%2$s</strong>.<br>Bitte aktualisiere deine PHP Version.';
+$GLOBALS['TL_LANG']['composer_client']['php_version']                   = 'PHP-Version <strong>PHP %1$s</strong> oder neuer wird vorrausgesetzt. Deine Installation läuft mit PHP-Version <strong>%2$s</strong>.<br>Bitte aktualisiere deine PHP-Version.';
 $GLOBALS['TL_LANG']['composer_client']['pinPackage']                    = 'Auf Version verankern';
 $GLOBALS['TL_LANG']['composer_client']['pluginNotFound']                = 'Contao Composer Plugin wurde nicht gefunden!';
 $GLOBALS['TL_LANG']['composer_client']['removeCandidate']               = 'Paket %s wurde gelöscht. Bitte aktualisieren Sie die Pakete um die Änderung zu übernehmen.';
@@ -189,15 +189,16 @@ $GLOBALS['TL_LANG']['composer_client']['update_database']               = 'Daten
 $GLOBALS['TL_LANG']['composer_client']['vcs_requirements']              = '
 <ul class="preconditions">
 <li class="{if gitAvailable==true}pass{else}fail{endif}">
-	git ist {if gitAvailable==true}verfügbar{else}nicht verfügbar, die meisten Pakete können nicht installiert werden!{endif}
+git ist {if gitAvailable==true}verfügbar{else}nicht verfügbar, die meisten Pakete können nicht installiert werden!{endif}
 </li>
 <li class="{if hgAvailable==true}pass{else}fail{endif}">
-	mercurial ist {if hgAvailable==true}verfügbar{else}nicht verfügbar, manche Pakete können nicht installiert werden!{endif}
+mercurial ist {if hgAvailable==true}verfügbar{else}nicht verfügbar, viele  Pakete können wahrscheinlich nicht installiert werden!{endif}
 </li>
 <li class="{if svnAvailable==true}pass{else}fail{endif}">
-	svn ist {if svnAvailable==true}verfügbar{else}nicht verfügbar, manche Pakete können nicht installiert werden!{endif}
+svn ist {if svnAvailable==true}verfügbar{else}nicht verfügbar, viele Pakete können wahrscheinlich nicht installiert werden!{endif}
 </li>
-</ul>';
+</ul>
+';
 $GLOBALS['TL_LANG']['composer_client']['version_bugfix']                = 'Bugfix Release %s (%s)';
 $GLOBALS['TL_LANG']['composer_client']['version_exact']                 = 'exakte Version %s';
 $GLOBALS['TL_LANG']['composer_client']['version_feature']               = 'Feature Release %s (%s)';

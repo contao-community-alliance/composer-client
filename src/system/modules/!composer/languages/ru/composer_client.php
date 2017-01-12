@@ -8,7 +8,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  *
- * last-updated: 2015-07-11T02:00:07+02:00
+ * last-updated: 2015-11-05T02:00:08+01:00
  */
 
 $GLOBALS['TL_LANG']['composer_client']['added_candidate']               = 'Добавлен пакет %s версии %s. Обновите пакеты для применения изменений.';
@@ -64,38 +64,33 @@ $GLOBALS['TL_LANG']['composer_client']['migrate_faq']                   = '
 <ul class="questions">
 <li>
     <h3>Необходимо ли использовать этот клиент?</h3>
-    Вовсе нет, это необязательно. Но некоторые разработчики распространяют новые возможности или новые расширения только через этот менеджер пакетов. Вы можете пропустить некоторые важные обновления, если не будете использовать его.
+     Вовсе нет, это необязательно. Но некоторые разработчики распространяют новые возможности или новые расширения только через этот менеджер пакетов. Вы можете пропустить некоторые важные обновления, если не будете использовать его.
 </li>
 <li>
     <h3>Могу ли я установить пакеты, которые доступны в текущем хранилище расширений?</h3>
-    Да, вы можете. Все публичные пакеты синхронизированы в новое
-    хранилище расширений (они начинаются с префикса <em>contao-legacy/</em>).<br>
-    <em>Обратите внимание, что существующие коммерческие расширения не могут быть
-     установлены с Composer из-за лицензионных ограничений. 
-    Обратитесь к издателю для включения поддержки Composer.</em>
+    Да, вы можете. Все публичные пакеты синхронизированы в новое хранилище расширений (они начинаются с префикса <em>contao-legacy/</em>).<br>
+    <em>Обратите внимание, что существующие коммерческие расширения не могут быть установлены с Composer из-за лицензионных ограничений. Обратитесь к издателю для включения поддержки Composer.</em>
 </li>
 <li>
     <h3>Будет ли новое хранилище расширений?</h3>
-    Да, новое хранилище расширений существует на <a href="http://legacy-packages-via.contao-community-alliance.org/"
+     Да, новое хранилище расширений существует на <a href="http://legacy-packages-via.contao-community-alliance.org/"
       target="_blank">legacy-packages-via.contao-community-alliance.org</a>.
     Сейчас оно представляет собой простой список пакетов установки, но в ближайшее время мы займемся его улучшением, под наши потребности.
 </li>
 <li>
     <h3>Что такое Composer и этот менеджер пакетов Composer?</h3>
-    Ответ слишком длинный, чтобы разместить его здесь. Прочитайте статью о клиенте Composer в
-    <a href="http://de.contaowiki.org/Composer_Client" target="_blank">Contao Wiki</a>.
+     Ответ слишком длинный, чтобы разместить его здесь. Прочитайте статью о клиенте Composer в <a href="http://de.contaowiki.org/Composer_Client" target="_blank">Contao Wiki</a>.
 </li>
 <li>
     <h3>Можно ли переключиться обратно на старый менеджер пакетов?</h3>
-    Да, можно. Перейдите в окно настроек клиента Composer и выберите "Вернуть старый клиент".
+     Да, это можно сделать вручную. Прочитайте руководство на <a href="https://github.com/contao-community-alliance/composer-client/wiki/Switch-back">wiki</a>.
 </li>
 <li>
     <h3>У меня проблемы с новым клиентом, где я могу получить поддержку?</h3>
-    Этот клиент управляется сообществом.
-    Вы можете задать свои вопросы на <a href="https://community.contao.org/de/forumdisplay.php?6-Entwickler-Fragen"
+    Этот клиент управляется сообществом. Вы можете задать свои вопросы на <a href="https://community.contao.org/de/forumdisplay.php?6-Entwickler-Fragen"
       target="_blank">форумах сообщества</a>,
-    в официальном IRC канале <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
-    или <a href="https://github.com/contao-community-alliance/composer/issues" target="_blank">тикет-системе</a>.
+    the official IRC channel <a href="irc://chat.freenode.net/%23contao.composer">#contao.composer</a>
+     или <a href="https://github.com/contao-community-alliance/composer/issues" target="_blank">тикет-системе</a>.
 </li>
 </ul>';
 $GLOBALS['TL_LANG']['composer_client']['migrate_intro']                 = '

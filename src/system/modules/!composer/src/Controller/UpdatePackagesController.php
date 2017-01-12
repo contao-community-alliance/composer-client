@@ -8,6 +8,7 @@
  * @copyright  ContaoCommunityAlliance 2013
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
+ * @author     Yanick Witschi <yanick.witschi@terminal42.ch>
  * @package    Composer
  * @license    LGPLv3
  * @filesource
@@ -162,6 +163,19 @@ class UpdatePackagesController extends AbstractController
 
         if ($dryRun) {
             $cmd .= ' --dry-run';
+        }
+
+        switch ($this->composer->getConfig()->get('preferred-install')) {
+            case 'source':
+                $cmd .= ' --prefer-source';
+                break;
+            case 'dist':
+                $cmd .= ' --prefer-dist';
+                break;
+            case 'auto':
+            default:
+                // noop
+                break;
         }
 
         if ($packages) {
