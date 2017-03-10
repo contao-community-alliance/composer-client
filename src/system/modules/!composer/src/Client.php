@@ -8,6 +8,7 @@
  * @copyright  ContaoCommunityAlliance 2013
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Tristan Lins <tristan.lins@bit3.de>
+ * @author     Fritz Michael Gschwantner <fmg@inspiredminds.at>
  * @package    Composer
  * @license    LGPLv3
  * @filesource
@@ -73,7 +74,7 @@ class Client extends \System
         // disable the repo client
         $reset           = false;
         $activeModules   = $this->Config->getActiveModules();
-        $inactiveModules = deserialize($GLOBALS['TL_CONFIG']['inactiveModules']);
+        $inactiveModules = deserialize($GLOBALS['TL_CONFIG']['inactiveModules'], true);
 
         if (in_array('repository', $activeModules)) {
             $inactiveModules[] = 'repository';
