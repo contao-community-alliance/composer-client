@@ -56,7 +56,7 @@ class Client extends \System
     {
         $callback = $this->inactiveModulesOptionsCallback;
         $this->import($callback[0]);
-        $modules = $this->$callback[0]->$callback[1]();
+        $modules = $this->{$callback[0]}->{$callback[1]}();
 
         if (isset($modules['repository'])) {
             $modules['repository'] = sprintf(
