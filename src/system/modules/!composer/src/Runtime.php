@@ -11,6 +11,7 @@
  * @author     Dominik Zogg <dominik.zogg@gmail.com>
  * @author     Oliver Hoff <oliver@hofff.com>
  * @author     Nicky Hoff <nick@hofff.com>
+ * @author     Fritz Michael Gschwantner <fmg@inspiredminds.at>
  * @package    Composer
  * @license    LGPLv3
  * @filesource
@@ -244,7 +245,9 @@ EOF;
         if (is_file($backup)) {
             unlink($backup);
         }
-        rename($file, $backup);
+        if (is_file($file)) {
+            rename($file, $backup);
+        }
         rename($tmpFile, $file);
 
         return true;
