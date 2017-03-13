@@ -3,3 +3,9 @@ exclude:
   - tests
 
 mapping:
+  "Fritz Michael Gschwantner <fmg@inspiredminds.at>":
+    - "Fritz Michael Gschwantner <email@spikx.net>"
+    - "Fritz Michael Gschwantner <github@spikx.net>"
+    - "fritzmg <fmg@inspiredminds.at>"
+    - "fritzmg <email@spikx.net>"
+    - "fritzmg <github@spikx.net>"

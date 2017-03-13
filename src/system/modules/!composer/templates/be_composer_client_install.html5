@@ -44,7 +44,7 @@ $source = $preferedCandidate->getSourceUrl();
 
 <div class="composer_package_type_<?php echo strtolower(str_replace('-', '_', $preferedCandidate->getType())); ?>">
     <div id="tl_buttons">
-        <a href="contao/main.php?do=composer" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
+        <a href="contao/main.php?do=composer<?php echo ($keyword = \Input::get('keyword')) ? '&amp;keyword=' . $keyword : '' ?>" title="<?php echo specialchars($GLOBALS['TL_LANG']['MSC']['backBT']); ?>" class="header_back">
             <?php echo $GLOBALS['TL_LANG']['MSC']['backBT']; ?>
         </a>
     </div>
