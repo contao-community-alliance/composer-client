@@ -11,6 +11,7 @@
  * @author     Dominik Zogg <dominik.zogg@gmail.com>
  * @author     Oliver Hoff <oliver@hofff.com>
  * @author     Nicky Hoff <nick@hofff.com>
+ * @author     Fritz Michael Gschwantner <fmg@inspiredminds.at>
  * @package    Composer
  * @license    LGPLv3
  * @filesource
@@ -244,7 +245,9 @@ EOF;
         if (is_file($backup)) {
             unlink($backup);
         }
-        rename($file, $backup);
+        if (is_file($file)) {
+            rename($file, $backup);
+        }
         rename($tmpFile, $file);
 
         return true;
@@ -280,9 +283,9 @@ EOF;
             };
 
             $memoryLimit = trim(ini_get('memory_limit'));
-            // Increase memory_limit if it is lower than 512M
-            if ($memoryLimit != -1 && $memoryInBytes($memoryLimit) < 1024 * 1024 * 1024) {
-                @ini_set('memory_limit', '1024M');
+            // Increase memory_limit if it is lower than 1.5GB
+            if ($memoryLimit != -1 && $memoryInBytes($memoryLimit) < 1024 * 1024 * 1536) {
+                @ini_set('memory_limit', '1536M');
             }
             unset($memoryInBytes, $memoryLimit);
         }

@@ -55,7 +55,7 @@ $installationManager = $composer->getInstallationManager();
                 ?></td>
                 <td class="tl_file_list col_name">
                     <div class="name">
-                        <a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>"><?php echo $package['name']; ?></a>
+                        <a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>&amp;keyword=<?php echo \Input::get('keyword'); ?>"><?php echo $package['name']; ?></a>
                         <?php
                         if (!$package['contao-compatible']):
                         ?>
@@ -83,7 +83,7 @@ $installationManager = $composer->getInstallationManager();
                             );
                         else:
                             ?>
-                            <a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>">
+                            <a href="contao/main.php?do=composer&amp;install=<?php echo $package['name']; ?>&amp;keyword=<?php echo \Input::get('keyword'); ?>">
                                 <?php echo $this->generateImage(
                                     'system/modules/!composer/assets/images/mark_install.png',
                                     $GLOBALS['TL_LANG']['composer_client']['mark_to_install'],
