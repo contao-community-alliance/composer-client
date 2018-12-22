@@ -3,8 +3,9 @@
 namespace ContaoCommunityAlliance\Contao\Composer\Test;
 
 use ContaoCommunityAlliance\Contao\Composer\ConsoleColorConverter;
+use PHPUnit\Framework\TestCase;
 
-class ColorConverterTest extends \PHPUnit_Framework_TestCase
+class ColorConverterTest extends TestCase
 {
     public function testConverter()
     {
