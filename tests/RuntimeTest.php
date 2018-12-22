@@ -3,8 +3,9 @@
 namespace ContaoCommunityAlliance\Contao\Composer\Test;
 
 use ContaoCommunityAlliance\Contao\Composer\Runtime;
+use PHPUnit\Framework\TestCase;
 
-class RuntimeTest extends \PHPUnit_Framework_TestCase
+class RuntimeTest extends TestCase
 {
     public function providerReadComposerDevWarningTime()
     {
