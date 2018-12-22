@@ -7,7 +7,7 @@
         "composer",
         "client"
     ],
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Tristan Lins",
@@ -29,12 +29,12 @@
         }
     },
     "require": {
-        "php": ">=5.3.4",
-        "contao/core": ">=3.2,<4-dev",
+        "php": "^5.6 || ^7.0",
+        "contao/core": "^3.5.5",
         "contao-community-alliance/composer-plugin": "^2.3.8"
     },
     "require-dev": {
-        "phpcq/all-tasks": "~1.1"
+        "phpcq/all-tasks": "^1.1"
     },
     "replace": {
         "contao-community-alliance/composer": "self.version"
@@ -52,8 +52,8 @@
             }
         },
         "branch-alias": {
-            "dev-master": "0.16.x-dev",
-            "dev-develop": "0.17.x-dev"
+            "dev-master": "0.17.x-dev",
+            "dev-develop": "0.18.x-dev"
         }
     }
 }
